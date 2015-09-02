@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+
+    lintOptions {
+        abortOnError false
+    }
+    project.archivesBaseName="GoVoz";
+    signingConfigs {
+        debug {
+            storeFile file("../signing/gotako.key")
+            storePassword "bachtuoc2013"
+            keyAlias "gotako"
+            keyPassword "bachtuoc2013"
+        }
+
+        release {
+            storeFile file("../signing/gotako.key")
+            storePassword "bachtuoc2013"
+            keyAlias "gotako"
+            keyPassword "bachtuoc2013"
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.gotako.govoz"
+        minSdkVersion 16
+        targetSdkVersion 16
+    }
+
+    buildTypes {
+            release {
+            signingConfig signingConfigs.release
+                //zipAlign true
+            minifyEnabled false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.debug
+            //zipAlign true
+            minifyEnabled true
+        }
+    }
+
+    packagingOptions {
+        // conflicting files in some of the included libraries have to be excluded
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+}
+
+dependencies {
+    compile project(':goFast')
+    //compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:design:22.2.0'
+    compile files('libs/bugsense-3.6.1.jar')
+    compile files('libs/htmlcleaner-2.7.jar')
+    compile files('libs/jsoup-1.7.3.jar')
+    compile 'org.sufficientlysecure:html-textview:1.2'
+    compile 'com.felipecsl:gifimageview:1.2.0'
+}

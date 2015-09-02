@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postInfo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="horizontal|vertical"    
+    tools:context=".ForumActivity" >
+    
+    <ListView
+        android:id="@+id/threadsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_weight="0.8"        
+        android:scrollingCache="true" >
+
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/navigationPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="0.2"
+        android:background="@drawable/frame_border"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/fFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_border"
+            android:onClick="goFirst"
+            android:text="&lt;&lt;" />
+
+        <Button
+            android:id="@+id/fPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_vertical|center_horizontal"
+            android:layout_weight="10"
+            android:background="@drawable/button_border"
+            android:onClick="goPrevious"
+            android:text="&lt;" />
+
+        <TextView
+            android:id="@+id/pageNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="goPageSelect"
+            android:text="Page 1/1"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/fNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_vertical|center_horizontal"
+            android:layout_weight="10"
+            android:background="@drawable/button_border"
+            android:onClick="goNext"
+            android:text=">" />
+
+        <Button
+            android:id="@+id/fLast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right|center_horizontal"
+            android:layout_weight="10"
+            android:background="@drawable/button_border"
+            android:onClick="goLast"
+            android:text=">>" />
+
+    </LinearLayout>
+
+</LinearLayout>

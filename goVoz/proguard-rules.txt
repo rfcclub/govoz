@@ -1,0 +1,158 @@
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in /Users/ruisilvestre/dev/android/sdk/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.support.v4.app.FragmentActivity
+-keep public class * extends android.support.v4.app.Fragment
+
+#-keep class com.google.android.gms.maps.** { *; }
+#-keep interface com.google.android.gms.maps.** { *; }
+
+#-dontwarn twitter4j.**
+#-keep class twitter4j.** { *; }
+
+#-keep class com.facebook.** { *; }
+
+#-keep class com.google.code.linkedinapi.**
+
+-optimizationpasses 5
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+
+-printmapping mapping.txt
+-printseeds seed.txt
+
+
+-keepclassmembers class * {  @com.google.api.client.util.Key <fields>;}
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keepclassmembers class * implements android.os.Parcelable {
+      public static final android.os.Parcelable$Creator *;
+}
+
+-keep class * implements android.os.Parcelable {
+   public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-keepclasseswithmembers public class * {    public static void main(java.lang.String[]);}
+
+-keep @javax.inject.Inject public class *
+
+
+-keepclassmembers public class * extends android.view.View {
+   void set*(***);
+   *** get*();
+}
+
+-keepclassmembers class * extends android.app.Activity {
+   public void *(android.view.View);
+}
+
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+}
+
+#-Keep the names of classes that have fields annotated with @Inject and the fields themselves.
+-keepclasseswithmembernames class * {
+      @javax.inject.* <fields>;
+      @javax.inject.* <init>(...);
+}
+
+#Keep classes for Jackson
+-keepnames class org.codehaus.jackson.** { *; }
+-keep class org.codehaus.** { *; }
+-keep class com.google.common.** { *; }
+-dontwarn javax.xml.**
+-dontwarn javax.xml.stream.events.**
+-dontwarn com.fasterxml.jackson.databind.**
+-dontwarn org.codehaus.jackson.map.ext.**
+
+-dontwarn sun.misc.**
+
+#Joda time entries
+-dontwarn org.joda.convert.FromString
+-dontwarn org.joda.convert.ToString
+-dontwarn javax.xml.bind.DatatypeConverter
+
+
+#Keep the dagger annotation classes themselves
+-keep @interface dagger.*,javax.inject.*
+
+-dontwarn dagger.internal.codegen.**
+-dontwarn dagger.internal.Binding
+
+-keepnames @interface dagger.*,javax.inject.*
+
+#-Keep the fields annotated with @Inject of any class that is not deleted.
+-keepclassmembers class * {
+  @javax.inject.* <fields>;
+}
+
+# Keep the generated classes by dagger-compile
+-keep class **$$ModuleAdapter
+-keep class **$$InjectAdapter
+-keep class **$$StaticInjection
+
+#Keep the dagger annotation classes themselves
+#-keep class dagger.** { *; }
+-keep class javax.inject.** { *; }
+#-keep class dagger.internal.** { *; }
+-keep class * extends javax.inject.Provider.** { *; }
+#-keep class * extends dagger.internal.ModuleAdapter.** { *; }
+#-keep class * extends dagger.internal.StaticInjection.** { *; }
+
+#Google Play Services Section.
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+#HTML Cleaner
+-keep class org.htmlcleaner.** { *;}
+-dontwarn org.htmlcleaner.**
+
+-keep class org.jsoup.** { *;}
+-dontwarn org.jsoup.**
+
+-keepattributes Exceptions, Signature, InnerClasses, *Annotation*, EnclosingMethod

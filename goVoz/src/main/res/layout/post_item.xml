@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/postInfo"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/userInfoPanel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_post_title"
+            android:orientation="horizontal">
+
+				<TextView
+				    android:id="@+id/postDate"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center|left"
+				    android:text="postDate"
+				    android:layout_weight="0.9"
+				    android:layout_marginLeft="5dp"
+				    android:layout_marginTop="5dp"
+            		android:layout_marginBottom="5dp"
+				    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+				<TextView
+				    android:id="@+id/postCount"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_gravity="center|right"
+				    android:text="postCount"
+				    android:layout_weight="0.1"
+				    android:layout_marginLeft="5dp"
+				    android:layout_marginTop="5dp"
+            		android:layout_marginBottom="5dp"
+				    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+				<ImageView
+				    android:id="@+id/imageViewHidePost"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_weight="0.1"
+				    android:layout_gravity="center_vertical"
+				    android:src="@drawable/arrow_up" />
+
+        </LinearLayout>
+
+		<LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="top"
+		    android:orientation="horizontal"
+		    android:background="@color/background" >
+
+		        <ImageView
+		            android:id="@+id/avatar"
+		            android:layout_width="54dp"
+		            android:layout_height="match_parent"
+		            android:scaleType="centerCrop"
+		            android:src="@drawable/user_icon" />
+		
+		        <GridLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:columnCount="2"
+		            android:rowCount="3">
+		
+		            <TextView
+		                android:id="@+id/user"
+		                android:layout_gravity="left"
+		                android:text="user"
+		                android:layout_marginLeft="5dp"
+				    	android:layout_marginTop="5dp"
+            			android:layout_marginBottom="5dp"
+		                android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		            <TextView
+		                android:id="@+id/joinDate"
+		                android:layout_gravity="right"
+		                android:text="joinDate"
+		                android:layout_marginRight="5dp"
+				    	android:layout_marginTop="5dp"
+            			android:layout_marginBottom="5dp"
+		                android:textAppearance="?android:attr/textAppearanceSmall" />
+		
+		            <TextView
+		                android:id="@+id/rank"
+		                android:layout_gravity="left"
+		                android:text="rank"
+		                android:layout_marginLeft="5dp"
+            			android:layout_marginBottom="5dp"
+		                android:textAppearance="?android:attr/textAppearanceSmall" />
+		
+		            <TextView
+		                android:id="@+id/posted"
+		                android:layout_gravity="right"
+		                android:text="posted"
+		                android:layout_marginRight="5dp"
+            			android:layout_marginBottom="5dp"
+		                android:textAppearance="?android:attr/textAppearanceSmall" />
+		        </GridLayout>
+		    </LinearLayout>
+		</LinearLayout>
+    <TextView
+        android:id="@+id/subTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="14dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold" />
+
+    <WebView
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:animateLayoutChanges="false"
+        android:clickable="true"
+        android:longClickable="true"
+        android:scrollbars="none" />
+
+</LinearLayout>

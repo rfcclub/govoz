@@ -1,0 +1,131 @@
+package com.gotako.govoz;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+
+public class SettingActivity extends Activity {
+
+	private CheckBox loadImageByDemand;
+	private CheckBox autoReloadForum;
+	private CheckBox supportLongAvatar;
+	private EditText fontSize;
+	private VozConfig config;
+	
+	private RadioButton currentCheckedRadio;	
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_setting);
+		setTitle("Setting");	
+		config = VozConfig.instance();
+		loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
+		autoReloadForum = (CheckBox)findViewById(R.id.autoReloadForum);
+		supportLongAvatar = (CheckBox)findViewById(R.id.supportLongAvatar);
+		fontSize = (EditText)findViewById(R.id.fontSize);		
+		fontSize.setText(String.valueOf(config.getFontSize()));
+		loadImageByDemand.setChecked(config.isLoadImageByDemand());
+		autoReloadForum.setChecked(config.isAutoReloadForum());
+		supportLongAvatar.setChecked(config.isSupportLongAvatar());
+		
+		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
+		currentCheckedRadio.setChecked(true);		
+	}
+
+	private RadioButton getRadioForDrawable(int loadingDrawable) {
+		RadioButton button = null;		
+		switch(loadingDrawable) {
+			case R.drawable.load159:
+					button = (RadioButton)findViewById(R.id.radio159);
+					break;
+			case R.drawable.load257:
+					button = (RadioButton)findViewById(R.id.radio257);
+					break;			
+			case R.drawable.load35:
+				button = (RadioButton)findViewById(R.id.radio35);
+					break;
+			case R.drawable.load715:
+				button = (RadioButton)findViewById(R.id.radio715);
+					break;
+			case R.drawable.loadday1:
+				button = (RadioButton)findViewById(R.id.radioday1);
+					break;
+			case R.drawable.load278:
+			default:
+				button = (RadioButton)findViewById(R.id.radio278);
+				
+		}
+		return button;
+	}
+
+	private int parseDrawableFromRadio(int id) {
+		int result = R.drawable.load278;
+		switch (id) {
+		case R.id.radio159:
+			result = R.drawable.load159;
+			break;
+		case R.id.radio257:
+			result = R.drawable.load257;
+			break;
+		case R.id.radio35:
+			result = R.drawable.load35;
+			break;
+		case R.id.radio715:
+			result = R.drawable.load715;
+			break;
+		case R.id.radioday1:
+			result = R.drawable.loadday1;
+			break;
+		case R.id.radio278:
+		default:
+			result = R.drawable.load278;
+		}		
+		return result;
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.setting, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	public void saveConfig(View view) {
+		config.setLoadImageByDemand(loadImageByDemand.isChecked());
+		config.setFontSize(Integer.parseInt(fontSize.getText().toString()));
+		config.setAutoReloadForum(autoReloadForum.isChecked());		
+		config.setSupportLongAvatar(supportLongAvatar.isChecked());
+		config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
+		config.save(this);		
+		this.finish();
+	}
+	
+
+	public void animationChoosing(View view) {
+		if (view instanceof RadioButton) {
+			RadioButton button = (RadioButton)view;
+			if(button.isChecked()) {				
+				currentCheckedRadio.setChecked(false);				
+				currentCheckedRadio = button;
+			}
+		}
+	}
+}

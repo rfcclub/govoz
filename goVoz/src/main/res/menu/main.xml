@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings" android:enabled="true"/>
+	<item android:id="@+id/action_pin" android:title="@string/pin" android:orderInCategory="101" android:showAsAction="always" android:icon="@drawable/pin"/>
+	<item android:id="@+id/action_unpin" android:title="@string/unpin" android:orderInCategory="102" android:showAsAction="always" android:icon="@drawable/unpin"/>
+	<item android:id="@+id/action_refresh" android:title="@string/refresh" android:orderInCategory="103" android:showAsAction="always" android:icon="@drawable/ic_action_navigation_refresh"/>
+    <item android:id="@+id/action_login" android:title="@string/action_login" android:orderInCategory="104" android:showAsAction="never" />
+    <item android:id="@+id/action_login_preset" android:orderInCategory="105" android:title="@string/login_with_preset"></item><item android:id="@+id/action_logout" android:title="@string/action_logout" android:orderInCategory="106" android:showAsAction="never" />
+    <item android:id="@+id/action_quickrep" android:title="@string/quick_reply" android:orderInCategory="107" android:showAsAction="always" android:icon="@drawable/ic_action_social_reply" />
+        
+
+</menu>

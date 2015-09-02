@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <item name="card_flip_time_full" type="integer" format="integer">300</item>
+    <item name="card_flip_time_half" type="integer" format="integer">150</item>
+    <dimen name="thread_font_size">16dp</dimen>
+
+</resources>

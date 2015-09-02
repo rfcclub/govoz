@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#E1E4F2ff</color>
+    <color name="background_post_title">#354F81ff</color>
+    <color name="transparent">#0000ffff</color>
+    <color name="item_header">#fff6d0b6</color>
+    <color name="table_popup_text_color">#ff321809</color>
+    <color name="table_popup_table_header_bg">#ffF1B198</color>
+    <color name="table_popup_odd_bg">#ffFFE7DD</color>
+    <color name="table_popup_even_bg">#ffFFFFFF</color>
+
+    <color name="list_item_title">#fff</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="list_divider">#272727</color>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
+    <color name="pin_title_color">#ffffffff</color>
+</resources>
