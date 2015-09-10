@@ -41,6 +41,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,8 @@ import com.gotako.govoz.tasks.GotReplyQuoteTask;
 import com.gotako.govoz.tasks.IgnoreUserTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
+
+import info.hoang8f.android.segment.SegmentedGroup;
 
 public class ThreadActivity extends VozFragmentActivity implements
 		ActivityCallback<Post>, ExceptionCallback, OnLongClickListener,
@@ -111,9 +114,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 				.getCurrentThread();
 
 		this.setTitle(currentThread.getTitle());
-		/*pageNumber.setText("Page "
-				+ String.valueOf(VozCache.instance().getCurrentThreadPage())
-				+ "/" + String.valueOf(lastPage));*/
+        updateNavigationPanel();
 	}
 
 	private void getThreads() {
@@ -272,8 +273,70 @@ public class ThreadActivity extends VozFragmentActivity implements
 		}
 
 		updateStatus();
-
 		listView.fullScroll(ScrollView.FOCUS_UP);
+	}
+
+	private void updateNavigationPanel() {
+		SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
+		navigationGroup.removeAllViews();
+		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+		int currentPage = VozCache.instance().getCurrentThreadPage();
+		if(currentPage > 3) {
+			RadioButton first = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+			first.setText("<<");
+			first.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					goFirst();
+				}
+			});
+			navigationGroup.addView(first);
+		}
+		int prevStart = currentPage - 2;
+		if(prevStart < 1) prevStart = 1;
+		int extraRight = 0;
+		for (int i = prevStart; i <= currentPage; i++) {
+			RadioButton prevPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+			prevPage.setText(String.valueOf(i));
+			final int page = i;
+			prevPage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					goToPage(page);
+				}
+			});
+			navigationGroup.addView(prevPage);
+			extraRight++;
+		}
+		int nextEnd = currentPage + 2;
+		if(nextEnd < 5) nextEnd = 5;
+		if(nextEnd > lastPage) nextEnd = lastPage;
+		for (int i = currentPage + 1; i <= nextEnd; i++) {
+			RadioButton nextPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+			nextPage.setText(String.valueOf(i));
+			final int page = i;
+			nextPage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					goToPage(page);
+				}
+			});
+			navigationGroup.addView(nextPage);
+		}
+		if(nextEnd < lastPage) {
+			RadioButton last = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+			last.setText(">>");
+			last.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					goLast();
+				}
+			});
+			navigationGroup.addView(last);
+		}
+		navigationGroup.updateBackground();
+		navigationGroup.requestLayout();
+		navigationGroup.invalidate();
 	}
 
 	private void setListenerToWebView(WebView webView) {
@@ -361,7 +424,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		return url.endsWith(".jpg") || url.endsWith(".gif") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".bmp");
 	}
 
-	public void goFirst(View view) {
+	public void goFirst() {
 		int currPage = VozCache.instance().getCurrentThreadPage();
 		if (currPage > 1) {
 			VozCache.instance().setCurrentThreadPage(1);
@@ -369,25 +432,12 @@ public class ThreadActivity extends VozFragmentActivity implements
 		}
 	}
 
-	public void goPrevious(View view) {
-		int currPage = VozCache.instance().getCurrentThreadPage();
-		if (currPage > 1) {
-			currPage -= 1;
-			VozCache.instance().setCurrentThreadPage(currPage);
-			getThreads();
-		}
+	public void goToPage(int page) {
+		VozCache.instance().setCurrentThreadPage(page);
+		refresh();
 	}
 
-	public void goNext(View view) {
-		int currPage = VozCache.instance().getCurrentThreadPage();
-		if (currPage < lastPage) {
-			currPage += 1;
-			VozCache.instance().setCurrentThreadPage(currPage);
-			getThreads();
-		}
-	}
-
-	public void goLast(View view) {
+	public void goLast() {
 		int currPage = VozCache.instance().getCurrentThreadPage();
 		if (currPage < lastPage) {
 			currPage = lastPage;
@@ -400,6 +450,7 @@ public class ThreadActivity extends VozFragmentActivity implements
     protected void onResume() {
         super.onResume();
         refreshActionBarIcon();
+        updateNavigationPanel();
     }
 
 	@Override
@@ -417,17 +468,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 	@Override
 	public void refresh() {
-		posts.clear();
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-				.getCurrentThread();
-		VozThreadDownloadTask task = new VozThreadDownloadTask(this);
-		task.setContext(this);
-		task.setRetries(2);
-		task.setShowProcessDialog(true);
-		String url = VOZ_LINK + currentThread.getThreadUrl()
-				+ "&page="
-				+ String.valueOf(VozCache.instance().getCurrentThreadPage());
-		task.execute(url);
+        getThreads();
 	}
 
 	@Override

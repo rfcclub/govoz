@@ -107,13 +107,10 @@ public class ForumActivity extends VozFragmentActivity implements
 	private void updateStatus() {
 		Forum forum = VozCache.instance().getCurrentForum();
 		setTitle(forum.getForumName());
-		/*TextView tView = (TextView) findViewById(R.id.pageNumber);
-		tView.setText("Page "
-				+ String.valueOf(VozCache.instance().getCurrentForumPage())
-				+ "/" + String.valueOf(lastPage));*/
 		listView = (ListView) findViewById(R.id.threadsList);
 		// listView.smoothScrollToPosition(0);
 		listView.setSelection(0);
+        updateNavigationPanel();
 	}
 
 	public void loadThreads() {		
@@ -142,58 +139,71 @@ public class ForumActivity extends VozFragmentActivity implements
 		forums = (List<Forum>) extra[0];
 		lastPage = (Integer) extra[1];
 		insertForumToThreads();
-		GoFastEngine.notify(this, "threads");
+        GoFastEngine.notify(this, "threads");
 		VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum().getId(), threads);
 		VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum().getId(), lastPage);
 		VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum().getId(), forums);
 		updateStatus();
-        updateNavigationPanel();
-
 	}
 
     private void updateNavigationPanel() {
         SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
         navigationGroup.removeAllViews();
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        RadioButton first = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
-        first.setText("<<");
-        first.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goFirst(v);
-            }
-        });
-        navigationGroup.addView(first);
-
-        RadioButton prev = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
-        prev.setText("<");
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goPrevious(v);
-            }
-        });
-        navigationGroup.addView(prev);
-
-        RadioButton next = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
-        next.setText(">");
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goNext(v);
-            }
-        });
-        navigationGroup.addView(next);
-
-        RadioButton last = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
-        last.setText(">>");
-        last.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goLast(v);
-            }
-        });
-        navigationGroup.addView(last);
+		int currentPage = VozCache.instance().getCurrentForumPage();
+		if(currentPage > 3) {
+			RadioButton first = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+			first.setText("<<");
+			first.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					goFirst();
+				}
+			});
+			navigationGroup.addView(first);
+		}
+        int prevStart = currentPage - 2;
+        if(prevStart < 1) prevStart = 1;
+        int extraRight = 0;
+		for (int i = prevStart; i <= currentPage; i++) {
+			RadioButton prevPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+			prevPage.setText(String.valueOf(i));
+            final int page = i;
+			prevPage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToPage(page);
+                }
+            });
+            navigationGroup.addView(prevPage);
+            extraRight++;
+		}
+        int nextEnd = currentPage + 2;
+        if(nextEnd < 5) nextEnd = 5;
+        if(nextEnd > lastPage) nextEnd = lastPage;
+        for (int i = currentPage + 1; i <= nextEnd; i++) {
+            RadioButton nextPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+            nextPage.setText(String.valueOf(i));
+            final int page = i;
+            nextPage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToPage(page);
+                }
+            });
+            navigationGroup.addView(nextPage);
+        }
+        if(nextEnd < lastPage) {
+            RadioButton last = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+            last.setText(">>");
+            last.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goLast();
+                }
+            });
+            navigationGroup.addView(last);
+        }
         navigationGroup.updateBackground();
         navigationGroup.requestLayout();
         navigationGroup.invalidate();
@@ -291,36 +301,19 @@ public class ForumActivity extends VozFragmentActivity implements
                 .getFontSize() - 2);
     }
 
-	public void goFirst(View view) {
+	public void goFirst() {
 		if (VozCache.instance().getCurrentForumPage() > 1) {
 			VozCache.instance().setCurrentForumPage(1);
 			refresh();
 		}
 	}
 
-	public void goPrevious(View view) {
-		int currPage = VozCache.instance().getCurrentForumPage();
-		if (currPage > 1) {
-			currPage -= 1;
-			VozCache.instance().setCurrentForumPage(currPage);
-			refresh();
-		} else {
-			currPage = 1;
-		}
+	public void goToPage(int page) {
+        VozCache.instance().setCurrentForumPage(page);
+        refresh();
 	}
 
-	public void goNext(View view) {
-		int currPage = VozCache.instance().getCurrentForumPage();
-		if (currPage < lastPage) {
-			currPage += 1;
-			VozCache.instance().setCurrentForumPage(currPage);
-			refresh();
-		} else {
-			currPage = lastPage;
-		}
-	}
-
-	public void goLast(View view) {
+	public void goLast() {
 		int currPage = VozCache.instance().getCurrentForumPage();
 		if (currPage < lastPage) {
 			currPage = lastPage;
