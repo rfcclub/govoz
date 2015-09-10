@@ -62,9 +62,9 @@
     <string name="setting_confirm_when_ignoring">Xác nhận khi Ignore</string>
     <string name="setting_application_font">Kích thước font hiển thị:</string>
     <string name="setting_theme">Theme:</string>
-    <string name="setting_theme_dark">Ban đêm</string>
-    <string name="setting_light_theme">Ban ngày</string>
-    <string name="setting_theme_light">Ban ngày</string>
+    <string name="setting_theme_dark">Dark</string>
+    <string name="setting_light_theme">Light</string>
+    <string name="setting_theme_light">Light</string>
     <string name="setting_save_config">Lưu cấu hình</string>
     <string name="setting_font_metrics">dp</string>
     <string name="select_page_goto_page">Đi đến</string>
@@ -74,5 +74,8 @@
     <string name="supportLongAvatar">Hiển thị avatar dài</string>
     <string name="title_activity_show_image">ShowImageActivity</string>
     <string name="login_with_preset">Login with saved account</string>
+    <string name="title_activity_pm">pmActivity</string>
+    <string name="title_activity_pmview">PMViewActivity</string>
+    <string name="title_activity_inbox">InboxActivity</string>
 
 </resources>

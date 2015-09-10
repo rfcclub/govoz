@@ -91,34 +91,6 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 	protected List<Thread> doInBackground(String... params) {
 		return doInBackgroundInternal(params);
 	}
-
-	/*private List<Thread> doInBackgroundInternal(String[] params) {
-		String urlString = params[0];
-		List<Thread> result = new ArrayList<Thread>();
-		boolean completed = false;
-		// while (retries >= 0 && !completed) {
-			try {
-				Document document = null;
-				if (VozCache.instance().getCookies() == null) {
-					document = Jsoup.connect(urlString).timeout(60000).post();
-				} else {
-					document = Jsoup
-							.connect(urlString)
-							.timeout(60000)
-							.cookies(VozCache.instance().getCookies())
-							.data("securitytoken",
-									VozCache.instance().getSecurityToken())
-							.post();
-				}
-				result = processResult(document);
-				completed = true;
-			} catch (Exception e) {				
-				processError(e);				
-			}
-			// retries-=1;
-		// }
-		return result;
-	}*/
 	
 	public String getForumId() {
 		return forumId;

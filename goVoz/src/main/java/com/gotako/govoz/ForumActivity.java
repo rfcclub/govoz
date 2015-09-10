@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
+
+import info.hoang8f.android.segment.SegmentedGroup;
 
 public class ForumActivity extends VozFragmentActivity implements
 		ActivityCallback<Thread>, OnItemClickListener, ExceptionCallback {
@@ -45,14 +48,13 @@ public class ForumActivity extends VozFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		VozCache.instance().setCanShowReplyMenu(false);
-		// setContentView(R.layout.activity_forum);
 
-		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View layout = mInflater.inflate(R.layout.activity_forum, null);
 
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
 		frameLayout.addView(layout);
-
 		/*
 		 * overridePendingTransition(R.animator.right_slide_in,
 		 * R.animator.left_slide_out);
@@ -67,18 +69,17 @@ public class ForumActivity extends VozFragmentActivity implements
 						ReactiveCollectionField.class);
 		field.getAdapter().setBindingActionListener(this);
 		final FragmentActivity activity = this;
-		((TextView) layout.findViewById(R.id.pageNumber))
+		/*((TextView) layout.findViewById(R.id.pageNumber))
 				.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						FragmentManager fm = activity
 								.getSupportFragmentManager();
 						PageSelectDialog dialog = new PageSelectDialog();
-						dialog.setStyle(DialogFragment.STYLE_NORMAL,
-								R.style.ThemeWithCorners);
+						dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.ThemeWithCorners);
 						dialog.setActivity(activity);
 						dialog.show(fm, "a");
 					}
-				});
+				});*/
 		list = (ListView) layout.findViewById(R.id.threadsList);
 		list.setOnItemClickListener(this);
 		if (VozCache.instance().cache().containsKey(VozConstant.FORUM_THREADS + VozCache.instance().getCurrentForum().getId())) {
@@ -86,6 +87,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		} else { // load threads
 			loadThreads();
 		}
+        updateNavigationPanel();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -105,10 +107,10 @@ public class ForumActivity extends VozFragmentActivity implements
 	private void updateStatus() {
 		Forum forum = VozCache.instance().getCurrentForum();
 		setTitle(forum.getForumName());
-		TextView tView = (TextView) findViewById(R.id.pageNumber);
+		/*TextView tView = (TextView) findViewById(R.id.pageNumber);
 		tView.setText("Page "
 				+ String.valueOf(VozCache.instance().getCurrentForumPage())
-				+ "/" + String.valueOf(lastPage));
+				+ "/" + String.valueOf(lastPage));*/
 		listView = (ListView) findViewById(R.id.threadsList);
 		// listView.smoothScrollToPosition(0);
 		listView.setSelection(0);
@@ -145,9 +147,59 @@ public class ForumActivity extends VozFragmentActivity implements
 		VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum().getId(), lastPage);
 		VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum().getId(), forums);
 		updateStatus();
+        updateNavigationPanel();
+
 	}
 
-	private void insertForumToThreads() {
+    private void updateNavigationPanel() {
+        SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
+        navigationGroup.removeAllViews();
+        LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        RadioButton first = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+        first.setText("<<");
+        first.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goFirst(v);
+            }
+        });
+        navigationGroup.addView(first);
+
+        RadioButton prev = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+        prev.setText("<");
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goPrevious(v);
+            }
+        });
+        navigationGroup.addView(prev);
+
+        RadioButton next = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+        next.setText(">");
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goNext(v);
+            }
+        });
+        navigationGroup.addView(next);
+
+        RadioButton last = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
+        last.setText(">>");
+        last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goLast(v);
+            }
+        });
+        navigationGroup.addView(last);
+        navigationGroup.updateBackground();
+        navigationGroup.requestLayout();
+        navigationGroup.invalidate();
+    }
+
+    private void insertForumToThreads() {
 		List<Thread> newThreads = new ArrayList<Thread>();
 		for (Forum forum : forums) {
 			Thread th = new Thread();
@@ -169,7 +221,12 @@ public class ForumActivity extends VozFragmentActivity implements
 		if (!currentThread.isSubForum()) {
 			VozCache.instance().setCurrentThread(currentThread);
 			VozCache.instance().setCurrentThreadPage(1);
-			Intent intent = new Intent(this, ThreadActivity.class);
+            String url = VOZ_LINK + "/"
+                    + currentThread.getThreadUrl()
+                    + "&page="
+                    + String.valueOf(VozCache.instance().getCurrentThreadPage());
+            VozCache.instance().navigationList.add(url);
+            Intent intent = new Intent(this, ThreadActivity.class);
 			startActivity(intent);
 		} else {
 			VozCache.instance().setCurrentThread(null);
@@ -188,7 +245,9 @@ public class ForumActivity extends VozFragmentActivity implements
 						VozCache.instance().getCurrentForum());
 				VozCache.instance().setCurrentForum(subForum);
 				subForum.setParent(VozCache.instance().getCurrentParentForum());
-				VozCache.instance().setCurrentForumPage(1);
+                String forumUrl = FORUM_URL_F + subForum + FORUM_URL_ORDER + "1";
+                VozCache.instance().navigationList.add(forumUrl);
+                VozCache.instance().setCurrentForumPage(1);
 				loadThreads();
 			}
 		}
@@ -223,14 +282,14 @@ public class ForumActivity extends VozFragmentActivity implements
 		if (currentRenderItem.isSticky()) { // set red background for text
 			title.setTextColor(Color.RED);
 		} else {
-			title.setTextColor(Color.parseColor("#23497C"));
+			title.setTextColor(Color.WHITE);
 		}
 		title.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
 				.getFontSize());
 		TextView poster = (TextView) viewSection.findViewById(R.id.poster);
 		poster.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
-				.getFontSize() - 2);
-	}
+                .getFontSize() - 2);
+    }
 
 	public void goFirst(View view) {
 		if (VozCache.instance().getCurrentForumPage() > 1) {
@@ -270,15 +329,24 @@ public class ForumActivity extends VozFragmentActivity implements
 		}
 	}
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshActionBarIcon();
+        updateNavigationPanel();
+    }
+
 	@Override
 	public void onBackPressed() {
-		if (VozCache.instance().getCurrentParentForum() == null) {
+        if (VozCache.instance().navigationList.size() > 0)
+            VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
+        if (VozCache.instance().getCurrentParentForum() == null) {
 			overridePendingTransition(R.animator.left_slide_in,
-					R.animator.zoom_out);
-			Intent intent = new Intent(this, MainActivity.class);
+                    R.animator.zoom_out);
+            Intent intent = new Intent(this, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-					| Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum().getId());
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum().getId());
 			VozCache.instance().cache().remove(FORUM_LAST_PAGE  + VozCache.instance().getCurrentForum().getId());
 			VozCache.instance().cache().remove(FORUM_POSITION);
 			VozCache.instance().setCurrentForum(null);
@@ -369,7 +437,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		item.tag = VozCache.instance().getCurrentForum();
 		item.page = VozCache.instance().getCurrentForumPage();
 
-		pinPage(item);
+		//pinPage(item);
 		pinMenu.setVisible(true);
 		unpinMenu.setVisible(false);
 	}
@@ -382,7 +450,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		NavDrawerItem item = new NavDrawerItem(forum.getForumName(), forumUrl,
 				"forum");
 
-		unpinPage(item);
+		//unpinPage(item);
 		pinMenu.setVisible(false);
 		unpinMenu.setVisible(true);
 	}

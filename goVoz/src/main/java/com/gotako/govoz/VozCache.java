@@ -15,6 +15,7 @@ import android.support.v4.util.LruCache;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.data.VozMenuItem;
 
 /**
  * Cache contains current state of application
@@ -40,9 +41,11 @@ public class VozCache {
 	private boolean canShowReplyMenu;
 	private Forum currentParentForum = null;
 	private int width;
-	private int height;	
-	private List<NavDrawerItem> pinItemList;	
+	private int height;
+	public List<NavDrawerItem> pinItemList;
+	public List<VozMenuItem> menuItemList;
 	private Map<String, Object> forumCache = null;
+	public List<String> navigationList;
 	
 	private VozCache() {
 		cookies = null;
@@ -50,6 +53,7 @@ public class VozCache {
         memoryCache = new LruCache(cacheSize);
         forumCache = new HashMap<String, Object>();
         pinItemList = new ArrayList<NavDrawerItem>();
+        navigationList = new ArrayList<String>();
 	}
 
 	public static VozCache instance() {
@@ -188,5 +192,5 @@ public class VozCache {
 
 	public Map<String, Object> cache() {
 		return forumCache;
-	}	
+	}
 }

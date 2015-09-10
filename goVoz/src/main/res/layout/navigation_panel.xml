@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentTop="true"
+    android:gravity="center"
+    android:layout_gravity="center_horizontal"
+    android:background="@android:color/transparent"
+    >
+    <info.hoang8f.android.segment.SegmentedGroup
+        android:id="@+id/navigation_group"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+    </info.hoang8f.android.segment.SegmentedGroup>
+</LinearLayout>

@@ -6,5 +6,7 @@
     <item name="card_flip_time_full" type="integer" format="integer">300</item>
     <item name="card_flip_time_half" type="integer" format="integer">150</item>
     <dimen name="thread_font_size">16dp</dimen>
+    <dimen name="radio_button_conner_radius">5dp</dimen>
+    <dimen name="button_conner_radius">5dp</dimen>
 
 </resources>

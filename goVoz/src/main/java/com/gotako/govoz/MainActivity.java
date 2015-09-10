@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -27,6 +28,9 @@ import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.annotation.BindingCollection;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
+
+import static com.gotako.govoz.VozConstant.FORUM_URL_F;
+import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
 
 public class MainActivity extends VozFragmentActivity implements
 		ActivityCallback<Forum>, OnChildClickListener, ExceptionCallback {	
@@ -45,14 +49,11 @@ public class MainActivity extends VozFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		BugSenseHandler.initAndStartSession(this, "2330a14e");
 		BugSenseHandler.setLogging(1000, "*:W");
-		super.onCreate(savedInstanceState);		
-		
+		super.onCreate(savedInstanceState);
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View layout = mInflater.inflate(R.layout.activity_main, null);
-		
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
 		frameLayout.addView(layout);
-		
 		// if login then do login
 		Display display=getWindowManager().getDefaultDisplay();
 		DisplayMetrics outMetrics = new DisplayMetrics();
@@ -60,22 +61,19 @@ public class MainActivity extends VozFragmentActivity implements
 		VozCache.instance().setHeight(outMetrics.heightPixels);
 		VozCache.instance().setWidth(outMetrics.widthPixels);
 		overridePendingTransition(android.R.anim.fade_in,
-				android.R.anim.fade_out);
+                android.R.anim.fade_out);
 		VozCache.instance().reset();
 		VozCache.instance().setCanShowReplyMenu(false);		
 		VozConfig config = VozConfig.instance();
-		config.load(this);		
-		SharedPreferences prefs = this.getSharedPreferences("VOZINFO", Context.MODE_PRIVATE);
+		config.load(this);
+		VozCache.instance().navigationList.clear();
+		SharedPreferences prefs = this.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
 		boolean autoLogin = false;
-		if(prefs.contains("USERNAME") && prefs.contains("PASSWORD")) {
+		if(prefs.contains(VozConstant.USERNAME) && prefs.contains(VozConstant.PASSWORD)) {
 			// if not login so do login
 			if (VozCache.instance().getCookies() == null) {
-				/*Intent intent = new Intent(this, AutoLoginActivity.class);
-				startActivity(intent);
-				finish();
-				autoLogin = true;*/
-				String username = prefs.getString("USERNAME", "guest");
-				String password = prefs.getString("PASSWORD", "guest");
+				String username = prefs.getString(VozConstant.USERNAME, "guest");
+				String password = prefs.getString(VozConstant.PASSWORD, "guest");
 				AutoLoginBackgroundService albs = new AutoLoginBackgroundService(this);
 				albs.doLogin(username, password);				
 			}
@@ -89,9 +87,9 @@ public class MainActivity extends VozFragmentActivity implements
 		if(!autoLogin) {
 			getVozForums();
 		}
+
 	}
 
-	
 	private void getVozForums() {
 		VozMainForumDownloadTask task = new VozMainForumDownloadTask(this);
 		task.setContext(this);		
@@ -145,12 +143,12 @@ public class MainActivity extends VozFragmentActivity implements
 		VozCache.instance().setCurrentForum(selectedForum);
 		VozCache.instance().setCurrentForumPage(1);
 		VozCache.instance().cache().clear();
-		//VozCache.instance().getLookAheadPosts().clear();
-		Intent intent = new Intent(this, ForumActivity.class);
+        String forumUrl = FORUM_URL_F + selectedForum + FORUM_URL_ORDER + String.valueOf(VozCache.instance().getCurrentForumPage());
+        VozCache.instance().navigationList.add(forumUrl);
+        Intent intent = new Intent(this, ForumActivity.class);
 		startActivity(intent);		
 		return true;
 	}
-
 
 	@Override
 	public void refresh() {
@@ -162,9 +160,15 @@ public class MainActivity extends VozFragmentActivity implements
 		ExpandAnimation expandAni = new ExpandAnimation(convertView, 500);
 		convertView.startAnimation(expandAni);		
 	}
-	
-	@Override
-	public void onBackPressed() {
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshActionBarIcon();
+    }
+
+    @Override
+    public void onBackPressed() {
 		this.finish();
 	}
 

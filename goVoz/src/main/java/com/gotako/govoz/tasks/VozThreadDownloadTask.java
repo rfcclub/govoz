@@ -87,9 +87,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						// if not smilies so wrap it inside an inline block and restrict the size						
 						if(!image.attr("src").contains("images/smilies/")) {
 							if(image.attr("src").endsWith("gif")) { // transparent background
-								image.attr("style","display: block;max-width: 100%");
+								image.attr("style","display: block;max-width: 60%");
 							} else {
-								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loader64x64.gif) no-repeat center center");
+								image.attr("style","display: block;max-width: 60%;background:url(file:///android_res/drawable/loader64x64.gif) no-repeat center center");
 							}
 							image.wrap("<div style='display: inline-block'></div>");
 						}						
@@ -99,14 +99,23 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					Elements quotes = first.select("div[style^=margin:20px;]");
 					if(quotes!= null && quotes.size()>0) {
 						for(Element quote:quotes){
-							quote.attr("style", "margin:0px; margin-top:1px;width:100%");
+							quote.attr("style", "margin:0px; margin-top:1px;width:100%;color:white");
+							Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
+							if (tableQuote!=null) {
+								tableQuote.attr("cellpadding","2");
+								tableQuote.removeAttr("class");
+								Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
+								if(td != null) {
+									td.attr("style","border:1px solid");
+								}
+							}
 						}
 					}
 					// get sign
 					StringBuilder ctent = new StringBuilder(first.toString());
 					Element possibleSign = first.nextElementSibling();
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
-						ctent.append(possibleSign.toString());
+						ctent.append("<div style='display: inline-block;width:100%;color:white'>" + possibleSign.toString() + "</div>");
 					}
 					
 					post.setContent(ctent.toString());					

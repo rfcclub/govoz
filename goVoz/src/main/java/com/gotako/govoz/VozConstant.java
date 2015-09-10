@@ -11,4 +11,7 @@ public class VozConstant {
 	public static final String FORUM_LAST_PAGE = "FORUM_LAST_PAGE";
 	public static final String FORUM_THREADS = "FORUM_THREADS";
 	public static final String SUB_FORUMS = "SUM_FORUMS";
+	public static final String VOZINFO = "VOZINFO";
+	public static final String USERNAME = "USERNAME";
+	public static final String PASSWORD = "PASSWORD";
 }

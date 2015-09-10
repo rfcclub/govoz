@@ -8,14 +8,18 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.jsoup.nodes.Document;
+import org.kobjects.htmlview.HtmlView;
+import org.w3c.dom.Text;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -63,7 +67,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 	private int selectIndex;
 	private ScrollView listView = null;	
 	private LayoutInflater viewInflater;
-	private TextView pageNumber;
+	//private TextView pageNumber;
 	private LinearLayout layout;
 	private SparseArray<WebView> webViewList;
 
@@ -74,7 +78,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View thread_layout = mInflater.inflate(R.layout.activity_thread, null);
-
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
 		frameLayout.addView(thread_layout);
 
@@ -82,7 +85,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		listView.setAnimationCacheEnabled(true);
         listView.setDrawingCacheEnabled(true);
         listView.setAlwaysDrawnWithCacheEnabled(true);
-		pageNumber = (TextView) thread_layout.findViewById(R.id.pageNumber);
+		//pageNumber = (TextView) thread_layout.findViewById(R.id.pageNumber);
 		layout = (LinearLayout) listView.findViewById(R.id.postListLayout);
 		if (VozCache.instance().getCookies() != null) {
 			VozCache.instance().setCanShowReplyMenu(true);
@@ -108,10 +111,9 @@ public class ThreadActivity extends VozFragmentActivity implements
 				.getCurrentThread();
 
 		this.setTitle(currentThread.getTitle());
-
-		pageNumber.setText("Page "
+		/*pageNumber.setText("Page "
 				+ String.valueOf(VozCache.instance().getCurrentThreadPage())
-				+ "/" + String.valueOf(lastPage));
+				+ "/" + String.valueOf(lastPage));*/
 	}
 
 	private void getThreads() {
@@ -136,15 +138,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 					+ "&page="
 					+ String.valueOf(VozCache.instance().getCurrentThreadPage());
 			task.execute(url);
-			// if (bounded && cachePostService != null) {
-			// cachePostService.cachePost();
-			// }
-//			String threadUrl = VOZFORUM_URL
-//					+ currentThread.getThreadUrl()
-//					+ "&page="
-//					+ String.valueOf(VozCache.instance().getCurrentThreadPage());
-//			task = new VozThreadDownloadTask(this);
-//			task.execute(threadUrl);
 		}
 	}
 
@@ -157,15 +150,13 @@ public class ThreadActivity extends VozFragmentActivity implements
 		posts = result;
 		lastPage = (Integer) extra[0];
 		layout.removeAllViews();
-		viewInflater = (LayoutInflater) this
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		webViewList = new SparseArray<WebView>();
 		for (int i = 0; i < posts.size(); i++) {
 			View view = viewInflater.inflate(R.layout.post_item, null);
 
 			Post post = posts.get(i);
 			final WebView webView = (WebView) view.findViewById(R.id.content);
-
 			webView.getSettings().setJavaScriptEnabled(false);
 			// disable all click listener in webview
 			webView.setClickable(false);
@@ -188,33 +179,24 @@ public class ThreadActivity extends VozFragmentActivity implements
 			Display display = getWindowManager().getDefaultDisplay();
 			DisplayMetrics outMetrics = new DisplayMetrics();
 			display.getMetrics(outMetrics);
-			String head = "<head><meta name='viewport' content='initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0' /></head>";
+			String head = "<head><style type='text/css'>body{color: #fff; background-color: #000;}</style></head>";
 			utfContent = head + "<div style='width="
 					+ String.valueOf(outMetrics.widthPixels) + "'>"
 					+ utfContent + "</div>";
 			post.setContent(utfContent);
-
-			// webView.getSettings().setLoadWithOverviewMode(true);
-			// webView.getSettings().setUseWideViewPort(true);
 			webView.getSettings().setBuiltInZoomControls(false);
             webView.getSettings().setSupportZoom(false);
-            webView.setDrawingCacheEnabled(true);
-            webView.setAlwaysDrawnWithCacheEnabled(true);
+            webView.setBackgroundColor(Color.BLACK);
 			try {
 				TaskHelper.disableSSLCertCheck();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-			webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(),
-					"text/html", "utf-8", null);
-			
+			webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(),"text/html", "utf-8", null);
 			setListenerToWebView(webView);
-			
-			//webView.refreshDrawableState();
-			//webView.requestLayout();
-			//webView.invalidate();
+//            HtmlView htmlView = (HtmlView)findViewById(R.id.content_html);
+//            htmlView.loadHtml(post.getContent());
 			webViewList.append(i, webView);			
 			
 			ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
@@ -274,17 +256,17 @@ public class ThreadActivity extends VozFragmentActivity implements
 					if (status != null && status.booleanValue()) {
 						webView.setVisibility(View.GONE);
 						subTitle.setVisibility(View.GONE);
-						((ImageView) v).setImageResource(R.drawable.arrow_down);
+						((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_down_white_18dp);
 						v.setTag(Boolean.valueOf(false));
 					} else {
 						webView.setVisibility(View.VISIBLE);
 						subTitle.setVisibility(View.VISIBLE);
-						((ImageView) v).setImageResource(R.drawable.arrow_up);
+						((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_up_white_18dp);
 						v.setTag(Boolean.valueOf(true));
 					}
 				}
 			});
-			imageViewHide.setTag(null);
+			imageViewHide.setTag(true);
 			layout.addView(view);			
 
 		}
@@ -414,11 +396,18 @@ public class ThreadActivity extends VozFragmentActivity implements
 		}
 	}
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshActionBarIcon();
+    }
+
 	@Override
 	public void onBackPressed() {
 		overridePendingTransition(R.animator.left_slide_in, R.animator.zoom_out);
-
-		VozCache.instance().setCurrentThread(null);
+        if (VozCache.instance().navigationList.size() > 0)
+            VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
+        VozCache.instance().setCurrentThread(null);
 		VozCache.instance().setCurrentThreadPage(1);
 		Intent intent = new Intent(this, ForumActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -489,7 +478,8 @@ public class ThreadActivity extends VozFragmentActivity implements
 	private void showImageInWebView() {
 		Post post = posts.get(selectIndex);
 		WebView webView = webViewList.get(selectIndex);
-		webView.setWebViewClient(new WebViewClient() {});
+		//webView.setWebViewClient(new WebViewClient() {});
+		setListenerToWebView(webView);
 		webView.loadDataWithBaseURL(VOZ_LINK,
 				post.getContent(), "text/html", "utf-8", null);		
 		webView.refreshDrawableState();
@@ -611,7 +601,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		item.tag = currentThread;
 		item.page = VozCache.instance().getCurrentThreadPage();
 
-		pinPage(item);
+		//pinPage(item);
 		pinMenu.setVisible(true);
 		unpinMenu.setVisible(false);
 	}
@@ -627,7 +617,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		item.tag = VozCache.instance().getCurrentThread();
 		item.page = VozCache.instance().getCurrentThreadPage();
 
-		unpinPage(item);
+		//unpinPage(item);
 		pinMenu.setVisible(false);
 		unpinMenu.setVisible(true);
 	}

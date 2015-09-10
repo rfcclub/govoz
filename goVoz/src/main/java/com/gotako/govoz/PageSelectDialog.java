@@ -6,6 +6,7 @@ package com.gotako.govoz;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,21 +23,34 @@ import com.gotako.util.Utils;
  * @author HA LINH
  *
  */
-public class PageSelectDialog extends android.support.v4.app.DialogFragment {
+public class PageSelectDialog extends android.support.v7.app.AppCompatDialogFragment {
 
 	private Activity activity;
 	
 	private EditText editText;
-	
-	public PageSelectDialog() {}
+
+	public PageSelectDialog() {
+	}
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		Dialog dialog = super.onCreateDialog(savedInstanceState);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+		AppCompatDialog dialog = new AppCompatDialog(getActivity(), getTheme());
 		return dialog;
 	}
+
+	@Override
+    public void setupDialog(Dialog dialog, int style) {
+        switch (style) {
+            case STYLE_NO_INPUT:
+                dialog.getWindow().addFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                // fall through...
+            case STYLE_NO_FRAME:
+            case STYLE_NO_TITLE:
+                ((AppCompatDialog) dialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

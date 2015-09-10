@@ -9,7 +9,7 @@
         android:id="@+id/forumSection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/expand_list_selected" >
+        android:background="@color/expand_list_selected_dark" >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -25,7 +25,7 @@
                 android:paddingLeft="3dp"
                 android:paddingTop="3dp"
                 android:text="Large Text"
-                android:textColor="#23497C"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

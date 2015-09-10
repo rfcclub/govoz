@@ -2,6 +2,7 @@
 <resources>
     <color name="background">#E1E4F2ff</color>
     <color name="background_post_title">#354F81ff</color>
+    <color name="background_post_title_dark">#000000</color>
     <color name="transparent">#0000ffff</color>
     <color name="item_header">#fff6d0b6</color>
     <color name="table_popup_text_color">#ff321809</color>
@@ -16,4 +17,14 @@
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
     <color name="pin_title_color">#ffffffff</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="expand_list_selected_dark">#000000</color>
+    <color name="background_material_light_dark">#505050</color>
+    <color name="black">#000000</color>
+    <color name="radio_button_selected_color">#FFFFFF</color>
+    <color name="radio_button_unselected_color">@android:color/transparent</color>
+    <color name="button_color">#ffED1B24</color>
+    <color name="button_pressed_color">#ffFF6A30</color>
+    <color name="button_text_color">#ffffffff</color>
 </resources>

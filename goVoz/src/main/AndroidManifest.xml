@@ -2,20 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gotako.govoz"
     android:installLocation="auto"
-    android:versionCode="25"
-    android:versionName="2.9" >
+    android:versionCode="28"
+    android:versionName="3.0">
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="16" />
 
-    <uses-permission android:name="android.permission.INTERNET" />    
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
@@ -58,6 +62,13 @@
         <activity
             android:name=".ShowImageActivity"
             android:label="@string/title_activity_show_image" >
+        </activity>
+        <activity
+            android:name=".PMViewActivity"
+            android:label="@string/title_activity_pmview" ></activity>
+        <activity
+            android:name=".InboxActivity"
+            android:label="@string/title_activity_inbox">
         </activity>
     </application>
 

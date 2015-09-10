@@ -33,69 +33,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/navigationPanel"
-        android:layout_width="fill_parent"
+    <include layout="@layout/navigation_panel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_weight="0.2"
-        android:background="@drawable/frame_border"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/fFirst"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|left|center_horizontal"
-            android:layout_weight="10"
-            android:background="@drawable/button_border"
-            android:onClick="goFirst"
-            android:text="&lt;&lt;"
-            android:textStyle="bold"
-            android:typeface="normal" />
-
-        <Button
-            android:id="@+id/fPrevious"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_vertical|center_horizontal"
-            android:layout_weight="10"
-            android:background="@drawable/button_border"
-            android:onClick="goPrevious"
-            android:text="&lt;"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <TextView
-            android:id="@+id/pageNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Page 1/1"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <Button
-            android:id="@+id/fNext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center_vertical|center_horizontal"
-            android:layout_weight="10"
-            android:background="@drawable/button_border"
-            android:onClick="goNext"
-            android:text=">"
-            android:textStyle="bold"
-            android:typeface="sans" />
-
-        <Button
-            android:id="@+id/fLast"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right|center_horizontal"
-            android:layout_weight="10"
-            android:background="@drawable/button_border"
-            android:onClick="goLast"
-            android:text=">>"
-            android:textStyle="bold"
-            android:typeface="sans" />
-    </LinearLayout>
+    />
 
 </LinearLayout>
