@@ -299,6 +299,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 			RadioButton prevPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
 			prevPage.setText(String.valueOf(i));
 			final int page = i;
+			if(i == currentPage) prevPage.setChecked(true);
 			prevPage.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

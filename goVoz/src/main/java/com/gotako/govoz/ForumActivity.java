@@ -69,28 +69,40 @@ public class ForumActivity extends VozFragmentActivity implements
 						ReactiveCollectionField.class);
 		field.getAdapter().setBindingActionListener(this);
 		final FragmentActivity activity = this;
-		/*((TextView) layout.findViewById(R.id.pageNumber))
-				.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						FragmentManager fm = activity
-								.getSupportFragmentManager();
-						PageSelectDialog dialog = new PageSelectDialog();
-						dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.ThemeWithCorners);
-						dialog.setActivity(activity);
-						dialog.show(fm, "a");
-					}
-				});*/
 		list = (ListView) layout.findViewById(R.id.threadsList);
 		list.setOnItemClickListener(this);
-		if (VozCache.instance().cache().containsKey(VozConstant.FORUM_THREADS + VozCache.instance().getCurrentForum().getId())) {
-			reloadThreadsFromCache();
-		} else { // load threads
-			loadThreads();
-		}
+        processNavigationLink();
         updateNavigationPanel();
 	}
 
-	@SuppressWarnings("unchecked")
+    private void processNavigationLink() {
+        // last element of list should be forum link
+        String forumLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
+        String[] parameters = forumLink.split("\\?")[1].split("\\&");
+        String firstParam = parameters[0];
+        String forumId = firstParam.split("=")[1];
+        String currentForumId = VozCache.instance().getCurrentForum().getId();
+        if(currentForumId.equals(forumId)) {
+            if (VozCache.instance().cache().containsKey(VozConstant.FORUM_THREADS + currentForumId)) {
+                reloadThreadsFromCache();
+            } else { // load threads
+                loadThreads();
+            }
+        } else {
+            int foundIndex = -1;
+            for(int i =1; i < parameters.length; i ++) {
+                if(parameters[i].startsWith("page=")) {
+                    foundIndex =i;
+                    break;
+                }
+            }
+            int forumPage = 1;
+            if(foundIndex > -1) forumPage = Integer.parseInt(parameters[foundIndex].split("\\=")[1]);
+            loadThreads(forumId, forumPage);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
 	private void reloadThreadsFromCache() {
 		threads = (List<Thread>) VozCache.instance().cache().get(VozConstant.FORUM_THREADS + VozCache.instance().getCurrentForum().getId());
 		GoFastEngine.notify(this, "threads");
@@ -113,16 +125,26 @@ public class ForumActivity extends VozFragmentActivity implements
         updateNavigationPanel();
 	}
 
-	public void loadThreads() {		
+    public void loadThreads() {
+        loadThreads(VozCache.instance().getCurrentForum().getId(), VozCache.instance().getCurrentForumPage());
+    }
+	public void loadThreads(String forumId, int page) {
 		VozForumDownloadTask task = new VozForumDownloadTask(this);
-		String forumId = VozCache.instance().getCurrentForum().getId();
+        String _forumId = forumId;
+        if(forumId == null) {
+            _forumId = VozCache.instance().getCurrentForum().getId();
+        }
+        int _page = page;
+        if(_page == 0) {
+            _page = VozCache.instance().getCurrentForumPage();
+        }
 		// load threads for forum
 		task.setShowProcessDialog(true);
 		task.setContext(this);
-		task.setRetries(2);
-		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
-				+ String.valueOf(VozCache.instance().getCurrentForumPage());
-		task.setForumId(forumId);
+		task.setRetries(1);
+		String forumUrl = FORUM_URL_F + _forumId + FORUM_URL_ORDER
+				+ String.valueOf(_page);
+		task.setForumId(_forumId);
 		task.execute(forumUrl);
 	}
 
@@ -169,6 +191,7 @@ public class ForumActivity extends VozFragmentActivity implements
 			RadioButton prevPage = (RadioButton)mInflater.inflate(R.layout.navigation_button, null);
 			prevPage.setText(String.valueOf(i));
             final int page = i;
+			if(i == currentPage) prevPage.setChecked(true);
 			prevPage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -258,7 +281,7 @@ public class ForumActivity extends VozFragmentActivity implements
                 String forumUrl = FORUM_URL_F + subForum + FORUM_URL_ORDER + "1";
                 VozCache.instance().navigationList.add(forumUrl);
                 VozCache.instance().setCurrentForumPage(1);
-				loadThreads();
+				loadThreads(subForum.getId(), 1);
 			}
 		}
 	}
@@ -331,8 +354,10 @@ public class ForumActivity extends VozFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-        if (VozCache.instance().navigationList.size() > 0)
-            VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
+        List<String> navigationList = VozCache.instance().navigationList;
+        if (navigationList.size() > 0)
+            navigationList.remove(VozCache.instance().navigationList.size() - 1);
+
         if (VozCache.instance().getCurrentParentForum() == null) {
 			overridePendingTransition(R.animator.left_slide_in,
                     R.animator.zoom_out);
@@ -359,13 +384,9 @@ public class ForumActivity extends VozFragmentActivity implements
 			if (VozCache.instance().cache().containsKey(FORUM_THREADS + VozCache.instance().getCurrentForum().getId())) {
 				reloadThreadsFromCache();
 			} else { // load threads
-				loadThreads();
+                loadThreads();
 			}
 		}
-	}
-
-	public void goRefresh(View view) {
-		loadThreads();
 	}
 
 	public int getLastPage() {
@@ -374,7 +395,7 @@ public class ForumActivity extends VozFragmentActivity implements
 
 	@Override
 	public void refresh() {
-		loadThreads();
+        loadThreads();
 	}
 
 	@Override

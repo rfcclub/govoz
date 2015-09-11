@@ -21,7 +21,7 @@ public class SegmentedGroup extends RadioGroup {
     private int oneDP;
     private Resources resources;
     private int mTintColor;
-    private int mCheckedTextColor = Color.WHITE;
+    private int mCheckedTextColor = Color.BLACK;
 
     public SegmentedGroup(Context context) {
         super(context);
