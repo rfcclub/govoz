@@ -3,6 +3,7 @@
  */
 package com.gotako.govoz.service;
 
+import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 import com.gotako.govoz.VozCache;
@@ -30,9 +31,8 @@ public class CachePostService extends Service {
 	}
 	
 	public void cachePost() {
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-				.getCurrentThread();
-		String threadUrl = VOZ_LINK + "/"  + currentThread.getThreadUrl()
+		String currentThreadId = String.valueOf(VozCache.instance().getCurrentThread());
+		String threadUrl = THREAD_URL_T + "/"  + currentThreadId
 				+ "&page="
 				+ String.valueOf(VozCache.instance().getCurrentThreadPage());
 		VozThreadDownloadTask task = new VozThreadDownloadTask(null);		

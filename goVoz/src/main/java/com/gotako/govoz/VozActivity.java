@@ -144,15 +144,7 @@ public class VozActivity extends BaseActivity implements OnMenuItemClickListener
 	}
 
 	private void doRep() {
-		if (VozCache.instance().getCurrentThread().isClosed()) {
-			CharSequence text = "Sorry! This thread is closed!";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(this, text, duration);
-			toast.show();
-		} else { // reply thread
-			Intent intent = new Intent(this, PostActivity.class);
-			startActivity(intent);
-		}
+		// do nothing
 	}
 
 	private void doLogout() {
