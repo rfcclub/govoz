@@ -94,9 +94,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						// if not smilies so wrap it inside an inline block and restrict the size						
 						if(!image.attr("src").contains("images/smilies/")) {
 							if(image.attr("src").endsWith("gif")) { // transparent background
-								image.attr("style","display: block;max-width: 60%");
+								image.attr("style","display: block;max-width: 100%");
 							} else {
-								image.attr("style","display: block;max-width: 60%;background:url(file:///android_res/drawable/loader64x64.gif) no-repeat center center");
+								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loader64x64.gif) no-repeat center center");
 							}
 							image.wrap("<div style='display: inline-block'></div>");
 						}						
@@ -122,7 +122,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					StringBuilder ctent = new StringBuilder(first.toString());
 					Element possibleSign = first.nextElementSibling();
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
-						ctent.append("<div style='display: inline-block;width:100%;color:white'>" + possibleSign.toString() + "</div>");
+						ctent.append("<div style='display: inline;width:100%;color:white'>" + possibleSign.toString() + "</div>");
 					}
 					
 					post.setContent(ctent.toString());					
