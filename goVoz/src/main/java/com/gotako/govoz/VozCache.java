@@ -30,16 +30,16 @@ public class VozCache {
 	private LruCache memoryCache;
 	
 	private static VozCache vozCache = null;
-	private Forum currentForum;
+	private int currentForumId;
 	private int currentForumPage;
-	private Thread currentThread;
+	private int currentThreadId;
 	private int lastPage = 1;
 	private int currentThreadPage;
 	private Map<String,String> cookies;
 	private String securityToken ="guest";
 	private String userId ="";
 	private boolean canShowReplyMenu;
-	private Forum currentParentForum = null;
+	private int currentParentForumId = -1;
 	private int width;
 	private int height;
 	public List<NavDrawerItem> pinItemList;
@@ -79,12 +79,12 @@ public class VozCache {
 		VozCache.vozCache = vozCache;
 	}
 
-	public Forum getCurrentForum() {
-		return currentForum;
+	public int getCurrentForum() {
+		return currentForumId;
 	}
 
-	public void setCurrentForum(Forum currentForum) {
-		this.currentForum = currentForum;
+	public void setCurrentForum(int currentForum) {
+		this.currentForumId = currentForum;
 	}
 
 	public int getCurrentForumPage() {
@@ -95,12 +95,12 @@ public class VozCache {
 		this.currentForumPage = currentForumPage;
 	}
 
-	public Thread getCurrentThread() {
-		return currentThread;
+	public int getCurrentThread() {
+		return currentThreadId;
 	}
 
-	public void setCurrentThread(Thread currentThread) {
-		this.currentThread = currentThread;
+	public void setCurrentThread(int currentThread) {
+		this.currentThreadId = currentThread;
 	}
 
 	public int getCurrentThreadPage() {
@@ -112,10 +112,10 @@ public class VozCache {
 	}
 
 	public void reset() {
-		currentThread = null;
+		currentThreadId = -1;
 		currentThreadPage = 0;
 		currentForumPage = 0;
-		currentForum = null;
+		currentForumId = -1;
 	}
 
 	public Map<String, String> getCookies() {
@@ -150,12 +150,12 @@ public class VozCache {
 		this.canShowReplyMenu = canShowReplyMenu;
 	}
 
-	public Forum getCurrentParentForum() {
-		return currentParentForum;
+	public int getCurrentParentForum() {
+		return currentParentForumId;
 	}
 
-	public void setCurrentParentForum(Forum currentParentForum) {
-		this.currentParentForum = currentParentForum;
+	public void setCurrentParentForum(int currentParentForum) {
+		this.currentParentForumId = currentParentForum;
 	}
 
 	public int getWidth() {

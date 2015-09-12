@@ -18,6 +18,7 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 	private List<Forum> subforums = new ArrayList<Forum>();
 	private int lastPage;
 	private String forumId;
+	private String forumName;
 	
 	public VozForumDownloadTask(ActivityCallback<Thread> callback) {
 		super(callback);
@@ -27,6 +28,8 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 	public List<Thread> processResult(Document document) {
 		List<Thread> listThreads = new ArrayList<Thread>();
 		subforums = TaskHelper.parseSubForum(document);
+		Element title = document.select("title").first();
+		forumName = title.text().split("-")[0].trim();
 		Elements selected = document.select("table[id=threadslist]");
 		if (selected.size() == 0)
 			return listThreads;
@@ -66,7 +69,7 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 			}
 		}
 		//  get last page
-		String forumId = VozCache.instance().getCurrentForum().getId();
+		String forumId = String.valueOf(VozCache.instance().getCurrentForum());
 		Elements pages = document.select("a[class=smallfont][href*=page=][href^=forumdisplay.php?f="+forumId+"][title^=Last Page]");
 		lastPage = VozCache.instance().getCurrentForumPage();
 		for(Element linkPage : pages) {
@@ -83,7 +86,7 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 		doOnPostExecute(result);
 		// do call back
 		if (callback != null) {
-			callback.doCallback(result, subforums,lastPage);
+			callback.doCallback(result, subforums, lastPage, forumName);
 		}
 	}
 

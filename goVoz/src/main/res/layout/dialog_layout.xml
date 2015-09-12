@@ -44,7 +44,7 @@
             android:layout_below="@+id/txtPageNumber"
             android:layout_marginRight="22dp"
             android:layout_marginTop="28dp"
-            android:text="@string/select_page_cancel" />
+            android:text="@string/dialog_cancel" />
 
         <Button
             android:id="@+id/btnGo"
@@ -54,7 +54,7 @@
             android:layout_alignBottom="@+id/btnCancel"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="22dp"
-            android:text="@string/select_page_goto_page" />
+            android:text="@string/dialog_ok" />
 
     </RelativeLayout>
 

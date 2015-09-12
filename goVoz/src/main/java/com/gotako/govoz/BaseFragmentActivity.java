@@ -15,11 +15,13 @@ import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 import com.gotako.util.Utils;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -160,6 +162,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                 long id) {
+            FragmentManager fm = BaseFragmentActivity.this.getSupportFragmentManager();
         	if (position < navDrawerItems.size()) {
                 VozMenuItem item = navDrawerItems.get(position);
                 switch (item.type) {
@@ -170,12 +173,28 @@ public class BaseFragmentActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 1:
-
+                        ThreadSelectDialog threadSelectDialog = new ThreadSelectDialog();
+                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
+                        threadSelectDialog.setActivity(BaseFragmentActivity.this);
+                        threadSelectDialog.setTitle(getResources().getString(R.string.thread_select_title));
+                        threadSelectDialog.show(fm, "threadSelect");
                         break;
                     case 2:
+                        ForumSelectDialog forumSelectDialog = new ForumSelectDialog();
+                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
+                        forumSelectDialog.setActivity(BaseFragmentActivity.this);
+                        forumSelectDialog.setTitle(getResources().getString(R.string.forum_select_title));
+                        forumSelectDialog.show(fm, "forumSelect");
+                        break;
                     case 3:
                     case 4:
                     case 5:
+                        Intent intent1 = new Intent(BaseFragmentActivity.this,SettingActivity.class);
+                        BaseFragmentActivity.this.startActivity(intent1);
+                        break;
+                    case 6:
+                        BaseFragmentActivity.this.finishAffinity();
+                        break;
                     default:
                         break;
                 }

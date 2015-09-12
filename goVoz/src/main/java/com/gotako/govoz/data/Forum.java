@@ -9,7 +9,7 @@ public class Forum implements Comparable<Forum>, Serializable{
 	String threadReplies;
 	String viewing;
 	String forumGroupName = null;
-	Forum parent;
+	int parent;
 	
 
 	public String getId() {
@@ -72,11 +72,11 @@ public class Forum implements Comparable<Forum>, Serializable{
 		return Integer.parseInt(id) - Integer.parseInt(another.id);
 	}
 
-	public Forum getParent() {
+	public int getParent() {
 		return parent;
 	}
 
-	public void setParent(Forum parent) {
+	public void setParent(int parent) {
 		this.parent = parent;
 	}
 

@@ -40,8 +40,8 @@ public class PostReplyTask extends AsyncTask<String, Void, Boolean> {
 	}
 	
 	@Override
-	protected Boolean doInBackground(String... params) {		
-		String getReplyAttributeLink = VOZ_LINK + "/" +VozCache.instance().getCurrentThread().getReplyLink();
+	protected Boolean doInBackground(String... params) {
+		String getReplyAttributeLink = VOZ_LINK + "/" + params[3];
 		try {			
 			Document document = Jsoup.connect(getReplyAttributeLink)
 					                 .cookies(VozCache.instance().getCookies())

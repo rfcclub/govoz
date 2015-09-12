@@ -42,7 +42,7 @@ public class ForumActivity extends VozFragmentActivity implements
 	private List<Thread> threads;
 	private int lastPage = 1;
 	private ListView listView;
-
+	private String forumName = VozConstant.VOZ_SIGN;
 	@SuppressWarnings("rawtypes")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +80,9 @@ public class ForumActivity extends VozFragmentActivity implements
         String forumLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
         String[] parameters = forumLink.split("\\?")[1].split("\\&");
         String firstParam = parameters[0];
-        String forumId = firstParam.split("=")[1];
-        String currentForumId = VozCache.instance().getCurrentForum().getId();
-        if(currentForumId.equals(forumId)) {
+        int forumId = Integer.parseInt(firstParam.split("=")[1]);
+        int currentForumId = VozCache.instance().getCurrentForum();
+        if(currentForumId == forumId) {
             if (VozCache.instance().cache().containsKey(VozConstant.FORUM_THREADS + currentForumId)) {
                 reloadThreadsFromCache();
             } else { // load threads
@@ -104,21 +104,20 @@ public class ForumActivity extends VozFragmentActivity implements
 
     @SuppressWarnings("unchecked")
 	private void reloadThreadsFromCache() {
-		threads = (List<Thread>) VozCache.instance().cache().get(VozConstant.FORUM_THREADS + VozCache.instance().getCurrentForum().getId());
+		threads = (List<Thread>) VozCache.instance().cache().get(VozConstant.FORUM_THREADS + String.valueOf(VozCache.instance().getCurrentForum()));
 		GoFastEngine.notify(this, "threads");
-		lastPage = (Integer) VozCache.instance().cache().get(VozConstant.FORUM_LAST_PAGE + VozCache.instance().getCurrentForum().getId());
+		lastPage = (Integer) VozCache.instance().cache().get(VozConstant.FORUM_LAST_PAGE + String.valueOf(VozCache.instance().getCurrentForum()));
 		updateStatus();
 		if (VozCache.instance().cache().containsKey(FORUM_POSITION)) {
 			int pos = (Integer) VozCache.instance().cache().get(FORUM_POSITION);
 			if (pos < threads.size())
 				listView.setSelection(pos);
 		}
-		forums = (List<Forum>) VozCache.instance().cache().get(SUB_FORUMS + VozCache.instance().getCurrentForum().getId());
+		forums = (List<Forum>) VozCache.instance().cache().get(SUB_FORUMS + String.valueOf(VozCache.instance().getCurrentForum()));
 	}
 
 	private void updateStatus() {
-		Forum forum = VozCache.instance().getCurrentForum();
-		setTitle(forum.getForumName());
+		setTitle(forumName);
 		listView = (ListView) findViewById(R.id.threadsList);
 		// listView.smoothScrollToPosition(0);
 		listView.setSelection(0);
@@ -126,13 +125,13 @@ public class ForumActivity extends VozFragmentActivity implements
 	}
 
     public void loadThreads() {
-        loadThreads(VozCache.instance().getCurrentForum().getId(), VozCache.instance().getCurrentForumPage());
+        loadThreads(VozCache.instance().getCurrentForum(), VozCache.instance().getCurrentForumPage());
     }
-	public void loadThreads(String forumId, int page) {
+	public void loadThreads(int forumId, int page) {
 		VozForumDownloadTask task = new VozForumDownloadTask(this);
-        String _forumId = forumId;
-        if(forumId == null) {
-            _forumId = VozCache.instance().getCurrentForum().getId();
+        int _forumId = forumId;
+        if(forumId <= 0) {
+            _forumId = VozCache.instance().getCurrentForum();
         }
         int _page = page;
         if(_page == 0) {
@@ -144,7 +143,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		task.setRetries(1);
 		String forumUrl = FORUM_URL_F + _forumId + FORUM_URL_ORDER
 				+ String.valueOf(_page);
-		task.setForumId(_forumId);
+		task.setForumId(String.valueOf(_forumId));
 		task.execute(forumUrl);
 	}
 
@@ -160,11 +159,12 @@ public class ForumActivity extends VozFragmentActivity implements
 		threads = result;
 		forums = (List<Forum>) extra[0];
 		lastPage = (Integer) extra[1];
+		forumName = (String)extra[2];
 		insertForumToThreads();
         GoFastEngine.notify(this, "threads");
-		VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum().getId(), threads);
-		VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum().getId(), lastPage);
-		VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum().getId(), forums);
+		VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum(), threads);
+		VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum(), lastPage);
+		VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum(), forums);
 		updateStatus();
 	}
 
@@ -252,7 +252,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		Thread currentThread = threads.get(selectedIndex);
 		VozCache.instance().cache().put(FORUM_POSITION, selectedIndex);
 		if (!currentThread.isSubForum()) {
-			VozCache.instance().setCurrentThread(currentThread);
+			VozCache.instance().setCurrentThread(currentThread.getId());
 			VozCache.instance().setCurrentThreadPage(1);
             String url = VOZ_LINK + "/"
                     + currentThread.getThreadUrl()
@@ -262,7 +262,7 @@ public class ForumActivity extends VozFragmentActivity implements
             Intent intent = new Intent(this, ThreadActivity.class);
 			startActivity(intent);
 		} else {
-			VozCache.instance().setCurrentThread(null);
+			VozCache.instance().setCurrentThread(-1);
 			Forum subForum = null;
 			for (Forum forum : forums) {
 				if (currentThread.getTitle().equals(forum.getForumName())) {
@@ -274,14 +274,13 @@ public class ForumActivity extends VozFragmentActivity implements
 				forums = new ArrayList<Forum>();
 				threads = new ArrayList<Thread>();
 				GoFastEngine.notify(this, "threads");
-				VozCache.instance().setCurrentParentForum(
-						VozCache.instance().getCurrentForum());
-				VozCache.instance().setCurrentForum(subForum);
+				VozCache.instance().setCurrentParentForum(VozCache.instance().getCurrentForum());
+				VozCache.instance().setCurrentForum(Integer.parseInt(subForum.getId()));
 				subForum.setParent(VozCache.instance().getCurrentParentForum());
-                String forumUrl = FORUM_URL_F + subForum + FORUM_URL_ORDER + "1";
+                String forumUrl = FORUM_URL_F + subForum.getId() + FORUM_URL_ORDER + "1";
                 VozCache.instance().navigationList.add(forumUrl);
                 VozCache.instance().setCurrentForumPage(1);
-				loadThreads(subForum.getId(), 1);
+				loadThreads(Integer.parseInt(subForum.getId()), 1);
 			}
 		}
 	}
@@ -358,16 +357,16 @@ public class ForumActivity extends VozFragmentActivity implements
         if (navigationList.size() > 0)
             navigationList.remove(VozCache.instance().navigationList.size() - 1);
 
-        if (VozCache.instance().getCurrentParentForum() == null) {
+        if (VozCache.instance().getCurrentParentForum() > 0) {
 			overridePendingTransition(R.animator.left_slide_in,
                     R.animator.zoom_out);
             Intent intent = new Intent(this, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum().getId());
-			VozCache.instance().cache().remove(FORUM_LAST_PAGE  + VozCache.instance().getCurrentForum().getId());
+            VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum());
+			VozCache.instance().cache().remove(FORUM_LAST_PAGE  + VozCache.instance().getCurrentForum());
 			VozCache.instance().cache().remove(FORUM_POSITION);
-			VozCache.instance().setCurrentForum(null);
+			VozCache.instance().setCurrentForum(-1);
 			VozCache.instance().setCurrentForumPage(1);
 			// remove cache since we don't need it
 			// start new activity and remove all finish current activity
@@ -377,11 +376,11 @@ public class ForumActivity extends VozFragmentActivity implements
 			VozCache.instance().setCurrentForum(
 					VozCache.instance().getCurrentParentForum());
 			VozCache.instance().setCurrentForumPage(1);
-			VozCache.instance().setCurrentParentForum(null);
+			VozCache.instance().setCurrentParentForum(-1);
 			forums = new ArrayList<Forum>();
 			threads = new ArrayList<Thread>();
 			GoFastEngine.notify(this, "threads");
-			if (VozCache.instance().cache().containsKey(FORUM_THREADS + VozCache.instance().getCurrentForum().getId())) {
+			if (VozCache.instance().cache().containsKey(FORUM_THREADS + VozCache.instance().getCurrentForum())) {
 				reloadThreadsFromCache();
 			} else { // load threads
                 loadThreads();
@@ -398,51 +397,44 @@ public class ForumActivity extends VozFragmentActivity implements
         loadThreads();
 	}
 
-	@Override
-	public void lastBreath(Exception ex) {
-		ex.printStackTrace(); // in case you want to see the stacktrace in your
-								// log cat output
-		BugSenseHandler.sendException(ex);
-	}
-
 	protected boolean canShowPinnedMenu() {
-		if (navDrawerItems != null) {
-			String forumId = VozCache.instance().getCurrentForum().getId();
-			String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
-					+ String.valueOf(VozCache.instance().getCurrentForumPage());
-			Forum forum = VozCache.instance().getCurrentForum();
-			NavDrawerItem item = new NavDrawerItem(forum.getForumName(),
-					forumUrl);
-
-			if (navDrawerItems.contains(item)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+//		if (navDrawerItems != null) {
+//			String forumId = String.valueOf(VozCache.instance().getCurrentForum());
+//			String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
+//					+ String.valueOf(VozCache.instance().getCurrentForumPage());
+//			Forum forum = VozCache.instance().getCurrentForum();
+//			NavDrawerItem item = new NavDrawerItem(forum.getForumName(),
+//					forumUrl);
+//
+//			if (navDrawerItems.contains(item)) {
+//				return true;
+//			} else {
+//				return false;
+//			}
+//		}
 		return false;
 	}
 
 	protected boolean canShowUnpinnedMenu() {
-		if (navDrawerItems != null) {
-			String forumId = VozCache.instance().getCurrentForum().getId();
-			String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
-					+ String.valueOf(VozCache.instance().getCurrentForumPage());
-			Forum forum = VozCache.instance().getCurrentForum();
-			NavDrawerItem item = new NavDrawerItem(forum.getForumName(),
-					forumUrl, "forum");
-
-			if (navDrawerItems.contains(item)) {
-				return false;
-			} else {
-				return true;
-			}
-		}
+//		if (navDrawerItems != null) {
+//			String forumId = VozCache.instance().getCurrentForum().getId();
+//			String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
+//					+ String.valueOf(VozCache.instance().getCurrentForumPage());
+//			Forum forum = VozCache.instance().getCurrentForum();
+//			NavDrawerItem item = new NavDrawerItem(forum.getForumName(),
+//					forumUrl, "forum");
+//
+//			if (navDrawerItems.contains(item)) {
+//				return false;
+//			} else {
+//				return true;
+//			}
+//		}
 		return true;
 	}
 
 	protected void doPin() {
-		String forumId = VozCache.instance().getCurrentForum().getId();
+		/*String forumId = VozCache.instance().getCurrentForum().getId();
 		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
 				+ String.valueOf(VozCache.instance().getCurrentForumPage());
 		Forum forum = VozCache.instance().getCurrentForum();
@@ -453,11 +445,11 @@ public class ForumActivity extends VozFragmentActivity implements
 
 		//pinPage(item);
 		pinMenu.setVisible(true);
-		unpinMenu.setVisible(false);
+		unpinMenu.setVisible(false);*/
 	}
 
 	protected void doUnpin() {
-		String forumId = VozCache.instance().getCurrentForum().getId();
+		/*String forumId = VozCache.instance().getCurrentForum().getId();
 		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
 				+ String.valueOf(VozCache.instance().getCurrentForumPage());
 		Forum forum = VozCache.instance().getCurrentForum();
@@ -466,6 +458,6 @@ public class ForumActivity extends VozFragmentActivity implements
 
 		//unpinPage(item);
 		pinMenu.setVisible(false);
-		unpinMenu.setVisible(true);
+		unpinMenu.setVisible(true);*/
 	}
 }

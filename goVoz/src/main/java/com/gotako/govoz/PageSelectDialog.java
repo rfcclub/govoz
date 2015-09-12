@@ -25,9 +25,9 @@ import com.gotako.util.Utils;
  */
 public class PageSelectDialog extends android.support.v7.app.AppCompatDialogFragment {
 
-	private Activity activity;
-	
-	private EditText editText;
+	protected Activity activity;
+
+	protected EditText editText;
 
 	public PageSelectDialog() {
 	}
@@ -65,7 +65,7 @@ public class PageSelectDialog extends android.support.v7.app.AppCompatDialogFrag
 		getDialog().getWindow().setLayout((int) (width * 0.65), 440);
 		editText = (EditText) view.findViewById(R.id.txtPageNumber);
 		
-		((TextView) view.findViewById(R.id.txtViewPage1)).setText("Số trang tối đa: " + ((ForumActivity) activity).getLastPage());
+		((TextView) view.findViewById(R.id.txtTitle)).setText("Số trang tối đa: " + ((ForumActivity) activity).getLastPage());
 		
 		((Button) view.findViewById(R.id.btnGo)).setOnClickListener(new View.OnClickListener() {
 			

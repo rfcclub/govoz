@@ -140,10 +140,10 @@ public class MainActivity extends VozFragmentActivity implements
 		List<Forum> list = ((Map<Integer, List<Forum>>) forums[1])
 				.get(groupPosition);
 		Forum selectedForum = list.get(childPosition);
-		VozCache.instance().setCurrentForum(selectedForum);
+		VozCache.instance().setCurrentForum(Integer.parseInt(selectedForum.getId()));
 		VozCache.instance().setCurrentForumPage(1);
 		VozCache.instance().cache().clear();
-        String forumUrl = FORUM_URL_F + selectedForum + FORUM_URL_ORDER + String.valueOf(VozCache.instance().getCurrentForumPage());
+        String forumUrl = FORUM_URL_F + selectedForum.getId() + FORUM_URL_ORDER + "1";
         VozCache.instance().navigationList.add(forumUrl);
         Intent intent = new Intent(this, ForumActivity.class);
 		startActivity(intent);		
@@ -171,12 +171,4 @@ public class MainActivity extends VozFragmentActivity implements
     public void onBackPressed() {
 		this.finish();
 	}
-
-
-	@Override
-	public void lastBreath(Exception ex) {
-		ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
-		BugSenseHandler.sendException(ex);
-	}
-
 }

@@ -15,19 +15,26 @@ import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.util.Utils;
 
 public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 	int lastPage = 1;
-	
-	public VozThreadDownloadTask(ActivityCallback<Post> callback) {
+	String threadName;
+    boolean closed;
+    private String pValue;
+    private String replyLink;
+
+    public VozThreadDownloadTask(ActivityCallback<Post> callback) {
 		super(callback);
 	}
 
 	@Override
 	public List<Post> processResult(Document document) {
 		List<Post> posts = new ArrayList<Post>();
+		Element title = document.select("title").first();
+		threadName = title.text().split("-")[0].trim();
 		Element divPosts = document.select("div[id=posts]").get(0);
 		Elements tablePosts = divPosts
 				.select("table[class^=tborder][id^=post][cellpadding=6][cellspacing=1][border=0][width=100%][align=center]");
@@ -164,12 +171,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 				}
 			}
 			try {
-				if (Utils.isNullOrEmpty(VozCache.instance().getCurrentThread().getP())) {
-					Element ele = document.select("input[type=hidden][name=p]").first();
-					VozCache.instance().getCurrentThread().setP(ele.attr("value"));
-				}
-			} catch (Exception e) {			
-				
+				Element ele = document.select("input[type=hidden][name=p]").first();
+				pValue = ele.attr("value");
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -177,7 +181,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		Elements repliEles =document.select("a[href^=newreply.php?do=newreply][href*=noquote=1]");
 		if (repliEles != null && repliEles.size() > 0) {
 			Element replyEle = repliEles.first();
-			VozCache.instance().getCurrentThread().setReplyLink(replyEle.attr("href").replaceAll("&amp;", "&"));
+			replyLink = replyEle.attr("href").replaceAll("\\&amp\\;", "&");
 		}
 		// check whether this thread is closed or not
 		checkThreadCloseStatus(document);
@@ -200,9 +204,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					.getFirstElement(table
 							.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]"));
 			if (closeImage != null)
-				VozCache.instance().getCurrentThread().setClosed(true);
+				closed = true;
 			else
-				VozCache.instance().getCurrentThread().setClosed(false);
+				closed = false;
 			/*
 			 * String src = closeImage.attr("src"); src =
 			 * closeImage.attr("alt");
@@ -211,7 +215,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			// VozCache.instance().getCurrentThread().setClosed(true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			VozCache.instance().getCurrentThread().setClosed(false);
+			closed = false;
 		}
 	}
 
@@ -258,7 +262,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		
 		// do call back
 		if (callback != null) {
-			callback.doCallback(result, lastPage);
+			callback.doCallback(result, lastPage, threadName, closed, pValue, replyLink);
 		}
 	}
 	
@@ -266,51 +270,6 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	protected List<Post> doInBackground(String... params) {
 		return doInBackgroundInternal(params);
 	}
-
-	
-	/*private List<Post> doInBackgroundInternal(String[] params) {
-		String urlString = params[0];
-		List<Post> result = new ArrayList<Post>();
-		//if (!runForCache) {
-			boolean completed = false;
-			try {
-				Document document = null;
-				if (VozCache.instance().getCookies() == null) {
-					document = Jsoup.connect(urlString).timeout(60000).post();
-				} else {
-					document = Jsoup
-							.connect(urlString)
-							.timeout(60000)
-							.cookies(VozCache.instance().getCookies())
-							.data("securitytoken",
-									VozCache.instance().getSecurityToken())
-							.post();
-				}
-				result = processResult(document);
-				completed = true;
-				com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-						.getCurrentThread();
-				String threadId = currentThread.getId() + "";
-				VozCache.instance().putDataToCache(threadId + "_" + VozCache.instance().getCurrentThreadPage(), document);
-			} catch (Exception e) {				
-				processError(e);				
-			}
-			retries-=1;
-		return result;
-	}*/
-	
-	/*@Override
-	protected void onPreExecute() {
-		if (showProcessDialog && context!=null) {
-			progressDialog = ProgressDialog
-					.show(context, "", "Loading data...");
-			progressDialog = new ProgressDialog(context);
-			progressDialog.setMessage("Loading data...");			
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialog.setIndeterminate(true);			
-			progressDialog.show();
-		}
-	}*/
 
 	public int getLastPage() {
 		return lastPage;
@@ -322,9 +281,15 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 	@Override
 	public void afterDownload(Document document) {
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-				.getCurrentThread();
-		String threadId = currentThread.getId() + "";
-		VozCache.instance().putDataToCache(threadId + "_" + VozCache.instance().getCurrentThreadPage(), document);
+		String threadId = String.valueOf(VozCache.instance().getCurrentThread());
+        ThreadDumpObject threadDumpObject = new ThreadDumpObject();
+        threadDumpObject.threadId = VozCache.instance().getCurrentThread();
+        threadDumpObject.document = document;
+        threadDumpObject.closed = closed;
+        threadDumpObject.lastPage = lastPage;
+        threadDumpObject.pValue = pValue;
+        threadDumpObject.replyLink = replyLink;
+        threadDumpObject.threadName = threadName;
+		VozCache.instance().putDataToCache(threadId + "_" + VozCache.instance().getCurrentThreadPage(), threadDumpObject);
 	}
 }

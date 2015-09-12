@@ -77,5 +77,11 @@
     <string name="title_activity_pm">pmActivity</string>
     <string name="title_activity_pmview">PMViewActivity</string>
     <string name="title_activity_inbox">InboxActivity</string>
+    <string name="dialog_cancel">BỎ QUA</string>
+    <string name="dialog_ok">ĐỒNG Ý</string>
+    <string name="forum_select_title">Nhập Id của Forum và nhấn OK</string>
+    <string name="thread_select_title">Nhập Id của Thread rồi nhấn OK</string>
+    <string name="error_forum_select_id">Xin vui lòng nhập số. Id forum là số.</string>
+    <string name="error_not_login">Bạn cần phải login vào trước mới đi đến forum này được.</string>
 
 </resources>

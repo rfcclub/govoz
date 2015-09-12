@@ -1,5 +1,6 @@
 package com.gotako.govoz;
 
+import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 import java.io.UnsupportedEncodingException;
@@ -51,6 +52,7 @@ import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Post;
+import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.CachePostService;
@@ -73,12 +75,14 @@ public class ThreadActivity extends VozFragmentActivity implements
 	//private TextView pageNumber;
 	private LinearLayout layout;
 	private SparseArray<WebView> webViewList;
+    private String threadName;
+    private boolean closed;
+    private String pValue;
+    private String replyLink;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_thread);
-
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View thread_layout = mInflater.inflate(R.layout.activity_thread, null);
 		FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
@@ -100,9 +104,24 @@ public class ThreadActivity extends VozFragmentActivity implements
 		registerMenu();
 		posts = new ArrayList<Post>();
 		GoFastEngine.initialize(this);
-		getThreads();
+		processNavigationLink();
 		updateStatus();
-		
+	}
+
+	private void processNavigationLink() {
+		// last element of list should be forum link
+		String threadLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
+		String[] parameters = threadLink.split("\\?")[1].split("\\&");
+		String firstParam = parameters[0];
+		int threadId = Integer.parseInt(firstParam.split("=")[1]);
+		int threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
+		int currentForumId = VozCache.instance().getCurrentThread();
+		if (currentForumId != threadId) {
+            getThreads(threadId, threadPage);
+		} else {
+            VozCache.instance().setCurrentThreadPage(threadPage);
+            getThreads();
+        }
 	}
 
 	private void registerMenu() {
@@ -110,32 +129,35 @@ public class ThreadActivity extends VozFragmentActivity implements
 	}
 
 	private void updateStatus() {
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-				.getCurrentThread();
-
-		this.setTitle(currentThread.getTitle());
+		this.setTitle(threadName);
         updateNavigationPanel();
 	}
 
-	private void getThreads() {
+    private void getThreads() {
+        getThreads(VozCache.instance().getCurrentThread(), VozCache.instance().getCurrentThreadPage());
+    }
+	private void getThreads(int threadId, int threadPage) {
 		posts.clear();
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
-				.getCurrentThread();
+		int currentThreadId = VozCache.instance().getCurrentThread();
 		int page = VozCache.instance().getCurrentThreadPage();
-		String key = currentThread.getId() + "_" + page;
+		String key = String.valueOf(currentThreadId) + "_" + page;
 		Object cacheObject = VozCache.instance().getDataFromCache(key);
 		if (cacheObject != null) {
 			VozThreadDownloadTask task = new VozThreadDownloadTask(this);
-			List<Post> posts = task.processResult((Document) cacheObject);
+            ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
+			List<Post> posts = task.processResult(threadDumpObject.document);
+            threadName =threadDumpObject.threadName;
+            closed = threadDumpObject.closed;
+            pValue = threadDumpObject.pValue;
+            replyLink = threadDumpObject.replyLink;
 			int lastPage = task.getLastPage();
-			doCallback(posts, lastPage);
+			processResult(posts, lastPage);
 		} else {
 			VozThreadDownloadTask task = new VozThreadDownloadTask(this);
 			task.setContext(this);
 			task.setRetries(2);
 			task.setShowProcessDialog(true);
-			String url = VOZ_LINK + "/"
-					+ currentThread.getThreadUrl()
+			String url = THREAD_URL_T + String.valueOf(currentThreadId)
 					+ "&page="
 					+ String.valueOf(VozCache.instance().getCurrentThreadPage());
 			task.execute(url);
@@ -148,135 +170,143 @@ public class ThreadActivity extends VozFragmentActivity implements
 			Toast.makeText(this, "Cannot access to VozForum. Please try again later.", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		posts = result;
-		lastPage = (Integer) extra[0];
-		layout.removeAllViews();
-		viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		webViewList = new SparseArray<WebView>();
-		for (int i = 0; i < posts.size(); i++) {
-			View view = viewInflater.inflate(R.layout.post_item, null);
-
-			Post post = posts.get(i);
-			final WebView webView = (WebView) view.findViewById(R.id.content);
-			webView.getSettings().setJavaScriptEnabled(false);
-			// disable all click listener in webview
-			webView.setClickable(false);
-			webView.setLongClickable(true);			
-			webView.setFocusable(false);			
-			webView.setFocusableInTouchMode(false);
-			webView.setOnLongClickListener(this);
-			webView.getSettings().setDefaultFontSize(VozConfig.instance().getFontSize());			
-			webView.setTag(i); // position			
-			// webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-			String utfContent = null;
-			try {
-				utfContent = new String(post.getContent().getBytes("UTF-8"))
-						.replace("\r", "").replace("\n", "");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			Display display = getWindowManager().getDefaultDisplay();
-			DisplayMetrics outMetrics = new DisplayMetrics();
-			display.getMetrics(outMetrics);
-			String head = "<head><style type='text/css'>body{color: #fff; background-color: #000;}</style></head>";
-			utfContent = head + "<div style='width="
-					+ String.valueOf(outMetrics.widthPixels) + "'>"
-					+ utfContent + "</div>";
-			post.setContent(utfContent);
-			webView.getSettings().setBuiltInZoomControls(false);
-            webView.getSettings().setSupportZoom(false);
-            webView.setBackgroundColor(Color.BLACK);
-			try {
-				TaskHelper.disableSSLCertCheck();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(),"text/html", "utf-8", null);
-			setListenerToWebView(webView);
-//            HtmlView htmlView = (HtmlView)findViewById(R.id.content_html);
-//            htmlView.loadHtml(post.getContent());
-			webViewList.append(i, webView);			
-			
-			ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
-			if (post.getAvatar() != null) {
-				UrlDrawable drawable = new UrlDrawable();
-				drawable.setWidth(75);
-				drawable.setHeight(75);
-				//imageView.setImageDrawable(drawable);
-				imageView.setScaleType(ScaleType.CENTER_CROP);
-				DownloadImageTask task = new DownloadImageTask(drawable,
-						imageView, this);
-				task.execute(post.getAvatar());
-			}
-			imageView.setClickable(false);
-			imageView.setLongClickable(true);
-			imageView.setFocusable(false);
-			imageView.setFocusableInTouchMode(false);
-			imageView.setOnLongClickListener(this);
-			imageView.setTag(i);
-
-			// post date
-			TextView postDate = (TextView) view.findViewById(R.id.postDate);
-			postDate.setText(post.getPostDate());
-
-			// post count
-			TextView postCount = (TextView) view.findViewById(R.id.postCount);
-			postCount.setText(post.getPostCount());
-
-			// user
-			TextView user = (TextView) view.findViewById(R.id.user);
-			user.setText(post.getUser());
-
-			// join date
-			TextView joinDate = (TextView) view.findViewById(R.id.joinDate);
-			joinDate.setText(post.getJoinDate());
-
-			// rank
-			TextView rank = (TextView) view.findViewById(R.id.rank);
-			rank.setText(post.getRank());
-
-			// posted
-			TextView posted = (TextView) view.findViewById(R.id.posted);
-			posted.setText(post.getPosted());
-
-			// subtitle
-			final TextView subTitle = (TextView) view
-					.findViewById(R.id.subTitle);
-			subTitle.setText(post.getSubTitle());
-
-			ImageView imageViewHide = (ImageView) view
-					.findViewById(R.id.imageViewHidePost);			
-			imageViewHide.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					Boolean status = (Boolean) v.getTag();
-					if (status != null && status.booleanValue()) {
-						webView.setVisibility(View.GONE);
-						subTitle.setVisibility(View.GONE);
-						((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_down_white_18dp);
-						v.setTag(Boolean.valueOf(false));
-					} else {
-						webView.setVisibility(View.VISIBLE);
-						subTitle.setVisibility(View.VISIBLE);
-						((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_up_white_18dp);
-						v.setTag(Boolean.valueOf(true));
-					}
-				}
-			});
-			imageViewHide.setTag(true);
-			layout.addView(view);			
-
-		}
-
-		updateStatus();
-		listView.fullScroll(ScrollView.FOCUS_UP);
+        threadName =(String)extra[1];
+        closed =(Boolean)extra[2];
+        pValue = (String)extra[3];
+        replyLink =(String) extra[4];
+        processResult(result, (Integer) extra[0]);
 	}
 
-	private void updateNavigationPanel() {
+    private void processResult(List<Post> result,int last) {
+        posts = result;
+        lastPage = last;
+        layout.removeAllViews();
+        viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        webViewList = new SparseArray<WebView>();
+        for (int i = 0; i < posts.size(); i++) {
+            View view = viewInflater.inflate(R.layout.post_item, null);
+
+            Post post = posts.get(i);
+            final WebView webView = (WebView) view.findViewById(R.id.content);
+            webView.getSettings().setJavaScriptEnabled(false);
+            // disable all click listener in webview
+            webView.setClickable(false);
+            webView.setLongClickable(true);
+            webView.setFocusable(false);
+            webView.setFocusableInTouchMode(false);
+            webView.setOnLongClickListener(this);
+            webView.getSettings().setDefaultFontSize(VozConfig.instance().getFontSize());
+            webView.setTag(i); // position
+            // webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+            String utfContent = null;
+            try {
+                utfContent = new String(post.getContent().getBytes("UTF-8"))
+                        .replace("\r", "").replace("\n", "");
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            Display display = getWindowManager().getDefaultDisplay();
+            DisplayMetrics outMetrics = new DisplayMetrics();
+            display.getMetrics(outMetrics);
+            String head = "<head><style type='text/css'>body{color: #fff; background-color: #000;}</style></head>";
+            utfContent = head + "<div style='width="
+                    + String.valueOf(outMetrics.widthPixels) + "'>"
+                    + utfContent + "</div>";
+            post.setContent(utfContent);
+            webView.getSettings().setBuiltInZoomControls(false);
+            webView.getSettings().setSupportZoom(false);
+            webView.setBackgroundColor(Color.BLACK);
+            try {
+                TaskHelper.disableSSLCertCheck();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(),"text/html", "utf-8", null);
+            setListenerToWebView(webView);
+//            HtmlView htmlView = (HtmlView)findViewById(R.id.content_html);
+//            htmlView.loadHtml(post.getContent());
+            webViewList.append(i, webView);
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+            if (post.getAvatar() != null) {
+                UrlDrawable drawable = new UrlDrawable();
+                drawable.setWidth(75);
+                drawable.setHeight(75);
+                //imageView.setImageDrawable(drawable);
+                imageView.setScaleType(ScaleType.CENTER_CROP);
+                DownloadImageTask task = new DownloadImageTask(drawable,
+                        imageView, this);
+                task.execute(post.getAvatar());
+            }
+            imageView.setClickable(false);
+            imageView.setLongClickable(true);
+            imageView.setFocusable(false);
+            imageView.setFocusableInTouchMode(false);
+            imageView.setOnLongClickListener(this);
+            imageView.setTag(i);
+
+            // post date
+            TextView postDate = (TextView) view.findViewById(R.id.postDate);
+            postDate.setText(post.getPostDate());
+
+            // post count
+            TextView postCount = (TextView) view.findViewById(R.id.postCount);
+            postCount.setText(post.getPostCount());
+
+            // user
+            TextView user = (TextView) view.findViewById(R.id.user);
+            user.setText(post.getUser());
+
+            // join date
+            TextView joinDate = (TextView) view.findViewById(R.id.joinDate);
+            joinDate.setText(post.getJoinDate());
+
+            // rank
+            TextView rank = (TextView) view.findViewById(R.id.rank);
+            rank.setText(post.getRank());
+
+            // posted
+            TextView posted = (TextView) view.findViewById(R.id.posted);
+            posted.setText(post.getPosted());
+
+            // subtitle
+            final TextView subTitle = (TextView) view
+                    .findViewById(R.id.subTitle);
+            subTitle.setText(post.getSubTitle());
+
+            ImageView imageViewHide = (ImageView) view
+                    .findViewById(R.id.imageViewHidePost);
+            imageViewHide.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Boolean status = (Boolean) v.getTag();
+                    if (status != null && status.booleanValue()) {
+                        webView.setVisibility(View.GONE);
+                        subTitle.setVisibility(View.GONE);
+                        ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_down_white_18dp);
+                        v.setTag(Boolean.valueOf(false));
+                    } else {
+                        webView.setVisibility(View.VISIBLE);
+                        subTitle.setVisibility(View.VISIBLE);
+                        ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_up_white_18dp);
+                        v.setTag(Boolean.valueOf(true));
+                    }
+                }
+            });
+            imageViewHide.setTag(true);
+            layout.addView(view);
+
+        }
+
+        updateStatus();
+        listView.fullScroll(ScrollView.FOCUS_UP);
+    }
+
+    private void updateNavigationPanel() {
 		SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
 		navigationGroup.removeAllViews();
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -459,7 +489,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		overridePendingTransition(R.animator.left_slide_in, R.animator.zoom_out);
         if (VozCache.instance().navigationList.size() > 0)
             VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
-        VozCache.instance().setCurrentThread(null);
+        VozCache.instance().setCurrentThread(-1);
 		VozCache.instance().setCurrentThreadPage(1);
 		Intent intent = new Intent(this, ForumActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -470,13 +500,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 	@Override
 	public void refresh() {
         getThreads();
-	}
-
-	@Override
-	public void lastBreath(Exception ex) {
-		ex.printStackTrace(); // in case you want to see the stacktrace in your
-								// log cat output
-		BugSenseHandler.sendException(ex);
 	}
 
 	@Override
@@ -544,12 +567,10 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 	private void viewProfile() {
 		// TODO Auto-generated method stub
-
 	}
 
 	private void sendPM() {
 		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -574,6 +595,8 @@ public class ThreadActivity extends VozFragmentActivity implements
 	public void workWithQuote(String quote) {
 		Intent intent = new Intent(this, PostActivity.class);
 		intent.putExtra("quote", quote);
+        intent.putExtra("replyLink", replyLink);
+        intent.putExtra("threadName", threadName);
 		startActivity(intent);
 	}
 	
@@ -593,8 +616,8 @@ public class ThreadActivity extends VozFragmentActivity implements
 	}
 
 	protected boolean canShowPinnedMenu() {
-		if (navDrawerItems != null) {
-			com.gotako.govoz.data.Thread currentThread = VozCache.instance()
+		/*if (navDrawerItems != null) {
+			intcurrentThread = VozCache.instance()
 					.getCurrentThread();
 			String url = VOZ_LINK
 					+ currentThread.getThreadUrl()
@@ -608,12 +631,12 @@ public class ThreadActivity extends VozFragmentActivity implements
 			} else {
 				return false;
 			}
-		}
+		}*/
 		return false;
 	}
 
 	protected boolean canShowUnpinnedMenu() {
-		if (navDrawerItems != null) {
+		/*if (navDrawerItems != null) {
 			com.gotako.govoz.data.Thread currentThread = VozCache.instance()
 					.getCurrentThread();
 			String url = VOZ_LINK
@@ -628,12 +651,12 @@ public class ThreadActivity extends VozFragmentActivity implements
 			} else {
 				return true;
 			}
-		}
+		}*/
 		return true;
 	}
 
 	protected void doPin() {
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
+		/*com.gotako.govoz.data.Thread currentThread = VozCache.instance()
 				.getCurrentThread();
 		String url = VOZ_LINK + currentThread.getThreadUrl()
 				+ "&page="
@@ -645,11 +668,11 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 		//pinPage(item);
 		pinMenu.setVisible(true);
-		unpinMenu.setVisible(false);
+		unpinMenu.setVisible(false);*/
 	}
 
 	protected void doUnpin() {
-		com.gotako.govoz.data.Thread currentThread = VozCache.instance()
+		/*com.gotako.govoz.data.Thread currentThread = VozCache.instance()
 				.getCurrentThread();
 		String url = VOZ_LINK + currentThread.getThreadUrl()
 				+ "&page="
@@ -661,6 +684,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 		//unpinPage(item);
 		pinMenu.setVisible(false);
-		unpinMenu.setVisible(true);
+		unpinMenu.setVisible(true);*/
 	}
 }

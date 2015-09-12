@@ -22,6 +22,7 @@ public class PostActivity extends BaseActivity implements ActivityCallback<Boole
 	String titleText = "";
 	@BindingField(id = R.id.answerText, twoWay = true)
 	String answerText = "";
+	private String replyLink;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,8 @@ public class PostActivity extends BaseActivity implements ActivityCallback<Boole
 		frameLayout.addView(layout);
 		
 		GoFastEngine.initialize(this);
-		titleText ="Re: " + VozCache.instance().getCurrentThread().getTitle();
+		titleText ="Re: " + getIntent().getStringExtra("threadName");
+		replyLink = getIntent().getStringExtra("replyLink");
 		GoFastEngine.notify(this, "titleText");
 		String quote = getIntent().getStringExtra("quote");		
 		answerText = (quote == null ? "" : quote);
@@ -50,10 +52,9 @@ public class PostActivity extends BaseActivity implements ActivityCallback<Boole
 	}
 
 	public void post(View view) {
-		String tString = String.valueOf(VozCache.instance().getCurrentThread()
-				.getId());
+		String tString = String.valueOf(VozCache.instance().getCurrentThread());
 		PostReplyTask task = new PostReplyTask(this);
-		task.execute(tString, answerText, titleText);
+		task.execute(tString, answerText, titleText, replyLink);
 	}
 
 	@Override
