@@ -199,7 +199,7 @@ public class BaseActivity extends Activity {
 				NavDrawerItem item = navDrawerItems.get(position);
 
 				if ("forum".equals(item.type)) {
-					VozCache.instance().setCurrentForum((Forum) item.tag);
+					VozCache.instance().setCurrentForum((int)item.tag);
 					VozCache.instance().setCurrentForumPage(item.page);
 					VozCache.instance().cache().clear();
 					// VozCache.instance().getLookAheadPosts().clear();
@@ -207,8 +207,7 @@ public class BaseActivity extends Activity {
 							ForumActivity.class);
 					startActivity(intent);
 				} else if ("thread".equals(item.type)) {
-					VozCache.instance().setCurrentThread(
-							(com.gotako.govoz.data.Thread) item.tag);
+					VozCache.instance().setCurrentThread((int)item.tag);
 					VozCache.instance().setCurrentThreadPage(item.page);
 					VozCache.instance().cache().clear();
 					// VozCache.instance().getLookAheadPosts().clear();

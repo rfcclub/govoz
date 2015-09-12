@@ -32,6 +32,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	protected MenuItem unpinMenu;
 	private MenuItem settingMenu;
 	private MenuItem loginWithPresetMenu;
+	protected boolean threadIsClosed;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -175,7 +176,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	}
 	
 	private void doRep() {
-		if(VozCache.instance().getCurrentThread().isClosed()) {			
+		if(threadIsClosed) {
 			CharSequence text = "Sorry! This thread is closed!";
 			int duration = Toast.LENGTH_SHORT;
 			Toast toast = Toast.makeText(this, text, duration);

@@ -76,7 +76,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 	private LinearLayout layout;
 	private SparseArray<WebView> webViewList;
     private String threadName;
-    private boolean closed;
     private String pValue;
     private String replyLink;
 
@@ -147,7 +146,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
 			List<Post> posts = task.processResult(threadDumpObject.document);
             threadName =threadDumpObject.threadName;
-            closed = threadDumpObject.closed;
+            threadIsClosed = threadDumpObject.closed;
             pValue = threadDumpObject.pValue;
             replyLink = threadDumpObject.replyLink;
 			int lastPage = task.getLastPage();
@@ -171,7 +170,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 			return;
 		}
         threadName =(String)extra[1];
-        closed =(Boolean)extra[2];
+        threadIsClosed =(Boolean)extra[2];
         pValue = (String)extra[3];
         replyLink =(String) extra[4];
         processResult(result, (Integer) extra[0]);
