@@ -99,7 +99,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 			VozCache.instance().setCanShowReplyMenu(false);
 		}
 		webViewList = new SparseArray<WebView>();
-		overridePendingTransition(R.animator.right_slide_in,R.animator.zoom_out);
+		overridePendingTransition(R.animator.right_slide_in,R.animator.left_slide_out);
 		registerMenu();
 		posts = new ArrayList<Post>();
 		GoFastEngine.initialize(this);
@@ -138,8 +138,16 @@ public class ThreadActivity extends VozFragmentActivity implements
 	private void getThreads(int threadId, int threadPage) {
 		posts.clear();
 		int currentThreadId = VozCache.instance().getCurrentThread();
-		int page = VozCache.instance().getCurrentThreadPage();
-		String key = String.valueOf(currentThreadId) + "_" + page;
+		int currentThreadPage = VozCache.instance().getCurrentThreadPage();
+        if(threadId>0 && currentThreadId != threadId) {
+            VozCache.instance().setCurrentThread(threadId);
+            currentThreadId = threadId;
+        }
+        if(threadPage > 0 && threadPage !=currentThreadPage) {
+            VozCache.instance().setCurrentThreadPage(threadPage);
+            currentThreadPage = threadPage;
+        }
+		String key = String.valueOf(currentThreadId) + "_" + currentThreadPage;
 		Object cacheObject = VozCache.instance().getDataFromCache(key);
 		if (cacheObject != null) {
 			VozThreadDownloadTask task = new VozThreadDownloadTask(this);
@@ -158,7 +166,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 			task.setShowProcessDialog(true);
 			String url = THREAD_URL_T + String.valueOf(currentThreadId)
 					+ "&page="
-					+ String.valueOf(VozCache.instance().getCurrentThreadPage());
+					+ String.valueOf(currentThreadPage);
 			task.execute(url);
 		}
 	}
@@ -485,14 +493,14 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		overridePendingTransition(R.animator.left_slide_in, R.animator.zoom_out);
+		overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
         if (VozCache.instance().navigationList.size() > 0)
             VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
         VozCache.instance().setCurrentThread(-1);
 		VozCache.instance().setCurrentThreadPage(1);
-		Intent intent = new Intent(this, ForumActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-		startActivity(intent);
+		/*Intent intent = new Intent(this, ForumActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*//*
+		startActivity(intent);*/
 		this.finish();
 	}
 

@@ -60,7 +60,7 @@ public class ForumActivity extends VozFragmentActivity implements
 		 * R.animator.left_slide_out);
 		 */
 		overridePendingTransition(R.animator.right_slide_in,
-				R.animator.zoom_out);
+				R.animator.left_slide_out);
 		forums = new ArrayList<Forum>();
 		threads = new ArrayList<Thread>();
 		GoFastEngine.initialize(this);
@@ -132,10 +132,15 @@ public class ForumActivity extends VozFragmentActivity implements
         int _forumId = forumId;
         if(forumId <= 0) {
             _forumId = VozCache.instance().getCurrentForum();
+        } else {
+            if(_forumId != VozCache.instance().getCurrentForum())
+                VozCache.instance().setCurrentForum(_forumId);
         }
         int _page = page;
         if(_page == 0) {
             _page = VozCache.instance().getCurrentForumPage();
+        } else {
+            VozCache.instance().setCurrentForumPage(_page);
         }
 		// load threads for forum
 		task.setShowProcessDialog(true);
@@ -357,20 +362,20 @@ public class ForumActivity extends VozFragmentActivity implements
         if (navigationList.size() > 0)
             navigationList.remove(VozCache.instance().navigationList.size() - 1);
 
-        if (VozCache.instance().getCurrentParentForum() > 0) {
+        if (VozCache.instance().getCurrentParentForum() <= 0) {
 			overridePendingTransition(R.animator.left_slide_in,
-                    R.animator.zoom_out);
-            Intent intent = new Intent(this, MainActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum());
-			VozCache.instance().cache().remove(FORUM_LAST_PAGE  + VozCache.instance().getCurrentForum());
-			VozCache.instance().cache().remove(FORUM_POSITION);
-			VozCache.instance().setCurrentForum(-1);
-			VozCache.instance().setCurrentForumPage(1);
-			// remove cache since we don't need it
-			// start new activity and remove all finish current activity
-			startActivity(intent);
+                    R.animator.right_slide_out);
+//            Intent intent = new Intent(this, MainActivity.class);
+//			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            VozCache.instance().cache().remove(FORUM_THREADS + VozCache.instance().getCurrentForum());
+//			VozCache.instance().cache().remove(FORUM_LAST_PAGE  + VozCache.instance().getCurrentForum());
+//			VozCache.instance().cache().remove(FORUM_POSITION);
+//			VozCache.instance().setCurrentForum(-1);
+//			VozCache.instance().setCurrentForumPage(1);
+//			// remove cache since we don't need it
+//			// start new activity and remove all finish current activity
+//			startActivity(intent);
 			this.finish();
 		} else {
 			VozCache.instance().setCurrentForum(
