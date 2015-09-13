@@ -363,8 +363,6 @@ public class ForumActivity extends VozFragmentActivity implements
             navigationList.remove(VozCache.instance().navigationList.size() - 1);
 
         if (VozCache.instance().getCurrentParentForum() <= 0) {
-			overridePendingTransition(R.animator.left_slide_in,
-                    R.animator.right_slide_out);
 //            Intent intent = new Intent(this, MainActivity.class);
 //			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 //                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -377,6 +375,8 @@ public class ForumActivity extends VozFragmentActivity implements
 //			// start new activity and remove all finish current activity
 //			startActivity(intent);
 			this.finish();
+			overridePendingTransition(R.animator.left_slide_in,
+					R.animator.right_slide_out);
 		} else {
 			VozCache.instance().setCurrentForum(
 					VozCache.instance().getCurrentParentForum());

@@ -493,7 +493,6 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
         if (VozCache.instance().navigationList.size() > 0)
             VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
         VozCache.instance().setCurrentThread(-1);
@@ -502,6 +501,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*//*
 		startActivity(intent);*/
 		this.finish();
+		overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
 	}
 
 	@Override

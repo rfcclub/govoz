@@ -70,6 +70,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_with_nav);
         mToolbar = (Toolbar) findViewById(R.id.voz_toolbar);
+        final LinearLayout mainContent = (LinearLayout) findViewById(R.id.main_content);
         setSupportActionBar(mToolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -98,7 +99,18 @@ public class BaseFragmentActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
             }
 
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                float moveFactor = (mDrawerList.getWidth() * slideOffset);
+                if(drawerView.getId() == R.id.layout_slidermenu) {
+                    mainContent.setTranslationX(moveFactor);
+                } else {
+                    mainContent.setTranslationX(-moveFactor);
+                }
+            }
         };
+
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
@@ -109,7 +121,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
                     onBackPressed();
                 } else {
                     boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
-                    if(!drawerOpen) {
+                    if (!drawerOpen) {
                         mDrawerLayout.openDrawer(GravityCompat.START);
                     }
                 }
