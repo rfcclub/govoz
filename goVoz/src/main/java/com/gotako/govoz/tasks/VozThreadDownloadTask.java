@@ -25,8 +25,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
     boolean closed;
     private String pValue;
     private String replyLink;
+	private String errorMessage = null;
 
-    public VozThreadDownloadTask(ActivityCallback<Post> callback) {
+	public VozThreadDownloadTask(ActivityCallback<Post> callback) {
 		super(callback);
 	}
 
@@ -34,7 +35,12 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	public List<Post> processResult(Document document) {
 		List<Post> posts = new ArrayList<Post>();
 		Element title = document.select("title").first();
-		threadName = title.text().split("-")[0].trim();
+		threadName = title.text().trim();
+        Element errorElement = Utils.getFirstElement(document.select("td[class=tcat]"));
+		if(errorElement != null && errorElement.text().contains("vBulletin Message")) {
+            errorMessage = Utils.getFirstElement(document.select("div[style=margin: 10px]")).text();
+            return posts;
+        }
 		Element divPosts = document.select("div[id=posts]").get(0);
 		Elements tablePosts = divPosts
 				.select("table[class^=tborder][id^=post][cellpadding=6][cellspacing=1][border=0][width=100%][align=center]");
@@ -262,7 +268,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		
 		// do call back
 		if (callback != null) {
-			callback.doCallback(result, lastPage, threadName, closed, pValue, replyLink);
+			callback.doCallback(result, errorMessage, lastPage, threadName, closed, pValue, replyLink);
 		}
 	}
 	

@@ -27,4 +27,5 @@
     <color name="button_color">#ffED1B24</color>
     <color name="button_pressed_color">#ffFF6A30</color>
     <color name="button_text_color">#ffffffff</color>
+    <color name="delete_thread_color">#626262</color>
 </resources>

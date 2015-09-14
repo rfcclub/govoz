@@ -83,5 +83,6 @@
     <string name="thread_select_title">Nhập Id của Thread rồi nhấn OK</string>
     <string name="error_forum_select_id">Xin vui lòng nhập số. Id forum là số.</string>
     <string name="error_not_login">Bạn cần phải login vào trước mới đi đến forum này được.</string>
+    <string name="err_cannot_access_forum">Không thể truy nhập vozForums. Xin vui lòng thử lại sau.</string>
 
 </resources>

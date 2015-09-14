@@ -12,6 +12,7 @@ import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.Thread;
+import com.gotako.util.Utils;
 
 public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 
@@ -29,7 +30,7 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 		List<Thread> listThreads = new ArrayList<Thread>();
 		subforums = TaskHelper.parseSubForum(document);
 		Element title = document.select("title").first();
-		forumName = title.text().split("-")[0].trim();
+		forumName = title.text().trim();
 		Elements selected = document.select("table[id=threadslist]");
 		if (selected.size() == 0)
 			return listThreads;
@@ -62,6 +63,16 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 						thread.setLastUpdate(div.text());
 					}
 				}
+			} else {
+                Element deleteImg = Utils.getFirstElement(tr.select("img[class=inlineimg][src*=images/misc/trashcan_small.gif][alt*=Deleted Post(s)]"));
+                if(deleteImg != null) { // delete thread
+                    Elements deleteDiv = tr.select("div[class=smallfont]");
+                    thread = new Thread();
+                    thread.setDeleted(true);
+                    thread.setLastUpdate(deleteDiv.get(1).text());
+                    thread.setTitle(deleteDiv.get(0).text());
+                    thread.setPoster("");
+                }
 			}
 			if (thread != null) {
 				listThreads.add(thread);

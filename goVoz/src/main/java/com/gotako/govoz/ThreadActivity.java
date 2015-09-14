@@ -173,14 +173,18 @@ public class ThreadActivity extends VozFragmentActivity implements
 
 	@Override
 	public void doCallback(List<Post> result, Object... extra) {
-		if(result == null || result.size() == 0) {			
-			Toast.makeText(this, "Cannot access to VozForum. Please try again later.", Toast.LENGTH_SHORT).show();
+		if(result == null || result.size() == 0) {
+			String errorMessage = (String)extra[1];
+			if(errorMessage != null)
+				Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(this, getResources().getString(R.string.err_cannot_access_forum), Toast.LENGTH_SHORT).show();
 			return;
 		}
-        threadName =(String)extra[1];
-        threadIsClosed =(Boolean)extra[2];
-        pValue = (String)extra[3];
-        replyLink =(String) extra[4];
+        threadName =(String)extra[2];
+        threadIsClosed =(Boolean)extra[3];
+        pValue = (String)extra[4];
+        replyLink =(String) extra[5];
         processResult(result, (Integer) extra[0]);
 	}
 

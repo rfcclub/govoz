@@ -22,7 +22,8 @@ public class Thread implements Serializable {
 	private String p;
 	private boolean closed = false;
 	private String replyLink;
-	
+	private boolean deleted;
+
 	public String getTitle() {
 		return title;
 	}
@@ -163,4 +164,11 @@ public class Thread implements Serializable {
 		this.replyLink = replyLink;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 }

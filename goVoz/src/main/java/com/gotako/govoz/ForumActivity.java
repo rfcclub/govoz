@@ -255,6 +255,7 @@ public class ForumActivity extends VozFragmentActivity implements
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int selectedIndex, long arg3) {
 		Thread currentThread = threads.get(selectedIndex);
+		if(currentThread.isDeleted()) return;
 		VozCache.instance().cache().put(FORUM_POSITION, selectedIndex);
 		if (!currentThread.isSubForum()) {
 			VozCache.instance().setCurrentThread(currentThread.getId());
@@ -315,12 +316,19 @@ public class ForumActivity extends VozFragmentActivity implements
 				viewHeader.setVisibility(View.GONE);
 			}
 		}
-		TextView title = (TextView) viewSection.findViewById(R.id.title);
-		if (currentRenderItem.isSticky()) { // set red background for text
-			title.setTextColor(Color.RED);
-		} else {
-			title.setTextColor(Color.WHITE);
-		}
+        TextView title = (TextView) viewSection.findViewById(R.id.title);
+
+        if(currentRenderItem.isDeleted()) {
+            title.setTextColor(Color.LTGRAY);
+            viewSection.setBackgroundColor(getResources().getColor(R.color.delete_thread_color));
+        } else {
+            viewSection.setBackgroundColor(Color.BLACK);
+            if (currentRenderItem.isSticky()) { // set red background for text
+                title.setTextColor(Color.RED);
+            } else {
+                title.setTextColor(Color.WHITE);
+            }
+        }
 		title.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
 				.getFontSize());
 		TextView poster = (TextView) viewSection.findViewById(R.id.poster);
