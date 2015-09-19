@@ -7,16 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.listener.BindingActionListener;
+import com.gotako.govoz.data.VozMenuItem;
 import com.gotako.govoz.tasks.UserLogoutTask;
+import com.gotako.util.Utils;
+
+import java.util.ArrayList;
 
 /**
  * @author lnguyen66
@@ -24,17 +31,35 @@ import com.gotako.govoz.tasks.UserLogoutTask;
  */
 public class VozFragmentActivity extends BaseFragmentActivity implements
 		OnMenuItemClickListener,BindingActionListener, ExceptionCallback,LogoutCallback {
-
-	private MenuItem loginMenu;
-	private MenuItem logoutMenu;
-	private MenuItem quickRepMenu;
-	protected MenuItem pinMenu;
-	protected MenuItem unpinMenu;
-	private MenuItem settingMenu;
-	private MenuItem loginWithPresetMenu;
 	protected boolean threadIsClosed;
 
-	@Override
+    @Override
+    protected AdapterView.OnItemClickListener createItemClickListener() {
+        return new SlideMenuClickListener();
+    }
+
+    @Override
+    protected void createLeftMenu() {
+        if (VozCache.instance().menuItemList == null) {
+            VozCache.instance().menuItemList = new ArrayList<VozMenuItem>();
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home), R.drawable.ic_home_white_18dp, 0));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.ic_open_in_new_white_18dp, 1));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum), R.drawable.ic_open_in_new_white_18dp, 2));
+            VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox), R.drawable.ic_mail_white_18dp, 3));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search), R.drawable.ic_search_white_18dp, 4));
+            VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting), R.drawable.ic_settings_white_18dp, 5));
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_exit), R.drawable.ic_phone_android_white_18dp, 6));
+        }
+    }
+
+    @Override
+    protected void createRightMenu() {
+
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -43,86 +68,15 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	}
 
 	protected void setListenerForMenuItems(Menu menu) {
-		settingMenu = menu.findItem(R.id.action_settings);
-		settingMenu.setOnMenuItemClickListener(this);
-		loginMenu = menu.findItem(R.id.action_login);
-		loginMenu.setOnMenuItemClickListener(this);
 		MenuItem refresh = menu.findItem(R.id.action_refresh);
 		refresh.setOnMenuItemClickListener(this);
-		logoutMenu = menu.findItem(R.id.action_logout);
-		logoutMenu.setOnMenuItemClickListener(this);
-		quickRepMenu = menu.findItem(R.id.action_quickrep);
-		quickRepMenu.setOnMenuItemClickListener(this);
-		
-		pinMenu = menu.findItem(R.id.action_pin);
-		pinMenu.setOnMenuItemClickListener(this);
-		
-		loginWithPresetMenu = menu.findItem(R.id.action_login_preset);
-		loginWithPresetMenu.setOnMenuItemClickListener(this);
-		
-		unpinMenu = menu.findItem(R.id.action_unpin);
-		unpinMenu.setOnMenuItemClickListener(this);
-		
-		checkMenuItemStatus();
-	}
-
-	private void checkMenuItemStatus() {
-		// set menu items base on login status
-		if (VozCache.instance().getCookies() == null) { // not logged in yet
-			logoutMenu.setVisible(false);			
-			loginMenu.setVisible(true);
-			loginWithPresetMenu.setVisible(true);
-		} else { // logged in
-			logoutMenu.setVisible(true);			
-			loginMenu.setVisible(false);
-			loginWithPresetMenu.setVisible(false);
-		}		
-		if (VozCache.instance().canShowReplyMenu()) {
-			if(VozCache.instance().getCookies() != null) {// logged in
-				quickRepMenu.setVisible(true);
-			} else {
-				quickRepMenu.setVisible(false);
-			}
-		} else {
-			quickRepMenu.setVisible(false);
-		}
-		
-		if (canShowPinnedMenu()) {
-			pinMenu.setVisible(true);
-		} else {
-			pinMenu.setVisible(false);
-		}
-		
-		if (canShowUnpinnedMenu()) {
-			unpinMenu.setVisible(true);
-		} else {
-			unpinMenu.setVisible(false);
-		}
 	}
 	
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_login:
-			doLogin();
-			break;
-		case R.id.action_login_preset:
-			doLoginWithPreset();
-			break;	
 		case R.id.action_refresh:
 			refresh();
-			break;
-		case R.id.action_logout:
-			doLogout();
-			break;
-		case R.id.action_quickrep:
-			doRep();
-			break;
-		case R.id.action_pin:
-			doUnpin();
-			break;
-		case R.id.action_unpin:
-			doPin();
 			break;
 		case R.id.action_settings:
 			showSetting();
@@ -151,15 +105,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 		Intent intent = new Intent(this, SettingActivity.class);
 		startActivity(intent);		
 	}
-	
-	protected void doPin() {
-		
-	}
-	
-	protected void doUnpin() {
-		
-	}
-	
+
 	private void doLogout() {		
 		UserLogoutTask task = new UserLogoutTask(this);
 		task.setCallback(this);
@@ -172,7 +118,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	}
 
 	public void refresh() {
-		// do nothing
+		// do nothing. This method will be overriden by subclasses
 	}
 	
 	private void doRep() {
@@ -208,16 +154,56 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	@Override
 	public void doAfterLogout(boolean result) {
 		if(result) {
-			checkMenuItemStatus();
 			refresh();
 		}		
 	}
-	
-	protected boolean canShowPinnedMenu() {
-		return false;
-	}
-	
-	protected boolean canShowUnpinnedMenu() {
-		return false;
-	}
+
+    /**
+     * Slide menu item click listener
+     * */
+    private class SlideMenuClickListener implements
+            ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            FragmentManager fm = VozFragmentActivity.this.getSupportFragmentManager();
+            if (position < navDrawerItems.size()) {
+                VozMenuItem item = navDrawerItems.get(position);
+                switch (item.type) {
+                    case 0: // home
+                        VozCache.instance().navigationList.clear();
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        break;
+                    case 1:
+                        ThreadSelectDialog threadSelectDialog = new ThreadSelectDialog();
+                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
+                        threadSelectDialog.setActivity(VozFragmentActivity.this);
+                        threadSelectDialog.setTitle(getResources().getString(R.string.thread_select_title));
+                        threadSelectDialog.show(fm, "threadSelect");
+                        break;
+                    case 2:
+                        ForumSelectDialog forumSelectDialog = new ForumSelectDialog();
+                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
+                        forumSelectDialog.setActivity(VozFragmentActivity.this);
+                        forumSelectDialog.setTitle(getResources().getString(R.string.forum_select_title));
+                        forumSelectDialog.show(fm, "forumSelect");
+                        break;
+                    case 3:
+                    case 4:
+                    case 5:
+                        Intent intent1 = new Intent(VozFragmentActivity.this,SettingActivity.class);
+                        VozFragmentActivity.this.startActivity(intent1);
+                        break;
+                    case 6:
+                        VozFragmentActivity.this.finishAffinity();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
 }
+

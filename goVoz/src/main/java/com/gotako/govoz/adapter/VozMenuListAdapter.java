@@ -54,9 +54,16 @@ public class VozMenuListAdapter extends BaseAdapter {
 
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
-
-        imgIcon.setImageResource(itemList.get(position).icon);
-        txtTitle.setText(itemList.get(position).title);
+        VozMenuItem item = itemList.get(position);
+        if("-".equals(item.title)) {
+            convertView.findViewById(R.id.separate_line).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.menu_item).setVisibility(View.GONE);
+        } else { // normal item
+            convertView.findViewById(R.id.separate_line).setVisibility(View.GONE);
+            convertView.findViewById(R.id.menu_item).setVisibility(View.VISIBLE);
+            imgIcon.setImageResource(item.icon);
+            txtTitle.setText(item.title);
+        }
         return convertView;
     }
 }

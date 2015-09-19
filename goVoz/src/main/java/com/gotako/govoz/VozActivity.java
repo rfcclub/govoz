@@ -42,24 +42,8 @@ public class VozActivity extends BaseActivity implements OnMenuItemClickListener
 	protected void setListenerForMenuItems(Menu menu) {
 		settingMenu = menu.findItem(R.id.action_settings);
 		settingMenu.setOnMenuItemClickListener(this);
-		loginMenu = menu.findItem(R.id.action_login);
-		loginMenu.setOnMenuItemClickListener(this);
 		MenuItem refresh = menu.findItem(R.id.action_refresh);
 		refresh.setOnMenuItemClickListener(this);
-		logoutMenu = menu.findItem(R.id.action_logout);
-		logoutMenu.setOnMenuItemClickListener(this);
-		quickRepMenu = menu.findItem(R.id.action_quickrep);
-		quickRepMenu.setOnMenuItemClickListener(this);
-		
-		pinMenu = menu.findItem(R.id.action_pin);
-		pinMenu.setOnMenuItemClickListener(this);
-		
-		loginWithPresetMenu = menu.findItem(R.id.action_login_preset);
-		loginWithPresetMenu.setOnMenuItemClickListener(this);
-		
-		unpinMenu = menu.findItem(R.id.action_unpin);
-		unpinMenu.setOnMenuItemClickListener(this);
-		
 		checkMenuItemStatus();
 	}
 
@@ -100,20 +84,8 @@ public class VozActivity extends BaseActivity implements OnMenuItemClickListener
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_login:
-			doLogin();
-			break;
-		case R.id.action_login_preset:
-			doLoginWithPreset();
-			break;	
 		case R.id.action_refresh:
 			refresh();
-			break;
-		case R.id.action_logout:
-			doLogout();
-			break;
-		case R.id.action_quickrep:
-			doRep();
 			break;
 		case R.id.action_settings:
 			showSetting();

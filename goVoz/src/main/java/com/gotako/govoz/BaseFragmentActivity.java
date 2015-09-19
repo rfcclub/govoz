@@ -42,7 +42,7 @@ import android.widget.RelativeLayout;
  * @author lnguyen66
  *
  */
-public class BaseFragmentActivity extends AppCompatActivity {
+public abstract class BaseFragmentActivity extends AppCompatActivity {
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -75,7 +75,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         layoutSlidePanel = (LinearLayout) findViewById(R.id.layout_slidermenu);
-        initLeftMenu();
+        createLeftMenu();
 
         navDrawerItems = VozCache.instance().menuItemList;
         // enabling action bar app icon and behaving it as toggle button
@@ -113,7 +113,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
 
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerList.setOnItemClickListener(new SlideMenuClickListener());
+        mDrawerList.setOnItemClickListener(createItemClickListener());
         mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,18 +136,9 @@ public class BaseFragmentActivity extends AppCompatActivity {
 
     }
 
-    private void initLeftMenu() {
-        if (VozCache.instance().menuItemList == null) {
-            VozCache.instance().menuItemList = new ArrayList<VozMenuItem>();
-            VozCache.instance().menuItemList.add(new VozMenuItem("Trang chủ", R.drawable.ic_home_white_18dp, 0));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Đi đến Thread", R.drawable.ic_open_in_new_white_18dp, 1));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Đi đến Forum", R.drawable.ic_open_in_new_white_18dp, 2));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Hộp thư", R.drawable.ic_mail_white_18dp, 3));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Tìm kiếm", R.drawable.ic_search_white_18dp, 4));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Cài đặt", R.drawable.ic_settings_white_18dp, 5));
-            VozCache.instance().menuItemList.add(new VozMenuItem("Thoát", R.drawable.ic_phone_android_white_18dp, 6));
-        }
-    }
+    protected abstract AdapterView.OnItemClickListener createItemClickListener();
+    protected abstract void createLeftMenu();
+    protected abstract void createRightMenu();
 
     protected void changeDefaultActionBar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -166,53 +157,7 @@ public class BaseFragmentActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Slide menu item click listener
-     * */
-    private class SlideMenuClickListener implements
-            ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                long id) {
-            FragmentManager fm = BaseFragmentActivity.this.getSupportFragmentManager();
-        	if (position < navDrawerItems.size()) {
-                VozMenuItem item = navDrawerItems.get(position);
-                switch (item.type) {
-                    case 0: // home
-                        VozCache.instance().navigationList.clear();
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        break;
-                    case 1:
-                        ThreadSelectDialog threadSelectDialog = new ThreadSelectDialog();
-                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
-                        threadSelectDialog.setActivity(BaseFragmentActivity.this);
-                        threadSelectDialog.setTitle(getResources().getString(R.string.thread_select_title));
-                        threadSelectDialog.show(fm, "threadSelect");
-                        break;
-                    case 2:
-                        ForumSelectDialog forumSelectDialog = new ForumSelectDialog();
-                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
-                        forumSelectDialog.setActivity(BaseFragmentActivity.this);
-                        forumSelectDialog.setTitle(getResources().getString(R.string.forum_select_title));
-                        forumSelectDialog.show(fm, "forumSelect");
-                        break;
-                    case 3:
-                    case 4:
-                    case 5:
-                        Intent intent1 = new Intent(BaseFragmentActivity.this,SettingActivity.class);
-                        BaseFragmentActivity.this.startActivity(intent1);
-                        break;
-                    case 6:
-                        BaseFragmentActivity.this.finishAffinity();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -242,7 +187,6 @@ public class BaseFragmentActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
-        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
  

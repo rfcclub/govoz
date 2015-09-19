@@ -21,10 +21,10 @@ import com.gotako.util.Utils;
 public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 	int lastPage = 1;
-	String threadName;
+	String threadName = "";
     boolean closed;
-    private String pValue;
-    private String replyLink;
+    private String pValue = "";
+    private String replyLink = "";
 	private String errorMessage = null;
 
 	public VozThreadDownloadTask(ActivityCallback<Post> callback) {

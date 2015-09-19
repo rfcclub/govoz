@@ -113,4 +113,8 @@ public class Utils {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 		
 	}
+
+	public static String getString(Context context, int id) {
+		return context.getString(id);
+	}
 }

@@ -179,13 +179,13 @@ public class ThreadActivity extends VozFragmentActivity implements
 				Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
 			else
 				Toast.makeText(this, getResources().getString(R.string.err_cannot_access_forum), Toast.LENGTH_SHORT).show();
-			return;
+		} else {
+			threadName = (String) extra[2];
+			threadIsClosed = (Boolean) extra[3];
+			pValue = (String) extra[4];
+			replyLink = (String) extra[5];
+			processResult(result, (Integer) extra[0]);
 		}
-        threadName =(String)extra[2];
-        threadIsClosed =(Boolean)extra[3];
-        pValue = (String)extra[4];
-        replyLink =(String) extra[5];
-        processResult(result, (Integer) extra[0]);
 	}
 
     private void processResult(List<Post> result,int last) {
