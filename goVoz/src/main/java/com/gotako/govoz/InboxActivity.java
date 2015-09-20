@@ -41,7 +41,7 @@ public class InboxActivity extends VozFragmentActivity implements
         View layout = mInflater.inflate(R.layout.activity_inbox, null);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
         frameLayout.addView(layout);
-        overridePendingTransition(R.animator.right_slide_in, R.animator.zoom_out);
+        overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out);
         GoFastEngine.initialize(this);
         // TODO
         ReactiveCollectionField field = GoFastEngine.instance().getBindingObject(this, "pmList", ReactiveCollectionField.class);

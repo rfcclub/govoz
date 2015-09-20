@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/menu_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/icon"
         android:layout_width="18dp"
@@ -25,7 +25,7 @@
         android:layout_toRightOf="@+id/icon"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:layout_marginLeft="52dp"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="@color/list_item_title"
         android:text="menuItemSample"
         android:gravity="center_vertical" />

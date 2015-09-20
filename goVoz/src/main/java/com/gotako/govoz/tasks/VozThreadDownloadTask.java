@@ -41,6 +41,25 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
             errorMessage = Utils.getFirstElement(document.select("div[style=margin: 10px]")).text();
             return posts;
         }
+
+		Element divNav = Utils.getFirstElement(document.select("div[class=pagenav]"));
+		lastPage = VozCache.instance().getCurrentThreadPage();
+		if (divNav != null) {
+			Elements pageLinks = divNav.select("a");
+			if (pageLinks != null && pageLinks.size() > 0) {
+				for (Element pageLink : pageLinks) {
+					String href = pageLink.attr("href");
+					String pageSign = "page=";
+					if (href.indexOf(pageSign) > 0) { // if we have link href="...page=2"
+						String extractLink = href.split(pageSign)[1].trim();
+						int page = Integer.parseInt(extractLink);
+						if (page > lastPage)
+							lastPage = page;
+					}
+				}
+			}
+		}
+
 		Element divPosts = document.select("div[id=posts]").get(0);
 		Elements tablePosts = divPosts
 				.select("table[class^=tborder][id^=post][cellpadding=6][cellspacing=1][border=0][width=100%][align=center]");
@@ -145,23 +164,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			posts.add(post);
 		}
 		
-		Element divNav = Utils.getFirstElement(document.select("div[class=pagenav]"));
-		lastPage = VozCache.instance().getCurrentThreadPage();
-		if (divNav != null) {
-			Elements pageLinks = divNav.select("a");
-			if (pageLinks != null && pageLinks.size() > 0) {
-				for (Element pageLink : pageLinks) {
-					String href = pageLink.attr("href");
-					String pageSign = "page=";
-					if (href.indexOf(pageSign) > 0) { // if we have link href="...page=2"
-						String extractLink = href.split(pageSign)[1].trim();
-						int page = Integer.parseInt(extractLink);
-						if (page > lastPage)
-							lastPage = page;
-					}
-				}
-			}
-		}
+
 		VozCache.instance().setLastPage(lastPage);
 		
 		// if logged in so get userid

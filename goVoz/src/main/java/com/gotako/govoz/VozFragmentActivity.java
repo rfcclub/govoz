@@ -42,16 +42,27 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     protected void createLeftMenu() {
         if (VozCache.instance().menuItemList == null) {
             VozCache.instance().menuItemList = new ArrayList<VozMenuItem>();
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home), R.drawable.ic_home_white_18dp, 0));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.ic_open_in_new_white_18dp, 1));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum), R.drawable.ic_open_in_new_white_18dp, 2));
-            VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox), R.drawable.ic_mail_white_18dp, 3));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search), R.drawable.ic_search_white_18dp, 4));
-            VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting), R.drawable.ic_settings_white_18dp, 5));
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_exit), R.drawable.ic_phone_android_white_18dp, 6));
+        } else {
+            VozCache.instance().menuItemList.clear();
         }
+        if(VozCache.instance().isLoggedIn()) {
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_logout), R.drawable.ic_input_white_18dp, 9));
+        } else {
+            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login), R.drawable.ic_account_box_white_18dp, 7));
+            if(VozCache.instance().isSavedPreference(this.getBaseContext())) {
+                VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login_with_pref), R.drawable.ic_assignment_ind_white_18dp, 8));
+            }
+        }
+        VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home), R.drawable.ic_home_white_18dp, 0));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.ic_open_in_new_white_18dp, 1));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum), R.drawable.ic_open_in_new_white_18dp, 2));
+        VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox), R.drawable.ic_mail_white_18dp, 3));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search), R.drawable.ic_search_white_18dp, 4));
+        VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting), R.drawable.ic_settings_white_18dp, 5));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_exit), R.drawable.ic_power_settings_new_white_18dp, 6));
     }
 
     @Override
@@ -154,9 +165,21 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	@Override
 	public void doAfterLogout(boolean result) {
 		if(result) {
+            refreshLeftMenu();
 			refresh();
 		}		
 	}
+
+    public void doAfterAutoLogin() {
+        refreshLeftMenu();
+
+    }
+
+    private void refreshLeftMenu() {
+        VozCache.instance().menuItemList.clear();
+        createLeftMenu();
+        leftMenuAdapter.notifyDataSetChanged();
+    }
 
     /**
      * Slide menu item click listener
@@ -191,7 +214,11 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         forumSelectDialog.show(fm, "forumSelect");
                         break;
                     case 3:
+                        Intent intentInbox = new Intent(VozFragmentActivity.this,InboxActivity.class);
+                        VozFragmentActivity.this.startActivity(intentInbox);
+						break;
                     case 4:
+						break;
                     case 5:
                         Intent intent1 = new Intent(VozFragmentActivity.this,SettingActivity.class);
                         VozFragmentActivity.this.startActivity(intent1);
@@ -199,6 +226,15 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                     case 6:
                         VozFragmentActivity.this.finishAffinity();
                         break;
+					case 7:
+						doLogin();
+						break;
+					case 8:
+						doLoginWithPreset();
+						break;
+					case 9:
+						doLogout();
+						break;
                     default:
                         break;
                 }

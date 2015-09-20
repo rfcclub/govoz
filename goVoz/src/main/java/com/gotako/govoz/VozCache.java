@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.jsoup.nodes.Document;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
 
 import com.gotako.govoz.data.Forum;
@@ -26,8 +28,9 @@ import com.gotako.govoz.data.VozMenuItem;
 public class VozCache {
 	
 	public static final int LOOK_AHEAD_NUMBER = 2;
-	
-	private LruCache memoryCache;
+    public static final String GUEST = "guest";
+
+    private LruCache memoryCache;
 	
 	private static VozCache vozCache = null;
 	private int currentForumId;
@@ -36,7 +39,7 @@ public class VozCache {
 	private int lastPage = 1;
 	private int currentThreadPage;
 	private Map<String,String> cookies;
-	private String securityToken ="guest";
+	private String securityToken = GUEST;
 	private String userId ="";
 	private boolean canShowReplyMenu;
 	private int currentParentForumId = -1;
@@ -62,6 +65,13 @@ public class VozCache {
 		}
 		return vozCache;
 	}
+	public boolean isLoggedIn() {
+		return cookies != null;
+	}
+    public boolean isSavedPreference(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
+        return prefs.contains(VozConstant.USERNAME) && prefs.contains(VozConstant.PASSWORD);
+    }
 
 	public Object getDataFromCache(String key) {
 		return memoryCache.get(key);

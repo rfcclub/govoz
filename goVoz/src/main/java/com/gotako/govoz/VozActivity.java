@@ -96,19 +96,7 @@ public class VozActivity extends BaseActivity implements OnMenuItemClickListener
 		return true;
 	}
 
-	private void doLoginWithPreset() {
-		SharedPreferences prefs = this.getSharedPreferences("VOZINFO", Context.MODE_PRIVATE);
-		boolean autoLogin = false;
-		if(prefs.contains("USERNAME") && prefs.contains("PASSWORD")) {
-			// if not login so do login
-			if (VozCache.instance().getCookies() == null) {				
-				String username = prefs.getString("USERNAME", "guest");
-				String password = prefs.getString("PASSWORD", "guest");
-				AutoLoginBackgroundService albs = new AutoLoginBackgroundService(this);
-				albs.doLogin(username, password);				
-			}
-		}		
-	}
+
 	
 	private void showSetting() {
 		Intent intent = new Intent(this, SettingActivity.class);

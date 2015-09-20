@@ -23,10 +23,10 @@ public class PMDownloadTask extends AbstractDownloadTask<PrivateMessage> {
     @Override
     public List<PrivateMessage> processResult(Document document) {
         List<PrivateMessage> privateMessages = new ArrayList<PrivateMessage>();
-        Element formPM = Utils.getFirstElement(document.select("form[id=pmform][action*=private.php][method*=post]"));
+        Element formPM = Utils.getFirstElement(document.select("form[id=pmform][action^=private.php?do=managepm][method*=post]"));
         if(formPM!=null) {
-            Element tablePM = Utils.getFirstElement(document.select("table"));
-            Elements tBodys = document.select("tbody");
+            Element tablePM = Utils.getFirstElement(formPM.select("table"));
+            Elements tBodys = tablePM.select("tbody");
             for(Element tBody : tBodys) {
                 if(tBody.hasAttr("id")) {
                     Elements msgs = tBody.select("tr");
@@ -34,19 +34,19 @@ public class PMDownloadTask extends AbstractDownloadTask<PrivateMessage> {
                         Element tdMsg = msg.select("td").get(2);
                         PrivateMessage privateMessage = new PrivateMessage();
                         // get date
-                        privateMessage.date = "";
+                        privateMessage.pmDate = "";
                         Elements timeSpans = tdMsg.select("span[style=float:right]");
                         for(Element timeSpan:timeSpans) {
-                            privateMessage.date +=timeSpan.text() + " ";
+                            privateMessage.pmDate +=timeSpan.text() + " ";
                         }
                         // get message
                         Element msgLink = Utils.getFirstElement(msg.select("a[href*=private.php]"));
-                        privateMessage.title = msgLink.text();
+                        privateMessage.pmTitle = msgLink.text();
                         // get link
                         privateMessage.pmLink = msgLink.attr("href").replace("&amp;","&");
                         // get user
                         Element spanUser = Utils.getFirstElement(msg.select("span[onclick*=member]"));
-                        privateMessage.sender = spanUser.text();
+                        privateMessage.pmSender = spanUser.text();
                         privateMessages.add(privateMessage);
                     }
                 }

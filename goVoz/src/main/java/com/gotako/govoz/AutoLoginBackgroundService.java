@@ -10,6 +10,7 @@ import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.govoz.tasks.UserLoginTask;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
+import com.gotako.util.Utils;
 
 public class AutoLoginBackgroundService implements
 ActivityCallback<Boolean>, ExceptionCallback {
@@ -35,13 +36,14 @@ ActivityCallback<Boolean>, ExceptionCallback {
 	@Override
 	public void doCallback(List<Boolean> result, Object... extra) {
 		if(result != null && result.get(0) == true) {
-			Toast.makeText(context, "Login successfully !!", Toast.LENGTH_SHORT).show();	
+			Toast.makeText(context, Utils.getString(context,R.string.login_success), Toast.LENGTH_SHORT).show();
 			VozMainForumDownloadTask task = new VozMainForumDownloadTask(null);
 			task.setContext(context);		
 			task.setShowProcessDialog(false);
 			task.execute(VOZ_LINK);
+			((VozFragmentActivity)context).doAfterAutoLogin();
 		} else {
-			Toast.makeText(context, "Cannot login. Maybe wrong username/password or network is not good", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, Utils.getString(context,R.string.error_incorrect_password), Toast.LENGTH_SHORT).show();
 		}		
 	}
 	

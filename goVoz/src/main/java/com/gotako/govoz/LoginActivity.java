@@ -192,9 +192,10 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 			editor.putString("USERNAME", mUsername);
 			editor.putString("PASSWORD", mPassword);
 			editor.commit();
-			Toast.makeText(this, "Login successfully!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
 			finish();
 			Intent intent = new Intent(this,MainActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);			
 		} else {
 			mPasswordView

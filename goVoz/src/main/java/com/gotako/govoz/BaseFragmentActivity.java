@@ -61,7 +61,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     private LinearLayout layoutSlidePanel;
     protected List<VozMenuItem> navDrawerItems;
 
-    private VozMenuListAdapter adapter;
+    protected VozMenuListAdapter leftMenuAdapter;
     private Toolbar mToolbar;
 
     @Override
@@ -81,8 +81,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         // enabling action bar app icon and behaving it as toggle button
         changeDefaultActionBar();
         // setting the nav drawer list adapter
-        adapter = new VozMenuListAdapter(getBaseContext(), navDrawerItems);
-        mDrawerList.setAdapter(adapter);
+        leftMenuAdapter = new VozMenuListAdapter(getBaseContext(), navDrawerItems);
+        mDrawerList.setAdapter(leftMenuAdapter);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, //nav menu toggle icon

@@ -56,9 +56,9 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
+        /*int width = displaymetrics.widthPixels;
+        getDialog().getWindow().setLayout((int) (width * 0.65), 440);*/
 
-        getDialog().getWindow().setLayout((int) (width * 0.65), 440);
         editText = (EditText) view.findViewById(R.id.txtPageNumber);
 
         ((TextView) view.findViewById(R.id.txtTitle)).setText(title);

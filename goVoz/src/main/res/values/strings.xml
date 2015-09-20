@@ -13,7 +13,7 @@
     <string name="refresh">Refresh</string>
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
-    <string name="prompt_username">Username</string>
+    <string name="prompt_username">Tên tài khoản</string>
     <string name="title_activity_post">PostActivity</string>
     <string name="quick_reply">Reply</string>
     <string name="title_activity_auto_login">AutoLoginActivity</string>
@@ -91,4 +91,8 @@
     <string name="left_menu_search">Tìm kiếm</string>
     <string name="left_menu_setting">Cài đặt</string>
     <string name="left_menu_exit">Thoát</string>
+    <string name="left_menu_login">Đăng nhập</string>
+    <string name="left_menu_login_with_pref">Đăng nhập tự động bằng thông tin đã lưu</string>
+    <string name="left_menu_logout">Đăng xuất</string>
+    <string name="login_success">Đăng nhập thành công !</string>
 </resources>

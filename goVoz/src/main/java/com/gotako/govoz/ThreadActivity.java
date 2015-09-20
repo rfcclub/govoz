@@ -174,7 +174,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 	@Override
 	public void doCallback(List<Post> result, Object... extra) {
 		if(result == null || result.size() == 0) {
-			String errorMessage = (String)extra[1];
+			String errorMessage = (String)extra[0];
 			if(errorMessage != null)
 				Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
 			else
@@ -184,7 +184,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 			threadIsClosed = (Boolean) extra[3];
 			pValue = (String) extra[4];
 			replyLink = (String) extra[5];
-			processResult(result, (Integer) extra[0]);
+			processResult(result, (Integer) extra[1]);
 		}
 	}
 
