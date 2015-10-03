@@ -81,18 +81,20 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 	protected void setListenerForMenuItems(Menu menu) {
 		MenuItem refresh = menu.findItem(R.id.action_refresh);
 		refresh.setOnMenuItemClickListener(this);
+        MenuItem reply = menu.findItem(R.id.action_reply);
+        reply.setOnMenuItemClickListener(this);
 	}
 	
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_refresh:
-			refresh();
-			break;
-		case R.id.action_settings:
-			showSetting();
-			break;
-		default: // last option
+		    case R.id.action_refresh:
+			    refresh();
+			    break;
+		    case R.id.action_reply:
+			    doRep();
+			    break;
+		    default: // last option
 
 		}
 		return true;
@@ -132,30 +134,21 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 		// do nothing. This method will be overriden by subclasses
 	}
 	
-	private void doRep() {
-		if(threadIsClosed) {
-			CharSequence text = "Sorry! This thread is closed!";
-			int duration = Toast.LENGTH_SHORT;
-			Toast toast = Toast.makeText(this, text, duration);
-			toast.show();	
-		} else { // reply thread	
-			Intent intent = new Intent(this, PostActivity.class);
-			startActivity(intent);		
-		}		
+	public void doRep() {
+
 	}
 
 	@Override
 	public void preProcess(int position, View convertView, Object... extra) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
 	}
 
 	@Override
 	public void postProcess(int position, View convertView, Object... extra) {
-		// TODO Auto-generated method stub
-		
+		// do nothing
+
 	}
-	
+
 	@Override
 	public void lastBreath(Exception ex) {
 		ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output

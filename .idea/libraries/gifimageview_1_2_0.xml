@@ -5,6 +5,8 @@
       <root url="file://$PROJECT_DIR$/goVoz/build/intermediates/exploded-aar/com.felipecsl/gifimageview/1.2.0/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://D:/repository/.gradle/caches/modules-2/files-2.1/com.felipecsl/gifimageview/1.2.0/914ac535f0f8d4ff84cf34b196b96b8005ec2a83/gifimageview-1.2.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

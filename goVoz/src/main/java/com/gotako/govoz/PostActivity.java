@@ -16,7 +16,7 @@ import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.annotation.BindingField;
 import com.gotako.govoz.tasks.PostReplyTask;
 
-public class PostActivity extends BaseActivity implements ActivityCallback<Boolean>, ExceptionCallback {
+public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
 
 	@BindingField(id = R.id.titleText, twoWay = true)
 	String titleText = "";

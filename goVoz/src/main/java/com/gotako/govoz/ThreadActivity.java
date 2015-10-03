@@ -3,11 +3,16 @@ package com.gotako.govoz;
 import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.impl.client.HttpClients;
 import org.jsoup.nodes.Document;
 import org.kobjects.htmlview.HtmlView;
 import org.w3c.dom.Text;
@@ -28,6 +33,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -107,7 +113,16 @@ public class ThreadActivity extends VozFragmentActivity implements
 		updateStatus();
 	}
 
-	private void processNavigationLink() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        if(VozCache.instance().isLoggedIn()) {
+            menu.findItem(R.id.action_reply).setVisible(true);
+        }
+        return ret;
+    }
+
+    private void processNavigationLink() {
 		// last element of list should be forum link
 		String threadLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
 		String[] parameters = threadLink.split("\\?")[1].split("\\&");
@@ -171,7 +186,22 @@ public class ThreadActivity extends VozFragmentActivity implements
 		}
 	}
 
-	@Override
+    @Override
+    public void doRep() {
+        if(threadIsClosed) {
+            CharSequence text = "Sorry! This thread is closed!";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, text, duration);
+            toast.show();
+        } else { // reply thread
+            Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("threadName",threadName);
+            intent.putExtra("replyLink",replyLink);
+            startActivity(intent);
+        }
+    }
+
+    @Override
 	public void doCallback(List<Post> result, Object... extra) {
 		if(result == null || result.size() == 0) {
 			String errorMessage = (String)extra[0];
@@ -395,12 +425,16 @@ public class ThreadActivity extends VozFragmentActivity implements
 					if(url.startsWith(VOZ_LINK)) {
 						return super.shouldInterceptRequest(view, url);
 					} else if(isImageUrl(url)) {							
-							return new WebResourceResponse("image/png", "", resources.openRawResource(R.drawable.no_available_image));								
+							return new WebResourceResponse("image/png", "", resources.openRawResource(R.drawable.no_available_image));
 					} else {
 						return null;
 					}
-				} else {					
-					return super.shouldInterceptRequest(view, url);					
+				} else {
+					if(isAttachmentImage(url)) {
+						return getContentFromWeb(url);
+					} else {
+						return super.shouldInterceptRequest(view, url);
+					}
 				}
 			}
 
@@ -456,7 +490,25 @@ public class ThreadActivity extends VozFragmentActivity implements
 		};		
 		webView.setOnTouchListener(gestureListener);		
 	}
-	
+
+    private WebResourceResponse getContentFromWeb(String url) {
+        InputStream content = null;
+        try {
+            URL imageUrl = new URL(url.replaceAll("&amp;","&"));
+            content = imageUrl.openStream();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new WebResourceResponse("image/jpg", "", content);
+    }
+
+    private boolean isAttachmentImage(String url) {
+		return url.contains(VOZ_LINK + "/attachment.php?attachmentid=") && url.contains("stc=1&amp;thumb=1");
+	}
+
 	protected void processLink(String url) {
 		// TODO Auto-generated method stub
 		
