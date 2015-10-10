@@ -59,8 +59,7 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 
 	@Override
 	public void doCallback(List<Boolean> result, Object... extra) {
-		Intent intent = new Intent(this, ThreadActivity.class);
-		startActivity(intent);
+		setResult(1);
 		finish();
 	}
 	

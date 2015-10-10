@@ -131,7 +131,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 		int threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
 		int currentForumId = VozCache.instance().getCurrentThread();
 		if (currentForumId != threadId) {
-            getThreads(threadId, threadPage);
+            getThreads(false, threadId, threadPage);
 		} else {
             VozCache.instance().setCurrentThreadPage(threadPage);
             getThreads();
@@ -148,9 +148,9 @@ public class ThreadActivity extends VozFragmentActivity implements
 	}
 
     private void getThreads() {
-        getThreads(VozCache.instance().getCurrentThread(), VozCache.instance().getCurrentThreadPage());
+        getThreads(false, VozCache.instance().getCurrentThread(), VozCache.instance().getCurrentThreadPage());
     }
-	private void getThreads(int threadId, int threadPage) {
+	private void getThreads(boolean forceReload, int threadId, int threadPage) {
 		posts.clear();
 		int currentThreadId = VozCache.instance().getCurrentThread();
 		int currentThreadPage = VozCache.instance().getCurrentThreadPage();
@@ -164,7 +164,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         }
 		String key = String.valueOf(currentThreadId) + "_" + currentThreadPage;
 		Object cacheObject = VozCache.instance().getDataFromCache(key);
-		if (cacheObject != null) {
+		if (!forceReload && cacheObject != null && currentThreadPage < lastPage) {
 			VozThreadDownloadTask task = new VozThreadDownloadTask(this);
             ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
 			List<Post> posts = task.processResult(threadDumpObject.document);
@@ -175,33 +175,44 @@ public class ThreadActivity extends VozFragmentActivity implements
 			int lastPage = task.getLastPage();
 			processResult(posts, lastPage);
 		} else {
-			VozThreadDownloadTask task = new VozThreadDownloadTask(this);
-			task.setContext(this);
-			task.setRetries(2);
-			task.setShowProcessDialog(true);
-			String url = THREAD_URL_T + String.valueOf(currentThreadId)
-					+ "&page="
-					+ String.valueOf(currentThreadPage);
-			task.execute(url);
+			doGetThread(currentThreadId, currentThreadPage);
 		}
 	}
 
-    @Override
+	private void doGetThread(int currentThreadId, int currentThreadPage) {
+		VozThreadDownloadTask task = new VozThreadDownloadTask(this);
+		task.setContext(this);
+		task.setRetries(1);
+		task.setShowProcessDialog(true);
+		String url = THREAD_URL_T + String.valueOf(currentThreadId)
+				+ "&page="
+				+ String.valueOf(currentThreadPage);
+		task.execute(url);
+	}
+
+	@Override
     public void doRep() {
         if(threadIsClosed) {
             CharSequence text = "Sorry! This thread is closed!";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, text, duration);
-            toast.show();
+			toast.show();
         } else { // reply thread
             Intent intent = new Intent(this, PostActivity.class);
-            intent.putExtra("threadName",threadName);
-            intent.putExtra("replyLink",replyLink);
-            startActivity(intent);
+			intent.putExtra("threadName",threadName);
+			intent.putExtra("replyLink",replyLink);
+            startActivityForResult(intent,1);
         }
     }
 
-    @Override
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == 1) {
+            getThreads(true, VozCache.instance().getCurrentThread(), VozCache.instance().getCurrentThreadPage());
+		}
+	}
+
+	@Override
 	public void doCallback(List<Post> result, Object... extra) {
 		if(result == null || result.size() == 0) {
 			String errorMessage = (String)extra[0];
@@ -510,8 +521,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 	}
 
 	protected void processLink(String url) {
-		// TODO Auto-generated method stub
-		
+		Toast.makeText(this,"This feature will be implemented later !", Toast.LENGTH_SHORT).show();
 	}
 
 	protected boolean isImageUrl(String url) {		
@@ -553,9 +563,6 @@ public class ThreadActivity extends VozFragmentActivity implements
             VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
         VozCache.instance().setCurrentThread(-1);
 		VozCache.instance().setCurrentThreadPage(1);
-		/*Intent intent = new Intent(this, ForumActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*//*
-		startActivity(intent);*/
 		this.finish();
 		overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
 	}
