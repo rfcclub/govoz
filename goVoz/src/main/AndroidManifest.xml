@@ -3,7 +3,8 @@
     package="com.gotako.govoz"
     android:installLocation="auto"
     android:versionCode="28"
-    android:versionName="3.1">
+    android:versionName="3.1"
+    >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -17,9 +18,10 @@
 
     <application
         android:allowBackup="true"
-        android:hardwareAccelerated="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
