@@ -92,7 +92,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			Element thead = Utils.getFirstElement(tablePost.select("td[class=thead]"));
 			Element postCount = Utils.getFirstElement(thead.select("a[href^=showpost.php?p=]"));
 			if(postCount !=null) {
-				post.setPostCount("#" +postCount.attr("name"));
+				post.setPostCount("#" + postCount.attr("name"));
 			}
 			// get post time
 			Element firstDiv = Utils.getFirstElement(thead.select("div[class=normal]"));			
@@ -131,10 +131,11 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					Elements quotes = first.select("div[style^=margin:20px;]");
 					if(quotes!= null && quotes.size()>0) {
 						for(Element quote:quotes){
-							quote.attr("style", "margin:0px; margin-top:1px;width:100%;color:white");
+							quote.attr("style", "width:100%;color:white");
 							Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
 							if (tableQuote!=null) {
-								tableQuote.attr("cellpadding","2");
+								tableQuote.attr("cellpadding","1");
+								tableQuote.attr("width","100%");
 								tableQuote.removeAttr("class");
 								Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
 								if(td != null) {
@@ -147,9 +148,17 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					StringBuilder ctent = new StringBuilder(first.toString());
 					Element possibleSign = first.nextElementSibling();
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
-						ctent.append("<div style='display: inline;width:100%;color:white'>" + possibleSign.toString() + "</div>");
+						Elements floatDivs = possibleSign.select("div[style^=margin:20px;]");
+						for(Element floatDiv:floatDivs){
+							floatDiv.attr("style", "width:100%;color:white");
+						}
+						Elements allPres = possibleSign.select("pre");
+						for(Element pre:allPres){
+							pre.attr("style", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
+						}
+						ctent.append("<div style='display: block;width:100%;color:white'>" + possibleSign.toString() + "</div>");
 					}
-					
+
 					post.setContent(ctent.toString());					
 				}					
 				else {
