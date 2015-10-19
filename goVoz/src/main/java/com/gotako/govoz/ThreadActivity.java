@@ -262,7 +262,17 @@ public class ThreadActivity extends VozFragmentActivity implements
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
-            String head = "<head><style type='text/css'>body{color: #fff; background-color: #000;}</style></head>";
+            String head = "<head><style type='text/css'>" +
+					"body{color: #fff; background-color: #000;}\n" +
+					"div#permalink_section\n" +
+					"{\n" +
+					"    white-space: pre-wrap; \n" +
+					"    white-space: -moz-pre-wrap;\n" +
+					"    white-space: -pre-wrap; \n" +
+					"    white-space: -o-pre-wrap;\n" +
+					"    word-wrap: break-word;\n" +
+					"}\n" +
+					"</style></head>";
             utfContent = head + "<div style='width="
                     + String.valueOf(outMetrics.widthPixels) + "'>"
                     + utfContent + "</div>";
