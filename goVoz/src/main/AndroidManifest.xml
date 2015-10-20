@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gotako.govoz"
     android:installLocation="auto"
-    android:versionCode="28"
-    android:versionName="3.1"
-    >
+    android:versionCode="29"
+    android:versionName="3.29">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -21,7 +20,6 @@
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
