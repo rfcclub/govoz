@@ -117,4 +117,14 @@ public class Utils {
 	public static String getString(Context context, int id) {
 		return context.getString(id);
 	}
+
+	public static Element getElementAt(Elements trs, int i) {
+		Element ele = null;
+		try {
+			ele = trs.get(i);
+		} catch(Exception ex) {
+			// do nothing
+		}
+		return ele;
+	}
 }
