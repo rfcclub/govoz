@@ -1,1 +1,1 @@
-include ':htmlview', ':goFast', ':goVoz'
+include ':goFast', ':goVoz'
