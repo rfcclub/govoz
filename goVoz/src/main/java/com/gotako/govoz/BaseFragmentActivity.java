@@ -223,7 +223,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         }
         List<String> list = VozCache.instance().navigationList;
         // remove last element
-        list.remove(list.size() - 1);
+        if(list.size() > 0) list.remove(list.size() - 1);
     }
 
 	@Override
