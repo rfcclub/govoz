@@ -12,7 +12,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/goFast" />
             <option value="$PROJECT_DIR$/goVoz" />
-            <option value="$PROJECT_DIR$/htmlview" />
           </set>
         </option>
       </GradleProjectSettings>
