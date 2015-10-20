@@ -16,8 +16,8 @@ public class SettingActivity extends Activity {
 	private CheckBox supportLongAvatar;
 	private EditText fontSize;
 	private VozConfig config;
-	
-	private RadioButton currentCheckedRadio;	
+	private RadioButton currentCheckedRadio,darkThemeRadio,lightThemeRadio;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class SettingActivity extends Activity {
 		setContentView(R.layout.activity_setting);
 		setTitle("Setting");	
 		config = VozConfig.instance();
+		config.load(this);
 		loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
 		autoReloadForum = (CheckBox)findViewById(R.id.autoReloadForum);
 		supportLongAvatar = (CheckBox)findViewById(R.id.supportLongAvatar);
@@ -33,7 +34,15 @@ public class SettingActivity extends Activity {
 		loadImageByDemand.setChecked(config.isLoadImageByDemand());
 		autoReloadForum.setChecked(config.isAutoReloadForum());
 		supportLongAvatar.setChecked(config.isSupportLongAvatar());
-		
+		darkThemeRadio = (RadioButton)findViewById(R.id.darkThemeRadio);
+        lightThemeRadio = (RadioButton)findViewById(R.id.lightThemeRadio);
+        if(config.isDarkTheme()) {
+            darkThemeRadio.setChecked(true);
+            lightThemeRadio.setChecked(false);
+        } else {
+            darkThemeRadio.setChecked(false);
+            lightThemeRadio.setChecked(true);
+        }
 		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
 		currentCheckedRadio.setChecked(true);		
 	}
@@ -114,6 +123,11 @@ public class SettingActivity extends Activity {
 		config.setAutoReloadForum(autoReloadForum.isChecked());		
 		config.setSupportLongAvatar(supportLongAvatar.isChecked());
 		config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
+        if(darkThemeRadio.isChecked()) {
+            config.setDarkTheme(true);
+        } else {
+            config.setDarkTheme(false);
+        }
 		config.save(this);		
 		this.finish();
 	}
@@ -128,4 +142,9 @@ public class SettingActivity extends Activity {
 			}
 		}
 	}
+
+    @Override
+    public void onBackPressed() {
+        saveConfig(null);
+    }
 }

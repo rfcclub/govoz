@@ -6,16 +6,6 @@
     android:orientation="vertical"    
     tools:context=".ThreadActivity" >
 
-<!--     <ListView
-        android:id="@+id/postsList"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="top"
-        android:layout_weight="0.8"
-        android:scrollbars="none" >
-
-    </ListView> -->
-    
     <ScrollView
         android:id="@+id/postsList"
         android:layout_width="fill_parent"

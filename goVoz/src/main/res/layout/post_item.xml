@@ -58,7 +58,7 @@
 		    android:layout_height="wrap_content"
 		    android:gravity="top"
 		    android:orientation="horizontal"
-		    android:background="@color/primary_dark_material_dark" >
+		    >
 
 		        <ImageView
 		            android:id="@+id/avatar"
@@ -119,7 +119,6 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-		android:background="@color/black"
         android:textStyle="bold" />
     <WebView
         android:id="@+id/content"
@@ -130,8 +129,8 @@
         android:layout_marginRight="1dp"
         android:animateLayoutChanges="false"
         android:clickable="false"
-		android:background="@color/black"
         android:longClickable="true"
+		android:background="@color/black"
         android:scrollbars="none" />
 
     <LinearLayout

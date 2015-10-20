@@ -58,28 +58,44 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textSize="14sp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/theme_linear_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_marginTop="48dp"
-        android:text="@string/setting_theme"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textSize="14sp" />
+        android:layout_below="@id/linearLayout1"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/theme_description_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <RadioButton
-        android:id="@+id/darkThemeRadio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_below="@+id/textView3"
-        android:enabled="false"
-        android:checked="true"
-        android:text="@string/setting_theme_dark"
-        android:textSize="14sp" />
+            android:text="@string/setting_theme"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="14sp" />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/darkThemeRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:checked="true"
+                android:text="@string/setting_theme_dark"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/lightThemeRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:enabled="true"
+                android:text="@string/setting_theme_light"
+                android:textSize="14sp" />
+        </RadioGroup>
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textView4"
@@ -121,19 +137,9 @@
         android:id="@+id/autoReloadForum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/darkThemeRadio"
-        android:layout_below="@+id/darkThemeRadio"
+        android:layout_alignLeft="@+id/theme_linear_layout"
+        android:layout_below="@+id/theme_linear_layout"
         android:text="@string/autoReloadForum"
-        android:textSize="14sp" />
-
-    <RadioButton
-        android:id="@+id/lightThemeRadio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/autoReloadForum"
-        android:layout_alignRight="@+id/autoReloadForum"
-        android:enabled="false"
-        android:text="@string/setting_theme_light"
         android:textSize="14sp" />
 
     <Button

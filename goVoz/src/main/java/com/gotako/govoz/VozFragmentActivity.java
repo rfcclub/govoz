@@ -6,6 +6,7 @@ package com.gotako.govoz;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -32,6 +33,22 @@ import java.util.ArrayList;
 public class VozFragmentActivity extends BaseFragmentActivity implements
 		OnMenuItemClickListener,BindingActionListener, ExceptionCallback,LogoutCallback {
 	protected boolean threadIsClosed;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        VozConfig.instance().load(this);
+        if(VozConfig.instance().isDarkTheme()) {
+            setTheme(R.style.AppTheme);
+        } else {
+            setTheme(R.style.AppTheme_Light);
+        }
+        doTheming();
+    }
+
+    protected void doTheming() {
+
+    }
 
     @Override
     protected AdapterView.OnItemClickListener createItemClickListener() {

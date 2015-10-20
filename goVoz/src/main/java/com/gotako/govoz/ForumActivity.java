@@ -48,8 +48,6 @@ public class ForumActivity extends VozFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		VozCache.instance().setCanShowReplyMenu(false);
-
-
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		View layout = mInflater.inflate(R.layout.activity_forum, null);
 

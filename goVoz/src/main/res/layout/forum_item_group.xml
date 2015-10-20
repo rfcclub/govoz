@@ -13,10 +13,7 @@
         android:paddingBottom="6dp"
         android:paddingLeft="30dp"
         android:paddingTop="6dp"
-        android:text="Large Text"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:textColorLink="#FFFFFF"
+        android:text="GROUP FORUM NAME"
         android:textSize="18sp"
         android:textStyle="bold" />
 
