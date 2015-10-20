@@ -26,6 +26,8 @@ import com.gotako.util.Utils;
 
 import java.util.ArrayList;
 
+import static com.gotako.govoz.VozConstant.VOZ_LINK;
+
 /**
  * @author lnguyen66
  * 
@@ -224,6 +226,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         forumSelectDialog.show(fm, "forumSelect");
                         break;
                     case 3:
+                        String pmHttpsLink = VOZ_LINK + "/" + "private.php";
+                        VozCache.instance().navigationList.add(pmHttpsLink);
                         Intent intentInbox = new Intent(VozFragmentActivity.this,InboxActivity.class);
                         VozFragmentActivity.this.startActivity(intentInbox);
 						break;

@@ -36,7 +36,8 @@ public class InboxActivity extends VozFragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VozCache.instance().setCanShowReplyMenu(false);
-
+        overridePendingTransition(R.animator.right_slide_in,
+                R.animator.left_slide_out);
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View layout = mInflater.inflate(R.layout.activity_inbox, null);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);

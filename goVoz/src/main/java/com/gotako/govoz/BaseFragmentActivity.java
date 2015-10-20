@@ -62,7 +62,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     protected List<VozMenuItem> navDrawerItems;
 
     protected VozMenuListAdapter leftMenuAdapter;
-    private Toolbar mToolbar;
+    protected Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +220,10 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     	super.onBackPressed();
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
         	mDrawerLayout.closeDrawer(Gravity.LEFT);
-        }            
+        }
+        List<String> list = VozCache.instance().navigationList;
+        // remove last element
+        list.remove(list.size() - 1);
     }
 
 	@Override
@@ -228,7 +231,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 		super.onResume();
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
         	mDrawerLayout.closeDrawer(Gravity.LEFT);
-        } 
+        }
+        changeDefaultActionBar();
 	}
     
     
