@@ -95,4 +95,8 @@
     <string name="left_menu_login_with_pref">Đăng nhập tự động bằng thông tin đã lưu</string>
     <string name="left_menu_logout">Đăng xuất</string>
     <string name="login_success">Đăng nhập thành công !</string>
+    <string name="insert_avatar">Insert Icon</string>
+    <string name="title_activity_create_pm">CreatePMActivity</string>
+    <string name="to_address">Đến:</string>
+    <string name="pm_content">Nội dung:</string>
 </resources>

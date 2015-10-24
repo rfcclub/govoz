@@ -31,6 +31,7 @@ import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
+import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
 
@@ -71,6 +72,12 @@ public class ForumActivity extends VozFragmentActivity implements
 		list.setOnItemClickListener(this);
         processNavigationLink();
         updateNavigationPanel();
+        doTheming();
+        SegmentedGroup segmentedGroup = (SegmentedGroup)layout.findViewById(R.id.navigation_group);
+        if(segmentedGroup != null) {
+            segmentedGroup.setTintColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color),
+                    Utils.getColorByTheme(this, R.color.black, R.color.white));
+        }
 	}
 
     private void processNavigationLink() {
@@ -293,7 +300,9 @@ public class ForumActivity extends VozFragmentActivity implements
 	public void preProcess(int position, View convertView, Object... extra) {
 		Thread currentRenderItem = threads.get(position);
 		View viewHeader = convertView.findViewById(R.id.subForumHeader);
+		viewHeader.setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
 		View viewSection = convertView.findViewById(R.id.forumSection);
+		viewSection.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
 		if (currentRenderItem.isSubForum()) {
 			if (position == 0) {
 				viewHeader.setVisibility(View.VISIBLE);
@@ -320,18 +329,19 @@ public class ForumActivity extends VozFragmentActivity implements
             title.setTextColor(Color.LTGRAY);
             viewSection.setBackgroundColor(getResources().getColor(R.color.delete_thread_color));
         } else {
-            viewSection.setBackgroundColor(Color.BLACK);
             if (currentRenderItem.isSticky()) { // set red background for text
                 title.setTextColor(Color.RED);
             } else {
-                title.setTextColor(Color.WHITE);
+                title.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
             }
         }
 		title.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
-				.getFontSize());
+                .getFontSize());
 		TextView poster = (TextView) viewSection.findViewById(R.id.poster);
+        poster.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
 		poster.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
                 .getFontSize() - 2);
+        ((TextView)viewSection.findViewById(R.id.lastUpdate)).setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
     }
 
 	public void goFirst() {

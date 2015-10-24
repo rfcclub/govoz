@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -179,21 +180,6 @@ public class MainActivity extends VozFragmentActivity implements
     }
 
     @Override
-    protected void doTheming() {
-        if (VozConfig.instance().isDarkTheme()) {
-            findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector));
-            findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector));
-            ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector));
-            ((ListView) findViewById(R.id.list_right_menu)).setSelector(getResources().getDrawable(R.drawable.list_selector));
-        } else {
-            findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
-            findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
-            ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
-            ((ListView) findViewById(R.id.list_right_menu)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
-        }
-    }
-
-    @Override
     public void onGetGroupView(int groupPosition, boolean isLastChild, View v, ViewGroup parent) {
         v.findViewById(R.id.forumGroupName).setBackground(getResources().getDrawable(Utils.getValueByTheme(R.drawable.gradient, R.drawable.gradient_light)));
 //        ((TextView) v.findViewById(R.id.forumGroupName)).setTextColor(R.color.white);
@@ -201,7 +187,8 @@ public class MainActivity extends VozFragmentActivity implements
 
     @Override
     public void onGetChildView(int groupPosition, int childPosition, boolean isLastChild, View v, ViewGroup parent) {
-           v.setBackgroundColor(Utils.getValueByTheme(R.color.black,R.color.white));
-//        ((TextView) v.findViewById(R.id.forumName)).setTextColor(Utils.getValueByTheme(R.color.white, R.color.voz_front_color));
+        v.findViewById(R.id.forumSection).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+        ((TextView) v.findViewById(R.id.forumName)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.white, R.color.voz_front_color)));
+        ((TextView) v.findViewById(R.id.viewing)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.white, R.color.black)));
     }
 }

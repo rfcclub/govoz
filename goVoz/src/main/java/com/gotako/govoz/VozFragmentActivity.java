@@ -44,8 +44,21 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         super.onCreate(savedInstanceState);
     }
 
+    /*
+     * This method just can be called at the end of onCreate of subclasses
+     */
     protected void doTheming() {
-
+        if (VozConfig.instance().isDarkTheme()) {
+            findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector));
+            findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector));
+            ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector));
+            ((ListView) findViewById(R.id.list_right_menu)).setSelector(getResources().getDrawable(R.drawable.list_selector));
+        } else {
+            findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
+            findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
+            ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
+            ((ListView) findViewById(R.id.list_right_menu)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
+        }
     }
 
     @Override

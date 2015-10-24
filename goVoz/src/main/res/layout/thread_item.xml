@@ -18,10 +18,7 @@
             android:paddingBottom="3dp"
             android:paddingLeft="3dp"
             android:paddingTop="3dp"
-            android:text="Large Text"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#FFFFFF"
+            android:text="subForumHeader"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -48,7 +45,6 @@
                 android:paddingLeft="3dp"
                 android:paddingTop="3dp"
                 android:text="title"
-                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -75,7 +71,6 @@
                     android:paddingBottom="3dp"
                     android:paddingRight="3dp"
                     android:paddingTop="3dp"
-                    android:textColor="@color/white"
                     android:text="poster"
                     android:textSize="14dp" />
 
@@ -91,7 +86,6 @@
                     android:paddingTop="3dp"
                     android:text="lastUpdate"
                     android:textSize="12dp"
-                    android:textColor="@color/white"
                     android:textStyle="italic" />
 
                 <Space

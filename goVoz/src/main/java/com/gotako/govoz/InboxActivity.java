@@ -19,6 +19,7 @@ import com.gotako.gofast.annotation.BindingCollection;
 import com.gotako.govoz.R;
 import com.gotako.govoz.data.PrivateMessage;
 import com.gotako.govoz.tasks.PMDownloadTask;
+import com.gotako.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,20 @@ public class InboxActivity extends VozFragmentActivity implements
         ListView list = (ListView) layout.findViewById(R.id.pmList);
         list.setOnItemClickListener(this);
         loadPrivateMessages();
+        ReactiveCollectionField pmListField = GoFastEngine.instance()
+                .getBindingObject(this, "pmList",
+                        ReactiveCollectionField.class);
+        pmListField.getAdapter().setBindingActionListener(this);
+        doTheming();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        if (VozCache.instance().isLoggedIn()) {
+            menu.findItem(R.id.action_reply).setVisible(true);
+        }
+        return ret;
     }
 
     private void loadPrivateMessages() {
@@ -75,5 +90,20 @@ public class InboxActivity extends VozFragmentActivity implements
         VozCache.instance().navigationList.add(httpLink);
         Intent intent = new Intent(this, PMViewActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void preProcess(int position, View convertView, Object... extra) {
+        convertView.findViewById(R.id.pmSection).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
+    }
+
+    @Override
+    public void doRep() {
+        super.doRep();
+    }
+
+    @Override
+    public void refresh() {
+        loadPrivateMessages();
     }
 }

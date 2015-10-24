@@ -48,8 +48,6 @@
                     android:paddingBottom="3dp"
                     android:paddingRight="3dp"
                     android:paddingTop="3dp"
-                    android:textColor="@color/white"
-
                     android:text="poster"
                     android:textSize="14dp" />
 
@@ -65,8 +63,6 @@
                     android:paddingTop="3dp"
                     android:text="lastUpdate"
                     android:textSize="12dp"
-                    android:textColor="@color/white"
-
                     android:textStyle="italic" />
 
                 <Space
@@ -76,10 +72,6 @@
             </LinearLayout>
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></TableRow>
     </TableLayout>
 
 </TableLayout>

@@ -15,6 +15,7 @@ import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.annotation.BindingField;
 import com.gotako.govoz.tasks.PostReplyTask;
+import com.gotako.util.Utils;
 
 public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
 
@@ -42,12 +43,14 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 		String quote = getIntent().getStringExtra("quote");		
 		answerText = (quote == null ? "" : quote);
 		GoFastEngine.notify(this, "answerText");
+        doTheming();
+        layout.findViewById(R.id.postRootLayout).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.post, menu);
+		getMenuInflater().inflate(R.menu.post_menu, menu);
 		return true;
 	}
 
@@ -67,5 +70,11 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 	public void lastBreath(Exception ex) {
 		ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
 		BugSenseHandler.sendException(ex);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_insert_avatar).setIcon(Utils.getValueByTheme(R.drawable.ic_mood_white_18dp, R.drawable.ic_mood_black_18dp));
+        return true;
 	}
 }

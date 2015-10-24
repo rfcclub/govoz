@@ -131,7 +131,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					Elements quotes = first.select("div[style^=margin:20px;]");
 					if(quotes!= null && quotes.size()>0) {
 						for(Element quote:quotes){
-							quote.attr("style", "width:100%;color:white");
+							quote.attr("style", "width:100%");
 							Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
 							if (tableQuote!=null) {
 								tableQuote.attr("cellpadding","1");
@@ -150,13 +150,13 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
 						Elements floatDivs = possibleSign.select("div[style^=margin:20px;]");
 						for(Element floatDiv:floatDivs){
-							floatDiv.attr("style", "width:100%;color:white");
+							floatDiv.attr("style", "width:100%");
 						}
 						Elements allPres = possibleSign.select("pre");
 						for(Element pre:allPres){
 							pre.attr("style", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 						}
-						ctent.append("<div style='display: block;width:100%;color:white'>" + possibleSign.toString() + "</div>");
+						ctent.append("<div style='display: block;width:100%'>" + possibleSign.toString() + "</div>");
 					}
 
 					post.setContent(ctent.toString());					

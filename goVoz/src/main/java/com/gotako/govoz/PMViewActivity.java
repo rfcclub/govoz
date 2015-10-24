@@ -28,6 +28,7 @@ import com.gotako.govoz.tasks.PMContentDownloadTask;
 import com.gotako.govoz.tasks.PMDownloadTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.utils.DefaultVozWebClient;
+import com.gotako.util.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -56,8 +57,8 @@ public class PMViewActivity extends VozFragmentActivity implements
 
         GoFastEngine.initialize(this);
         ReactiveCollectionField field = GoFastEngine.instance().getBindingObject(this, "pmList", ReactiveCollectionField.class);
-
         loadPrivateMessageContent();
+        doTheming();
     }
 
     private void loadPrivateMessageContent() {
@@ -76,6 +77,7 @@ public class PMViewActivity extends VozFragmentActivity implements
         LayoutInflater viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (int i = 0; i < pmContentList.size(); i++) {
             View view = viewInflater.inflate(R.layout.pm_content, null);
+            view.findViewById(R.id.postInfo).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
             PrivateMessageContent post = pmContentList.get(i);
             ((TextView)view.findViewById(R.id.pmSender)).setText(post.pmSender);
             ((TextView)view.findViewById(R.id.pmDate)).setText(post.pmDate);
@@ -97,12 +99,12 @@ public class PMViewActivity extends VozFragmentActivity implements
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
+            String css = VozConfig.instance().isDarkTheme()? "body{color: #fff; background-color: #000;}" :"body{color: #000; background-color: #F5F5F5;}";
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
             String head = "<head><style type='text/css'>" +
-                    "body{color: #fff; background-color: #000;}\n" +
+                    css + "\n" +
                     "div#permalink_section\n" +
                     "{\n" +
                     "    white-space: pre-wrap; \n" +
