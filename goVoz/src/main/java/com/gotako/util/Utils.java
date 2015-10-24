@@ -14,6 +14,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.gotako.govoz.VozConfig;
+
 public class Utils {
 
 	public static boolean isEmpty(String str) {
@@ -126,5 +128,10 @@ public class Utils {
 			// do nothing
 		}
 		return ele;
+	}
+
+	public static int getValueByTheme(int a, int b) {
+		if(VozConfig.instance().isDarkTheme()) return a;
+		else return b;
 	}
 }

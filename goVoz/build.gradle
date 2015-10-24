@@ -60,8 +60,7 @@ android {
 dependencies {
     compile project(':goFast')
     //compile 'com.android.support:support-v4:20.0.0'
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:appcompat-v7:23.0.1'
     compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     compile files('libs/bugsense-3.6.1.jar')
     compile files('libs/htmlcleaner-2.7.jar')

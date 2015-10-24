@@ -7,5 +7,6 @@ public class PrivateMessageContent {
     public String pmDate;
     public String pmTitle;
     public String pmSender;
+    public String pmSenderTitle;
     public String content;
 }

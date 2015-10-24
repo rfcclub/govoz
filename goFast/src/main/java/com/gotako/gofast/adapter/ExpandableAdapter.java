@@ -14,6 +14,7 @@ import android.widget.BaseExpandableListAdapter;
 
 import com.gotako.gofast.ReactiveObject;
 import com.gotako.gofast.listener.BindingActionListener;
+import com.gotako.gofast.listener.OnCreateViewListener;
 
 /**
  * @author lnguyen66
@@ -28,6 +29,7 @@ public class ExpandableAdapter<T> extends BaseExpandableListAdapter implements
 	private int childViewId;
 	private int groupViewId;
 	private AdapterBindingCore<T> adapterCore;
+	private OnCreateViewListener onCreateViewListener;
 
 	public ExpandableAdapter(Context context, Object[] dataSource,
 			int groupViewId, int childViewId) {
@@ -84,7 +86,7 @@ public class ExpandableAdapter<T> extends BaseExpandableListAdapter implements
 		ReactiveObject reactObject = adapterCore.getReactiveObject(instance);
 		adapterCore.binding(groupPosition, v, reactObject, parent,
 				childPosition);
-
+		if(onCreateViewListener !=null) onCreateViewListener.onGetChildView(groupPosition, childPosition, isLastChild, v, parent);
 		return v;
 	}
 
@@ -121,6 +123,7 @@ public class ExpandableAdapter<T> extends BaseExpandableListAdapter implements
 		T instance = (T) getGroup(groupPosition);
 		ReactiveObject reactObject = adapterCore.getReactiveObject(instance);
 		adapterCore.binding(groupPosition, v, reactObject, parent);
+		if(onCreateViewListener !=null) onCreateViewListener.onGetGroupView(groupPosition, isLastChild, v, parent);
 		return v;
 	}
 
@@ -171,5 +174,9 @@ public class ExpandableAdapter<T> extends BaseExpandableListAdapter implements
 		}
 		this._listDataHeader = (List<T>) (((Object[]) datasource)[0]);
 		this._listDataChild = (Map<Integer, List<T>>) (((Object[]) datasource)[1]);
+	}
+
+	public void setOnCreateViewListener(OnCreateViewListener onCreateViewListener) {
+		this.onCreateViewListener = onCreateViewListener;
 	}
 }

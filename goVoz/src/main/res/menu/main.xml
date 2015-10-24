@@ -5,12 +5,12 @@
         android:title="@string/refresh"
         android:orderInCategory="103"
         app:showAsAction="always"
-        android:icon="@drawable/ic_action_navigation_refresh" />
+        />
     <item
         android:id="@+id/action_reply"
         android:title="@string/quick_reply"
         android:orderInCategory="103"
         app:showAsAction="always"
         android:visible="false"
-        android:icon="@drawable/ic_comment_white_18dp" />
+        />
 </menu>

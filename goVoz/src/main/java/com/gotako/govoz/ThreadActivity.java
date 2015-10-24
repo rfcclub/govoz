@@ -66,6 +66,7 @@ import com.gotako.govoz.tasks.GotReplyQuoteTask;
 import com.gotako.govoz.tasks.IgnoreUserTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
+import com.gotako.govoz.utils.DefaultVozWebClient;
 
 import info.hoang8f.android.segment.SegmentedGroup;
 
@@ -200,7 +201,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             Intent intent = new Intent(this, PostActivity.class);
 			intent.putExtra("threadName",threadName);
 			intent.putExtra("replyLink",replyLink);
-            startActivityForResult(intent,1);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -236,8 +237,8 @@ public class ThreadActivity extends VozFragmentActivity implements
         webViewList = new SparseArray<WebView>();
         for (int i = 0; i < posts.size(); i++) {
             View view = viewInflater.inflate(R.layout.post_item, null);
-
             Post post = posts.get(i);
+
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(false);
             // disable all click listener in webview
@@ -432,55 +433,26 @@ public class ThreadActivity extends VozFragmentActivity implements
 	}
 
 	private void setListenerToWebView(WebView webView) {
+
 		final Resources resources = getResources();
 		final ThreadActivity context = ThreadActivity.this;
-		webView.setWebViewClient(new WebViewClient() {
-			@Override
-			public void onReceivedSslError (WebView view, SslErrorHandler handler, SslError error) {
-				 handler.proceed();				 
-			}
-			@Override
-			public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-				if(VozConfig.instance().isLoadImageByDemand()) {
-					if(url.startsWith(VOZ_LINK)) {
-						return super.shouldInterceptRequest(view, url);
-					} else if(isImageUrl(url)) {							
-							return new WebResourceResponse("image/png", "", resources.openRawResource(R.drawable.no_available_image));
-					} else {
-						return null;
-					}
-				} else {
-					if(isAttachmentImage(url)) {
-						return getContentFromWeb(url);
-					} else {
-						return super.shouldInterceptRequest(view, url);
-					}
-				}
-			}
-
-			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				// make sure that link cannot clickable. It will be handled later
-				return true;
-			}
-			
-		});
+		webView.setWebViewClient(new DefaultVozWebClient(this));
 		final WebViewClickHolder holder = new WebViewClickHolder();
 		final Context thisContext = ThreadActivity.this;
 		final GestureDetector gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
-			
+
 			@Override
-			public boolean onDoubleTap(MotionEvent e) {		
+			public boolean onDoubleTap(MotionEvent e) {
 				if(holder.getType() > 0) {
 					// start new view which support view image
 					String url = holder.getLink() == null ? "NULL": holder.getLink();
 					//Toast.makeText(thisContext, String.valueOf(holder.getType()) + toast,Toast.LENGTH_LONG).show();
 					if(isImageUrl(url)) { // image link ?
-						Intent intent = new Intent(thisContext, ShowImageActivity.class);						
+						Intent intent = new Intent(thisContext, ShowImageActivity.class);
 						intent.putExtra("IMAGE_URL", url);
-						thisContext.startActivity(intent);						
+						thisContext.startActivity(intent);
 					} /*else if(url.indexOf(VOZ_SIGN)>=0) {
-						
+
 					}*/
 				}
 				return true;
@@ -489,44 +461,26 @@ public class ThreadActivity extends VozFragmentActivity implements
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent e) {
 				String url = holder.getLink() == null ? "NULL": holder.getLink();
-				ThreadActivity.this.processLink(url);				
+				ThreadActivity.this.processLink(url);
 				return super.onSingleTapConfirmed(e);
 			}
-			
+
 		});
 
 		WebView.OnTouchListener gestureListener = new WebView.OnTouchListener() {
 			@SuppressLint("ClickableViewAccessibility")
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {	
+			public boolean onTouch(View v, MotionEvent event) {
 				holder.setWebView((WebView)v);
 				HitTestResult result = holder.getWebView().getHitTestResult();
 				if (result != null) {
 					holder.setLink(result.getExtra());
 					holder.setType(result.getType());
 				}
-				return gestureDetector.onTouchEvent(event);				
+				return gestureDetector.onTouchEvent(event);
 			}
-		};		
-		webView.setOnTouchListener(gestureListener);		
-	}
-
-    private WebResourceResponse getContentFromWeb(String url) {
-        InputStream content = null;
-        try {
-            URL imageUrl = new URL(url.replaceAll("&amp;","&"));
-            content = imageUrl.openStream();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new WebResourceResponse("image/jpg", "", content);
-    }
-
-    private boolean isAttachmentImage(String url) {
-		return url.contains(VOZ_LINK + "/attachment.php?attachmentid=") && url.contains("stc=1&amp;thumb=1");
+		};
+		webView.setOnTouchListener(gestureListener);
 	}
 
 	protected void processLink(String url) {

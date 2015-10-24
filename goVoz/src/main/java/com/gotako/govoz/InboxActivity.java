@@ -1,6 +1,7 @@
 package com.gotako.govoz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -69,6 +70,10 @@ public class InboxActivity extends VozFragmentActivity implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        PrivateMessage message = pmList.get(position);
+        String httpLink = VOZ_LINK + "/" + message.pmLink;
+        VozCache.instance().navigationList.add(httpLink);
+        Intent intent = new Intent(this, PMViewActivity.class);
+        startActivity(intent);
     }
 }

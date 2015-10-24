@@ -3,28 +3,17 @@
  */
 package com.gotako.govoz;
 
-import static com.gotako.govoz.VozConstant.*;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.gotako.govoz.adapter.NavDrawerListAdapter;
 import com.gotako.govoz.adapter.VozMenuListAdapter;
-import com.gotako.govoz.data.Forum;
-import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 import com.gotako.util.Utils;
 
-import android.app.DialogFragment;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -149,10 +138,10 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 
     public void refreshActionBarIcon() {
         if (VozCache.instance().navigationList.size() > 0) {
-            mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
+            mToolbar.setNavigationIcon(Utils.getValueByTheme(R.drawable.ic_arrow_back_white_18dp, R.drawable.ic_arrow_back_black_18dp));
             mToolbar.invalidate();
         } else {
-            mToolbar.setNavigationIcon(R.drawable.ic_menu_white_18dp);
+            mToolbar.setNavigationIcon(Utils.getValueByTheme(R.drawable.ic_menu_white_18dp, R.drawable.ic_menu_black_18dp));
             mToolbar.invalidate();
         }
     }
@@ -185,6 +174,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_refresh).setIcon(Utils.getValueByTheme(R.drawable.ic_refresh_white_18dp, R.drawable.ic_refresh_black_18dp));
+        menu.findItem(R.id.action_reply).setIcon(Utils.getValueByTheme(R.drawable.ic_comment_white_18dp, R.drawable.ic_comment_black_18dp));
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
         return super.onPrepareOptionsMenu(menu);

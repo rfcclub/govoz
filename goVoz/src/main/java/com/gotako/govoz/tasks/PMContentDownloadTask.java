@@ -25,7 +25,7 @@ public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageCo
         List<PrivateMessageContent> privateMessages = new ArrayList<PrivateMessageContent>();
         Elements pmElements = document.select("table[class*=tborder voz-postbit][id=post]");
         for (Element pmElement : pmElements) {
-            Elements trs = pmElement.select("tr");
+            Elements trs = pmElement.children().get(0).children();
             PrivateMessageContent privateMessage = new PrivateMessageContent();
             Element tr1 = Utils.getElementAt(trs, 0);
             if (tr1 != null) {
@@ -35,13 +35,16 @@ public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageCo
             Element tr2 = Utils.getElementAt(trs, 1);
             if (tr2 != null) {
                 Elements detailTrs = Utils.getFirstElement(tr2.select("table")).select("td");
-                privateMessage.pmSender = Utils.getElementAt(detailTrs,0).select("<a[class=bigusername][href*=member.php?]").get(0).text();
-                privateMessage.pmTitle = Utils.getElementAt(detailTrs,0).select("div[class=smallfont]").get(0).text();
+                Element td = Utils.getElementAt(detailTrs,0);
+                privateMessage.pmSender = td.select("a[class=bigusername][href*=member.php]").get(0).text();
+                privateMessage.pmSenderTitle = td.select("div[class*=smallfont]").get(0).text();
             }
             Element tr3 = Utils.getElementAt(trs, 2);
             if (tr3 != null) {
                 privateMessage.content = Utils.getFirstElement(tr3.select("div[class=voz-post-message]")).text();
+                privateMessage.pmTitle = Utils.getFirstElement(tr3.select("div[class=smallfont]")).text();
             }
+            privateMessages.add(privateMessage);
         }
         return privateMessages;
     }
