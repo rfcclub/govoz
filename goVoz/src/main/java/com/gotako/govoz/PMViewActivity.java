@@ -2,6 +2,7 @@ package com.gotako.govoz;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +44,12 @@ public class PMViewActivity extends VozFragmentActivity implements
     private List<PrivateMessageContent> pmContentList = new ArrayList<PrivateMessageContent>();
     private int lastPage = 1;
     private LinearLayout layout;
+    private String pmReplyLink = "";
+    private String pmRecipient = "";
+    private String pmQuote = "";
+    private String securityToken;
+    private String loggedInUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +68,15 @@ public class PMViewActivity extends VozFragmentActivity implements
         doTheming();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        if (VozCache.instance().isLoggedIn()) {
+            menu.findItem(R.id.action_reply).setVisible(true);
+        }
+        return ret;
+    }
+
     private void loadPrivateMessageContent() {
         PMContentDownloadTask task = new PMContentDownloadTask(this);
         String pmContentLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
@@ -73,6 +89,11 @@ public class PMViewActivity extends VozFragmentActivity implements
     @Override
     public void doCallback(List<PrivateMessageContent> result, Object... extra) {
         pmContentList = result;
+        pmReplyLink = (String)extra[0];
+        pmRecipient = (String)extra[1];
+        pmQuote = (String)extra[2];
+        securityToken = (String)extra[3];
+        loggedInUser = (String) extra[4];
         layout.removeAllViews();
         LayoutInflater viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (int i = 0; i < pmContentList.size(); i++) {
@@ -131,5 +152,30 @@ public class PMViewActivity extends VozFragmentActivity implements
             webView.setWebViewClient(new DefaultVozWebClient(this));
             layout.addView(view);
         }
+    }
+
+    @Override
+    public void doRep() {
+        String httpLink = VOZ_LINK + "/private.php?do=newpm";
+        VozCache.instance().navigationList.add(httpLink);
+        Intent intent = new Intent(this, CreatePMActivity.class);
+        intent.putExtra("pmReplyLink",pmReplyLink);
+        intent.putExtra("pmRecipient",pmRecipient);
+        intent.putExtra("pmQuote",pmQuote);
+        intent.putExtra("securityToken",securityToken);
+        intent.putExtra("loggedInUser", loggedInUser);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 2) {
+            refresh();
+        }
+    }
+
+    @Override
+    public void refresh() {
+        loadPrivateMessageContent();
     }
 }

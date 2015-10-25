@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
@@ -95,11 +96,24 @@ public class InboxActivity extends VozFragmentActivity implements
     @Override
     public void preProcess(int position, View convertView, Object... extra) {
         convertView.findViewById(R.id.pmSection).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
+        ((TextView)convertView.findViewById(R.id.pmTitle)).setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
+        ((TextView)convertView.findViewById(R.id.pmSender)).setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
+        ((TextView)convertView.findViewById(R.id.pmDate)).setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
     }
 
     @Override
     public void doRep() {
-        super.doRep();
+        String httpLink = VOZ_LINK + "/private.php?do=newpm";
+        VozCache.instance().navigationList.add(httpLink);
+        Intent intent = new Intent(this, CreatePMActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            refresh();
+        }
     }
 
     @Override

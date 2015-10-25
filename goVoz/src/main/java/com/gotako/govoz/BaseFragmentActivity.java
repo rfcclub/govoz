@@ -11,6 +11,7 @@ import com.gotako.util.Utils;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -65,7 +67,6 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
         layoutSlidePanel = (LinearLayout) findViewById(R.id.layout_slidermenu);
         createLeftMenu();
-
         navDrawerItems = VozCache.instance().menuItemList;
         // enabling action bar app icon and behaving it as toggle button
         changeDefaultActionBar();

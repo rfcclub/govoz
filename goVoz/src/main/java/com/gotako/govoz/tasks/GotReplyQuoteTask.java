@@ -61,7 +61,7 @@ public class GotReplyQuoteTask extends AsyncTask<String, Void, String> {
 	}
 	
 	/**
-	 * @param callback the callback to set
+	 * @param callback the mCallback to set
 	 */
 	public void setCallback(GotReplyTaskCallback callback) {
 		this.callback = callback;

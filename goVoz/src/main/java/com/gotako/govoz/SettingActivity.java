@@ -9,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.gotako.util.Utils;
+
 public class SettingActivity extends Activity {
 
 	private CheckBox loadImageByDemand;
@@ -21,6 +23,12 @@ public class SettingActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		VozConfig.instance().load(this);
+		if (VozConfig.instance().isDarkTheme()) {
+			setTheme(R.style.AppTheme);
+		} else {
+			setTheme(R.style.AppTheme_Light);
+		}
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 		setTitle("Setting");	
@@ -44,7 +52,9 @@ public class SettingActivity extends Activity {
             lightThemeRadio.setChecked(true);
         }
 		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
-		currentCheckedRadio.setChecked(true);		
+		currentCheckedRadio.setChecked(true);
+        View rootView = findViewById(R.id.rootSettingLayout);
+        rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
 
 	private RadioButton getRadioForDrawable(int loadingDrawable) {

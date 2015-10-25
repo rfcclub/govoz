@@ -43,7 +43,7 @@ public class UserLogoutTask extends AsyncTask<String, Integer, Boolean> {
 		return result;
 	}
 	/**
-	 * @param callback the callback to set
+	 * @param callback the mCallback to set
 	 */
 	public void setCallback(LogoutCallback callback) {
 		this.callback = callback;

@@ -25,7 +25,7 @@ ActivityCallback<Boolean>, ExceptionCallback {
 	public void doLogin(String username, String password) {
 		UserLoginTask mAuthTask = new UserLoginTask(this);
 		mAuthTask.execute(username, password);
-		Toast.makeText(context, "Try to login with preset username/password", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, Utils.getString(context, R.string.left_menu_login_with_pref), Toast.LENGTH_SHORT).show();
 	}
 	@Override
 	public void lastBreath(Exception ex) {

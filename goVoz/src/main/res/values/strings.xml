@@ -75,14 +75,15 @@
     <string name="title_activity_show_image">Xem hình phóng to</string>
     <string name="login_with_preset">Login with saved account</string>
     <string name="title_activity_pm">pmActivity</string>
-    <string name="title_activity_pmview">Private Message</string>
-    <string name="title_activity_inbox">Inbox</string>
+    <string name="title_activity_pmview">Tin nhắn</string>
+    <string name="title_activity_inbox">Hộp thư</string>
     <string name="dialog_cancel">BỎ QUA</string>
     <string name="dialog_ok">ĐỒNG Ý</string>
     <string name="forum_select_title">Nhập Id của Forum và nhấn OK</string>
     <string name="thread_select_title">Nhập Id của Thread rồi nhấn OK</string>
     <string name="error_forum_select_id">Xin vui lòng nhập số. Id forum là số.</string>
-    <string name="error_not_login">Bạn cần phải login vào trước mới đi đến forum này được.</string>
+    <string name="error_not_login_go_forum">Bạn cần phải login vào trước mới đi đến forum này được.</string>
+    <string name="error_not_login_go_inbox">Bạn cần phải login vào trước mới có thể vào hộp thư được.</string>
     <string name="err_cannot_access_forum">Không thể truy nhập vozForums. Xin vui lòng thử lại sau.</string>
     <string name="left_menu_home">Trang chủ</string>
     <string name="left_menu_go_thread">Đi đến Thread</string>
@@ -96,7 +97,8 @@
     <string name="left_menu_logout">Đăng xuất</string>
     <string name="login_success">Đăng nhập thành công !</string>
     <string name="insert_avatar">Insert Icon</string>
-    <string name="title_activity_create_pm">CreatePMActivity</string>
+    <string name="title_activity_create_pm">Tạo tin nhắn</string>
     <string name="to_address">Đến:</string>
     <string name="pm_content">Nội dung:</string>
+    <string name="pm_title">Tựa:</string>
 </resources>

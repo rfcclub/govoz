@@ -118,6 +118,8 @@ public class ThreadActivity extends VozFragmentActivity implements
             segmentedGroup.setTintColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color),
                     Utils.getColorByTheme(this, R.color.black, R.color.white));
         }
+        LinearLayout navigationRootPanel = (LinearLayout) thread_layout.findViewById(R.id.navigationRootPanel);
+        if(navigationRootPanel != null) navigationRootPanel.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
     }
 
     @Override
@@ -206,6 +208,8 @@ public class ThreadActivity extends VozFragmentActivity implements
             Toast toast = Toast.makeText(this, text, duration);
             toast.show();
         } else { // reply thread
+            String httpLink = VOZ_LINK + "/" + replyLink;
+            VozCache.instance().navigationList.add(httpLink);
             Intent intent = new Intent(this, PostActivity.class);
             intent.putExtra("threadName", threadName);
             intent.putExtra("replyLink", replyLink);

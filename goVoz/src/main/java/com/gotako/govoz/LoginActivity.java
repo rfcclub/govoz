@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.govoz.tasks.UserLoginTask;
+import com.gotako.util.Utils;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -49,8 +50,13 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		VozConfig.instance().load(this);
+		if (VozConfig.instance().isDarkTheme()) {
+			setTheme(R.style.AppTheme);
+		} else {
+			setTheme(R.style.AppTheme_Light);
+		}
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
@@ -82,6 +88,8 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 						attemptLogin();
 					}
 				});
+        View loginForm = findViewById(R.id.login_form);
+        loginForm.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
 
 	@Override

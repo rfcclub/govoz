@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -78,6 +79,8 @@ public class ForumActivity extends VozFragmentActivity implements
             segmentedGroup.setTintColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color),
                     Utils.getColorByTheme(this, R.color.black, R.color.white));
         }
+		LinearLayout navigationRootPanel = (LinearLayout) layout.findViewById(R.id.navigationRootPanel);
+		if(navigationRootPanel != null) navigationRootPanel.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
 	}
 
     private void processNavigationLink() {

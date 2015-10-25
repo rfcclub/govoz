@@ -26,7 +26,7 @@ public class ForumSelectDialog extends AbstractNoBorderDialog {
         }
         if(param.trim().equals("33")) {
             if (VozCache.instance().getCookies() == null) {
-                Toast.makeText(activity,getResources().getString(R.string.error_not_login),Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity,getResources().getString(R.string.error_not_login_go_forum),Toast.LENGTH_SHORT).show();
                 return;
             }
         }

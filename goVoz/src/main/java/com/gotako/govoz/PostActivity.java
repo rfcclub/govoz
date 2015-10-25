@@ -38,8 +38,8 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 		
 		GoFastEngine.initialize(this);
 		titleText ="Re: " + getIntent().getStringExtra("threadName");
-		replyLink = getIntent().getStringExtra("replyLink");
 		GoFastEngine.notify(this, "titleText");
+		replyLink = getIntent().getStringExtra("replyLink");
 		String quote = getIntent().getStringExtra("quote");		
 		answerText = (quote == null ? "" : quote);
 		GoFastEngine.notify(this, "answerText");

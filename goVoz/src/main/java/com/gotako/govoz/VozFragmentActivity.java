@@ -14,6 +14,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
@@ -245,10 +246,14 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         forumSelectDialog.show(fm, "forumSelect");
                         break;
                     case 3:
-                        String pmHttpsLink = VOZ_LINK + "/" + "private.php";
-                        VozCache.instance().navigationList.add(pmHttpsLink);
-                        Intent intentInbox = new Intent(VozFragmentActivity.this, InboxActivity.class);
-                        VozFragmentActivity.this.startActivity(intentInbox);
+                        if(VozCache.instance().isLoggedIn()) {
+                            String pmHttpsLink = VOZ_LINK + "/" + "private.php";
+                            VozCache.instance().navigationList.add(pmHttpsLink);
+                            Intent intentInbox = new Intent(VozFragmentActivity.this, InboxActivity.class);
+                            VozFragmentActivity.this.startActivity(intentInbox);
+                        } else {
+                            Toast.makeText(VozFragmentActivity.this, getResources().getString(R.string.error_not_login_go_inbox), Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case 4:
                         break;
