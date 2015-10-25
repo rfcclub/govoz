@@ -46,9 +46,13 @@ public class BrowserActivity extends VozFragmentActivity {
             Toast.makeText(this, R.string.loading_link, Toast.LENGTH_SHORT).show();
             WebView webView = (WebView)findViewById(R.id.webView);
             webView.getSettings().setJavaScriptEnabled(true);
-            Map<String, String> headers = new HashMap<String, String>();
-            headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
-            webView.loadUrl(realLink, headers);
+            if(realLink.contains(VozConstant.VOZ_SIGN)) {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
+                webView.loadUrl(realLink, headers);
+            } else {
+                webView.loadUrl(realLink);
+            }
         }
     }
 }
