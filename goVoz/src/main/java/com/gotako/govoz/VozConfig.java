@@ -41,6 +41,12 @@ public class VozConfig {
      */
     private int loadingDrawable = R.drawable.load278;
 
+    /*
+     * Default show sign
+     */
+    private boolean showSign = true;
+
+
     /**
      * Default constructor
      */
@@ -96,13 +102,14 @@ public class VozConfig {
         editor.putBoolean("supportLongAvatar", supportLongAvatar);
         editor.putBoolean("darkTheme", darkTheme);
         editor.putInt("loadingDrawable", loadingDrawable);
+        editor.putBoolean("showSign", showSign);
         editor.commit();
     }
 
     public void load(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
         if (prefs.contains("fontSize")) {
-            fontSize = prefs.getInt("fontSize", 16);
+            fontSize = prefs.getInt("fontSize", 14);
         }
         if (prefs.contains("loadImageByDemand")) {
             loadImageByDemand = prefs.getBoolean("loadImageByDemand", false);
@@ -118,6 +125,9 @@ public class VozConfig {
         }
         if (prefs.contains("loadingDrawable")) {
             loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
+        }
+        if(prefs.contains("showSign")) {
+            showSign = prefs.getBoolean("showSign", true);
         }
     }
 
@@ -135,5 +145,13 @@ public class VozConfig {
 
     public void setDarkTheme(boolean darkTheme) {
         this.darkTheme = darkTheme;
+    }
+
+    public boolean isShowSign() {
+        return showSign;
+    }
+
+    public void setShowSign(boolean showSign) {
+        this.showSign = showSign;
     }
 }

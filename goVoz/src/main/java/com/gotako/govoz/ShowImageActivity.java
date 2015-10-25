@@ -28,9 +28,10 @@ public class ShowImageActivity extends Activity {
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 
         if (url.contains(VozConstant.VOZ_SIGN)) {
+            String bigUrl = url.split("&")[0];
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
-            webView.loadUrl(url, headers);
+            webView.loadUrl(bigUrl, headers);
         } else {
             webView.loadUrl(url);
         }

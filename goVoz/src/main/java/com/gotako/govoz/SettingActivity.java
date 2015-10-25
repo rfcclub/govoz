@@ -19,6 +19,7 @@ public class SettingActivity extends Activity {
 	private EditText fontSize;
 	private VozConfig config;
 	private RadioButton currentCheckedRadio,darkThemeRadio,lightThemeRadio;
+	private CheckBox chkShowSign;
 
 
 	@Override
@@ -38,11 +39,14 @@ public class SettingActivity extends Activity {
         loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
 		autoReloadForum = (CheckBox)findViewById(R.id.autoReloadForum);
 		supportLongAvatar = (CheckBox)findViewById(R.id.supportLongAvatar);
-		fontSize = (EditText)findViewById(R.id.fontSize);		
+		chkShowSign = (CheckBox)findViewById(R.id.chkShowSign);
+		fontSize = (EditText)findViewById(R.id.fontSize);
+
 		fontSize.setText(String.valueOf(config.getFontSize()));
 		loadImageByDemand.setChecked(config.isLoadImageByDemand());
 		autoReloadForum.setChecked(config.isAutoReloadForum());
 		supportLongAvatar.setChecked(config.isSupportLongAvatar());
+		chkShowSign.setChecked(config.isShowSign());
 
 		darkThemeRadio = (RadioButton)findViewById(R.id.darkThemeRadio);
         lightThemeRadio = (RadioButton)findViewById(R.id.lightThemeRadio);
@@ -55,6 +59,7 @@ public class SettingActivity extends Activity {
         }
 		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
 		currentCheckedRadio.setChecked(true);
+
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
@@ -135,6 +140,7 @@ public class SettingActivity extends Activity {
 		config.setAutoReloadForum(autoReloadForum.isChecked());		
 		config.setSupportLongAvatar(supportLongAvatar.isChecked());
 		config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
+		config.setShowSign(chkShowSign.isChecked());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {

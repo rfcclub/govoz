@@ -308,7 +308,11 @@ public class ThreadActivity extends VozFragmentActivity implements
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(), "text/html", "utf-8", null);
+            String shouldLoadContent = post.getContent();
+            if (VozConfig.instance().isShowSign()) {
+                shouldLoadContent += post.getUserSign() != null ? post.getUserSign() : "";
+            }
+            webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
             setListenerToWebView(webView);
             webViewList.append(i, webView);
 
@@ -526,7 +530,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         } else {
             VozCache.instance().navigationList.add(checkedUrl);
         }
-        if(!processed) {
+        if (!processed) {
             Intent intent = new Intent(this, BrowserActivity.class);
             intent.putExtra("link", checkedUrl);
             startActivity(intent);
@@ -708,7 +712,7 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     protected boolean canShowPinnedMenu() {
-		/*if (navDrawerItems != null) {
+        /*if (navDrawerItems != null) {
 			intcurrentThread = VozCache.instance()
 					.getCurrentThread();
 			String url = VOZ_LINK

@@ -113,7 +113,16 @@
         android:layout_alignLeft="@+id/autoReloadForum"
         android:layout_below="@+id/autoReloadForum"
         android:text="@string/supportLongAvatar"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:checked="true" />
+    <CheckBox
+        android:id="@+id/chkShowSign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setting_show_sign"
+        android:layout_below="@+id/supportLongAvatar"
+        android:layout_alignParentLeft="true"
+        android:checked="true" />
 
     <CheckBox
         android:id="@+id/loadImageByDemand"
@@ -129,7 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/supportLongAvatar"
-        android:layout_below="@+id/supportLongAvatar"
+        android:layout_below="@+id/chkShowSign"
         android:text="Hiệu ứng chuyển trang"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="14sp" />
@@ -278,5 +287,7 @@
             android1:onClick="animationChoosing" />
 
     </GridLayout>
+
+
 
 </RelativeLayout>
