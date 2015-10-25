@@ -1,6 +1,5 @@
 package com.gotako.govoz.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.http.SslError;
@@ -11,11 +10,20 @@ import android.webkit.WebViewClient;
 
 import com.gotako.govoz.R;
 import com.gotako.govoz.VozConfig;
+import com.gotako.govoz.tasks.TaskHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
@@ -46,7 +54,7 @@ public class DefaultVozWebClient extends WebViewClient {
             }
         } else {
             if (isAttachmentImage(url)) {
-                return getContentFromWeb(url);
+                return getAttachmentFromVoz(url);
             } else {
                 return super.shouldInterceptRequest(view, url);
             }
@@ -60,22 +68,32 @@ public class DefaultVozWebClient extends WebViewClient {
     }
 
 
-    private WebResourceResponse getContentFromWeb(String url) {
+    private WebResourceResponse getAttachmentFromVoz(String url) {
         InputStream content = null;
+        String encoding = "";
         try {
+            TaskHelper.disableSSLCertCheck();
             URL imageUrl = new URL(url.replaceAll("&amp;", "&"));
-            content = imageUrl.openStream();
+            HttpsURLConnection conn = (HttpsURLConnection) imageUrl.openConnection();
+            conn.setRequestMethod("GET");
+            conn.connect();
+            encoding = conn.getContentEncoding();
+            content = conn.getInputStream();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
         }
 
-        return new WebResourceResponse("image/jpg", "", content);
+        return new WebResourceResponse("image/png", encoding, content);
     }
 
     private boolean isAttachmentImage(String url) {
-        return url.contains(VOZ_LINK + "/attachment.php?attachmentid=") && url.contains("stc=1&amp;thumb=1");
+        return url.contains(VOZ_LINK + "/attachment.php?attachmentid=");
     }
 
     protected boolean isImageUrl(String url) {

@@ -101,4 +101,7 @@
     <string name="to_address">Đến:</string>
     <string name="pm_content">Nội dung:</string>
     <string name="pm_title">Tựa:</string>
+    <string name="title_activity_browser">Mở web browser</string>
+    <string name="error_invalid_link">Link không hợp lệ</string>
+    <string name="loading_link">Đang nạp trang ...</string>
 </resources>

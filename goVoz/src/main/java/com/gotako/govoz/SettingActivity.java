@@ -34,7 +34,8 @@ public class SettingActivity extends Activity {
 		setTitle("Setting");	
 		config = VozConfig.instance();
 		config.load(this);
-		loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
+
+        loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
 		autoReloadForum = (CheckBox)findViewById(R.id.autoReloadForum);
 		supportLongAvatar = (CheckBox)findViewById(R.id.supportLongAvatar);
 		fontSize = (EditText)findViewById(R.id.fontSize);		
@@ -42,6 +43,7 @@ public class SettingActivity extends Activity {
 		loadImageByDemand.setChecked(config.isLoadImageByDemand());
 		autoReloadForum.setChecked(config.isAutoReloadForum());
 		supportLongAvatar.setChecked(config.isSupportLongAvatar());
+
 		darkThemeRadio = (RadioButton)findViewById(R.id.darkThemeRadio);
         lightThemeRadio = (RadioButton)findViewById(R.id.lightThemeRadio);
         if(config.isDarkTheme()) {

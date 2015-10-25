@@ -2,17 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gotako.govoz"
     android:installLocation="auto"
-    android:versionCode="29"
-    android:versionName="3.29" >
+    android:versionCode="31"
+    android:versionName="5.01" >
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -73,6 +73,11 @@
         <activity
             android:name=".CreatePMActivity"
             android:label="@string/title_activity_create_pm"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".BrowserActivity"
+            android:label="@string/title_activity_browser"
             android:theme="@style/AppTheme" >
         </activity>
     </application>

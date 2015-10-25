@@ -89,10 +89,14 @@ public class VozConfig {
 
     public void save(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
-        prefs.edit().putInt("fontSize", fontSize);
-        prefs.edit().putBoolean("loadImageByDemand", loadImageByDemand);
-        prefs.edit().putBoolean("autoReloadForum", autoReloadForum);
-        prefs.edit().putBoolean("supportLongAvatar", supportLongAvatar);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("fontSize", fontSize);
+        editor.putBoolean("loadImageByDemand", loadImageByDemand);
+        editor.putBoolean("autoReloadForum", autoReloadForum);
+        editor.putBoolean("supportLongAvatar", supportLongAvatar);
+        editor.putBoolean("darkTheme", darkTheme);
+        editor.putInt("loadingDrawable", loadingDrawable);
+        editor.commit();
     }
 
     public void load(Context context) {
@@ -108,6 +112,12 @@ public class VozConfig {
         }
         if (prefs.contains("supportLongAvatar")) {
             supportLongAvatar = prefs.getBoolean("supportLongAvatar", true);
+        }
+        if (prefs.contains("darkTheme")) {
+            darkTheme = prefs.getBoolean("darkTheme", true);
+        }
+        if (prefs.contains("loadingDrawable")) {
+            loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
         }
     }
 

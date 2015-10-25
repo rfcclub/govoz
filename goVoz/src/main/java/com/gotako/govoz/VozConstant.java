@@ -1,6 +1,9 @@
 package com.gotako.govoz;
 
 public class VozConstant {
+
+	public static final String HTTP_PROTOCOL = "http://";
+	public static final String HTTPS_PROTOCOL = "https://";
 	public static final String VOZ_SIGN = "vozforums.com";
 	public static final String VOZ_LINK = "https://vozforums.com";	
 	public static final String PIN_ITEM_FILE_NAME = "pin_items_file.bin";
@@ -15,4 +18,7 @@ public class VozConstant {
 	public static final String VOZINFO = "VOZINFO";
 	public static final String USERNAME = "USERNAME";
 	public static final String PASSWORD = "PASSWORD";
+	public static final String FORUM_SIGN = "forumdisplay.php";
+	public static final String THREAD_SIGN = "showthread.php";
+	public static final String ATTTACHMENT_SIGN = "attachment.php";
 }

@@ -129,7 +129,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 refresh();
-                break;
+            break;
             case R.id.action_reply:
                 doRep();
                 break;

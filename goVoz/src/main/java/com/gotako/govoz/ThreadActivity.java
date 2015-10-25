@@ -2,6 +2,8 @@ package com.gotako.govoz;
 
 import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
+import static com.gotako.govoz.VozConstant.VOZ_SIGN;
+import static com.gotako.govoz.VozConstant.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,13 +115,14 @@ public class ThreadActivity extends VozFragmentActivity implements
         processNavigationLink();
         updateStatus();
         doTheming();
-        SegmentedGroup segmentedGroup = (SegmentedGroup)thread_layout.findViewById(R.id.navigation_group);
-        if(segmentedGroup != null) {
+        SegmentedGroup segmentedGroup = (SegmentedGroup) thread_layout.findViewById(R.id.navigation_group);
+        if (segmentedGroup != null) {
             segmentedGroup.setTintColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color),
                     Utils.getColorByTheme(this, R.color.black, R.color.white));
         }
         LinearLayout navigationRootPanel = (LinearLayout) thread_layout.findViewById(R.id.navigationRootPanel);
-        if(navigationRootPanel != null) navigationRootPanel.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
+        if (navigationRootPanel != null)
+            navigationRootPanel.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
     }
 
     @Override
@@ -137,7 +140,10 @@ public class ThreadActivity extends VozFragmentActivity implements
         String[] parameters = threadLink.split("\\?")[1].split("\\&");
         String firstParam = parameters[0];
         int threadId = Integer.parseInt(firstParam.split("=")[1]);
-        int threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
+        int threadPage = 1;
+        if (parameters.length > 1) {
+            threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
+        }
         int currentForumId = VozCache.instance().getCurrentThread();
         if (currentForumId != threadId) {
             getThreads(false, threadId, threadPage);
@@ -277,7 +283,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
-            String css = VozConfig.instance().isDarkTheme()? "body{color: #fff; background-color: #000;}" :"body{color: #000; background-color: #F5F5F5;}";
+            String css = VozConfig.instance().isDarkTheme() ? "body{color: #fff; background-color: #000;}" : "body{color: #000; background-color: #F5F5F5;}";
             String head = "<head><style type='text/css'>" +
                     css + "\n" +
                     "div#permalink_section\n" +
@@ -304,8 +310,6 @@ public class ThreadActivity extends VozFragmentActivity implements
             }
             webView.loadDataWithBaseURL(VOZ_LINK + "/", post.getContent(), "text/html", "utf-8", null);
             setListenerToWebView(webView);
-//            HtmlView htmlView = (HtmlView)findViewById(R.id.content_html);
-//            htmlView.loadHtml(post.getContent());
             webViewList.append(i, webView);
 
             ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
@@ -467,9 +471,9 @@ public class ThreadActivity extends VozFragmentActivity implements
                         Intent intent = new Intent(thisContext, ShowImageActivity.class);
                         intent.putExtra("IMAGE_URL", url);
                         thisContext.startActivity(intent);
-                    } /*else if(url.indexOf(VOZ_SIGN)>=0) {
+                    } else {
 
-					}*/
+                    }
                 }
                 return true;
             }
@@ -478,7 +482,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 String url = holder.getLink() == null ? "NULL" : holder.getLink();
                 ThreadActivity.this.processLink(url);
-                return super.onSingleTapConfirmed(e);
+                return true;
             }
 
         });
@@ -500,7 +504,46 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     protected void processLink(String url) {
-        Toast.makeText(this, "This feature will be implemented later !", Toast.LENGTH_SHORT).show();
+        boolean processed = false;
+        String checkedUrl = url;
+        if (isVozLink(url)) {
+            checkedUrl = rebuiltVozLink(url);
+            VozCache.instance().navigationList.add(checkedUrl);
+            if (checkedUrl.contains(FORUM_SIGN)) {
+                processed = true;
+                Intent intent = new Intent(this, ForumActivity.class);
+                startActivity(intent);
+            } else if (checkedUrl.contains(THREAD_SIGN)) {
+                processed = true;
+                Intent intent = new Intent(this, ThreadActivity.class);
+                startActivity(intent);
+            } else if (checkedUrl.contains("attachment.php")) {
+                processed = true;
+                Intent intent = new Intent(this, ShowImageActivity.class);
+                intent.putExtra("IMAGE_URL", checkedUrl);
+                startActivity(intent);
+            }
+        } else {
+            VozCache.instance().navigationList.add(checkedUrl);
+        }
+        if(!processed) {
+            Intent intent = new Intent(this, BrowserActivity.class);
+            intent.putExtra("link", checkedUrl);
+            startActivity(intent);
+        }
+    }
+
+    private String rebuiltVozLink(String url) {
+        String processedUrl = url;
+        if (processedUrl.startsWith(HTTP_PROTOCOL))
+            processedUrl = processedUrl.replace(HTTP_PROTOCOL, HTTPS_PROTOCOL);
+        if (processedUrl.startsWith(FORUM_SIGN) || processedUrl.startsWith(THREAD_SIGN) || url.startsWith(ATTTACHMENT_SIGN))
+            processedUrl = VOZ_LINK + "/" + processedUrl;
+        return processedUrl;
+    }
+
+    private boolean isVozLink(String url) {
+        return url.contains(VOZ_SIGN) || url.startsWith(FORUM_SIGN) || url.startsWith(THREAD_SIGN) || url.startsWith(ATTTACHMENT_SIGN);
     }
 
     protected boolean isImageUrl(String url) {
@@ -660,7 +703,7 @@ public class ThreadActivity extends VozFragmentActivity implements
     protected void onStop() {
         super.onStop();
         /*
-		 * if (bounded) { unbindService(serviceConnection); } bounded = false;
+         * if (bounded) { unbindService(serviceConnection); } bounded = false;
 		 */
     }
 
