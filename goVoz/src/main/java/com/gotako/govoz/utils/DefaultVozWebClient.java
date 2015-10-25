@@ -9,8 +9,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.gotako.govoz.R;
+import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.tasks.TaskHelper;
+import com.gotako.util.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,9 +78,12 @@ public class DefaultVozWebClient extends WebViewClient {
             URL imageUrl = new URL(url.replaceAll("&amp;", "&"));
             HttpsURLConnection conn = (HttpsURLConnection) imageUrl.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
             conn.connect();
-            encoding = conn.getContentEncoding();
-            content = conn.getInputStream();
+            if(conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+                encoding = conn.getContentEncoding();
+                content = conn.getInputStream();
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -89,7 +94,7 @@ public class DefaultVozWebClient extends WebViewClient {
             e.printStackTrace();
         }
 
-        return new WebResourceResponse("image/png", encoding, content);
+        return new WebResourceResponse("image/*", encoding, content);
     }
 
     private boolean isAttachmentImage(String url) {

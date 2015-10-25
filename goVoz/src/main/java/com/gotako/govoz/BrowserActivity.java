@@ -8,11 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.gotako.util.Utils;
+
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BrowserActivity extends VozFragmentActivity {
 
@@ -37,8 +43,12 @@ public class BrowserActivity extends VozFragmentActivity {
                 realLink = link.replace("https://vozforums.com/redirect/index.php?link=","");
                 realLink = realLink.replaceAll("%3A",":").replaceAll("%2F", "/").replaceAll("%3F","?").replaceAll("%3D","=");
             }
-            Toast.makeText(this, R.string.loading_link,Toast.LENGTH_SHORT).show();
-            ((WebView)findViewById(R.id.webView)).loadUrl(realLink);
+            Toast.makeText(this, R.string.loading_link, Toast.LENGTH_SHORT).show();
+            WebView webView = (WebView)findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
+            webView.loadUrl(realLink, headers);
         }
     }
 }

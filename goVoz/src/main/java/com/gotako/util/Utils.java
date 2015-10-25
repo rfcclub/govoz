@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -142,5 +144,19 @@ public class Utils {
 
     public static Drawable getDrawableByTheme(Context ctx, int black, int white) {
         return ctx.getResources().getDrawable(getValueByTheme(black, white));
+    }
+
+    public static String flatMap(Map<String, String> cookies) {
+        StringBuilder builder = new StringBuilder();
+        Iterator<String> iter = cookies.keySet().iterator();
+        int count = 0;
+        while(iter.hasNext()) {
+            if(count > 0) builder.append("; ");
+            count++;
+            String key = iter.next();
+            String value = cookies.get(key);
+            builder.append(key +"=" + value);
+        }
+        return builder.toString();
     }
 }

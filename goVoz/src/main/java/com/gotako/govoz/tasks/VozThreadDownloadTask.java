@@ -146,6 +146,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					}
 					// get sign
 					StringBuilder ctent = new StringBuilder(first.toString());
+					post.setContent(ctent.toString());
 					Element possibleSign = first.nextElementSibling();
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
 						Elements floatDivs = possibleSign.select("div[style^=margin:20px;]");
@@ -156,20 +157,30 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						for(Element pre:allPres){
 							pre.attr("style", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 						}
-						ctent.append("<div style='display: block;width:100%'>" + possibleSign.toString() + "</div>");
+						post.setUserSign("<div style='display: block;width:100%'>" + possibleSign.toString() + "</div>");
 					}
 
-					post.setContent(ctent.toString());					
+                    // try to get attachment
+                    Element fieldSet = Utils.getFirstElement(tablePost.select("fieldset[class=fieldset]"));
+                    if(fieldSet != null) {
+                        Element legend = Utils.getFirstElement(fieldSet.select("legend"));
+                        if(legend != null && legend.text().contains("Attached Thumbnails")) {
+                            Element divAttach = Utils.getFirstElement(fieldSet.select("div[style=padding:3px]"));
+                            divAttach.attr("style","border:1px;width:100%");
+                            post.setContent(post.getContent() + divAttach.html());
+                        }
+                    }
 				}					
 				else {
 					post.setContent("Cannot load post");
 					if(userIsIgnored) {
 						post.setContent(tablePost.select("div[class=smallfont]").get(1).text());						
 					}
+                    post.setUserSign("");
 				}
 			} else {
 				post.setUser(Utils.getFirstText(tablePost.select("a[href^=member.php?u=]")));
-			}
+            }
 			posts.add(post);
 		}
 		
