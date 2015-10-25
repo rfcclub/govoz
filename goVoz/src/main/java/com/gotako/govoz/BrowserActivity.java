@@ -35,18 +35,18 @@ public class BrowserActivity extends VozFragmentActivity {
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out);
 
         String link = getIntent().getStringExtra("link");
-        if(Utils.isNullOrEmpty(link)) {
-            Toast.makeText(this, R.string.error_invalid_link,Toast.LENGTH_SHORT).show();
+        if (Utils.isNullOrEmpty(link)) {
+            Toast.makeText(this, R.string.error_invalid_link, Toast.LENGTH_SHORT).show();
         } else {
             String realLink = link;
-            if(link.startsWith("https://vozforums.com/redirect/index.php?link=")) {
-                realLink = link.replace("https://vozforums.com/redirect/index.php?link=","");
-                realLink = realLink.replaceAll("%3A",":").replaceAll("%2F", "/").replaceAll("%3F","?").replaceAll("%3D","=");
+            if (link.startsWith("https://vozforums.com/redirect/index.php?link=")) {
+                realLink = link.replace("https://vozforums.com/redirect/index.php?link=", "");
+                realLink = realLink.replaceAll("%3A", ":").replaceAll("%2F", "/").replaceAll("%3F", "?").replaceAll("%3D", "=");
             }
             Toast.makeText(this, R.string.loading_link, Toast.LENGTH_SHORT).show();
-            WebView webView = (WebView)findViewById(R.id.webView);
+            WebView webView = (WebView) findViewById(R.id.webView);
             webView.getSettings().setJavaScriptEnabled(true);
-            if(realLink.contains(VozConstant.VOZ_SIGN)) {
+            if (realLink.contains(VozConstant.VOZ_SIGN)) {
                 Map<String, String> headers = new HashMap<String, String>();
                 headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
                 webView.loadUrl(realLink, headers);
