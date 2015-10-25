@@ -35,7 +35,7 @@ public class VozConfig {
     /*
      * Using dark theme or not
      */
-    private boolean darkTheme = true;
+    private boolean darkTheme = false;
     /*
      * Default loading drawable
      */
@@ -121,7 +121,7 @@ public class VozConfig {
             supportLongAvatar = prefs.getBoolean("supportLongAvatar", true);
         }
         if (prefs.contains("darkTheme")) {
-            darkTheme = prefs.getBoolean("darkTheme", true);
+            darkTheme = prefs.getBoolean("darkTheme", false);
         }
         if (prefs.contains("loadingDrawable")) {
             loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);

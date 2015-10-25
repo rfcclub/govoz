@@ -71,6 +71,7 @@
                 android:layout_below="@+id/textView2"
                 android:ems="10"
                 android:inputType="textMultiLine" >
+                <requestFocus />
             </EditText>
             <Button
                 android:id="@+id/postAnswer"
@@ -79,7 +80,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/pmContent"
                 android:onClick="post"
-                android:text="@string/answer_post" />
+                android:text="@string/send_pm_button" />
         </RelativeLayout>
     </ScrollView>
 

@@ -105,4 +105,10 @@
     <string name="error_invalid_link">Link không hợp lệ</string>
     <string name="loading_link">Đang nạp trang ...</string>
     <string name="setting_show_sign">Xem chữ ký</string>
+    <string name="send_pm_button">Gửi tin nhắn</string>
+    <string name="ignore_one_user">TIến hành ignore</string>
+    <string name="really_want_to_ignore">Bạn có muốn ignore nick </string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="embarrased"><![CDATA[:\">]]></string>
 </resources>

@@ -49,6 +49,7 @@ public class PMViewActivity extends VozFragmentActivity implements
     private String pmQuote = "";
     private String securityToken;
     private String loggedInUser;
+    private String pmTitle = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class PMViewActivity extends VozFragmentActivity implements
         pmQuote = (String)extra[2];
         securityToken = (String)extra[3];
         loggedInUser = (String) extra[4];
+
         layout.removeAllViews();
         LayoutInflater viewInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for (int i = 0; i < pmContentList.size(); i++) {
@@ -103,7 +105,7 @@ public class PMViewActivity extends VozFragmentActivity implements
             ((TextView)view.findViewById(R.id.pmSender)).setText(post.pmSender);
             ((TextView)view.findViewById(R.id.pmDate)).setText(post.pmDate);
             ((TextView)view.findViewById(R.id.pmTitle)).setText(post.pmTitle);
-
+            if(pmTitle == null) pmTitle = "Re: " + post.pmTitle;
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(false);
             // disable all click listener in webview
@@ -164,6 +166,7 @@ public class PMViewActivity extends VozFragmentActivity implements
         intent.putExtra("pmQuote",pmQuote);
         intent.putExtra("securityToken",securityToken);
         intent.putExtra("loggedInUser", loggedInUser);
+        intent.putExtra("pmTitle", pmTitle);
         startActivityForResult(intent, 2);
     }
 

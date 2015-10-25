@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -24,8 +25,9 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 	@BindingField(id = R.id.answerText, twoWay = true)
 	String answerText = "";
 	private String replyLink;
+    private EditText answerTextEdit;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_post);
@@ -41,8 +43,12 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 		GoFastEngine.notify(this, "titleText");
 		replyLink = getIntent().getStringExtra("replyLink");
 		String quote = getIntent().getStringExtra("quote");		
-		answerText = (quote == null ? "" : quote);
+		answerText = (quote == null ? "" : quote + "\n");
 		GoFastEngine.notify(this, "answerText");
+        answerTextEdit = (EditText) layout.findViewById(R.id.answerText);
+        if(!Utils.isNullOrEmpty(answerText)) {
+            answerTextEdit.setSelection(answerTextEdit.getText().length());
+        }
         doTheming();
         layout.findViewById(R.id.postRootLayout).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
 	}
@@ -77,4 +83,10 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
         menu.findItem(R.id.action_insert_avatar).setIcon(Utils.getValueByTheme(R.drawable.ic_mood_white_18dp, R.drawable.ic_mood_black_18dp));
         return true;
 	}
+    public void addSmiley(View view) {
+        String smiley = (String)view.getTag();
+        String content = answerTextEdit.getText() + smiley;
+        answerTextEdit.setText(content);
+        answerTextEdit.setSelection(answerTextEdit.getText().length());
+    }
 }

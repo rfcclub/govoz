@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.bugsense.trace.ExceptionCallback;
@@ -43,15 +44,20 @@ public class CreatePMActivity extends VozFragmentActivity implements ActivityCal
         frameLayout.addView(layout);
         GoFastEngine.initialize(this);
         String address = getIntent().getStringExtra("pmRecipient");
-        toAddress = address == null? "": address;
+        toAddress = (address == null)? "": address;
         GoFastEngine.notify(this, "toAddress");
         pmReplyLink = getIntent().getStringExtra("pmReplyLink");
         securityToken = getIntent().getStringExtra("securityToken");
         loggedInUser = getIntent().getStringExtra("loggedInUser");
         String quote = getIntent().getStringExtra("pmQuote");
         pmContent = (quote == null ? "" : quote);
-        GoFastEngine.notify(this, "pmQuote");
+        GoFastEngine.notify(this, "pmContent");
+        String title  = getIntent().getStringExtra("pmTitle");
+        pmTitle = (title == null ? "" : title);
+        GoFastEngine.notify(this, "pmTitle");
         if(pmReplyLink == null || pmReplyLink.trim() == "") doReply = true;
+        EditText pmContentEdit = (EditText)layout.findViewById(R.id.pmContent);
+        pmContentEdit.setSelection(pmContentEdit.getText().length());
         doTheming();
         layout.findViewById(R.id.pmCreateRootLayout).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
     }

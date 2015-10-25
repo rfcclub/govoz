@@ -21,11 +21,13 @@ import org.w3c.dom.Text;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
@@ -293,6 +295,7 @@ public class ThreadActivity extends VozFragmentActivity implements
                     "    white-space: -pre-wrap; \n" +
                     "    white-space: -o-pre-wrap;\n" +
                     "    word-wrap: break-word;\n" +
+                    "    overflow: hidden;\n" +
                     "}\n" +
                     "</style></head>";
             utfContent = head + "<div style='width="
@@ -484,8 +487,8 @@ public class ThreadActivity extends VozFragmentActivity implements
 
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
-                String url = holder.getLink() == null ? "NULL" : holder.getLink();
-                ThreadActivity.this.processLink(url);
+                String url = holder.getLink();
+                if(!Utils.isNullOrEmpty(url)) ThreadActivity.this.processLink(url);
                 return true;
             }
 
@@ -531,9 +534,13 @@ public class ThreadActivity extends VozFragmentActivity implements
             VozCache.instance().navigationList.add(checkedUrl);
         }
         if (!processed) {
-            Intent intent = new Intent(this, BrowserActivity.class);
-            intent.putExtra("link", checkedUrl);
-            startActivity(intent);
+            // if http link so open in browser
+            if(checkedUrl.startsWith(HTTP_PROTOCOL) || checkedUrl.startsWith(HTTPS_PROTOCOL)) {
+                Intent intent = new Intent(this, BrowserActivity.class);
+                intent.putExtra("link", checkedUrl);
+                startActivity(intent);
+            }
+            // other links are not processed at this moment.
         }
     }
 
@@ -648,17 +655,29 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     private void ignore() {
-        Post post = posts.get(selectIndex);
-        IgnoreUserTask task = new IgnoreUserTask();
-        task.execute(post.getUserId(), post.getUser());
-        try {
-            String result = task.get();
-            refresh();
-        } catch (InterruptedException e) {
+        final Post post = posts.get(selectIndex);
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(R.string.ignore_one_user)
+                .setMessage(Utils.getString(this,R.string.really_want_to_ignore) + " " + post.getUser() + "?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        IgnoreUserTask task = new IgnoreUserTask();
+                        task.execute(post.getUserId(), post.getUser());
+                        try {
+                            String result = task.get();
+                            refresh();
+                        } catch (InterruptedException e) {
 
-        } catch (ExecutionException e) {
+                        } catch (ExecutionException e) {
 
-        }
+                        }
+                    }
+
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
     }
 
     private void viewProfile() {
@@ -666,7 +685,12 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     private void sendPM() {
-        // TODO Auto-generated method stub
+        String httpLink = VOZ_LINK + "/private.php?do=newpm";
+        VozCache.instance().navigationList.add(httpLink);
+        Post post = posts.get(selectIndex);
+        Intent intent = new Intent(this, CreatePMActivity.class);
+        intent.putExtra("pmRecipient", post.getUser() + ";");
+        startActivityForResult(intent, 1);
     }
 
     /**
