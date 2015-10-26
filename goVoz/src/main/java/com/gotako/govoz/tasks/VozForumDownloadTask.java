@@ -63,6 +63,16 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 						thread.setLastUpdate(div.text());
 					}
 				}
+				// get prefix if in box mua ban
+				Element prefix = Utils.getFirstElement(tr.select("a[href*=forumdisplay.php?f][href*=prefixid]"));
+				if(prefix != null) {
+					thread.prefix = prefix.text();
+					thread.prefixLink = prefix.attr("href").replace("&amp;","&");
+					Element prefixColor = Utils.getFirstElement(prefix.select("strong"));
+					String color = prefixColor.attr("style");
+					color = color.substring(color.indexOf("#"), color.length() - 1);
+					thread.prefixColor = color;
+				}
 			} else {
                 Element deleteImg = Utils.getFirstElement(tr.select("img[class=inlineimg][src*=images/misc/trashcan_small.gif][alt*=Deleted Post(s)]"));
                 if(deleteImg != null) { // delete thread

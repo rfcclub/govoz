@@ -12,6 +12,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -305,12 +311,12 @@ public class ForumActivity extends VozFragmentActivity implements
 
     @Override
     public void preProcess(int position, View convertView, Object... extra) {
-        Thread currentRenderItem = threads.get(position);
+        Thread currentThread = threads.get(position);
         View viewHeader = convertView.findViewById(R.id.subForumHeader);
         viewHeader.setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
         View viewSection = convertView.findViewById(R.id.forumSection);
         viewSection.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
-        if (currentRenderItem.isSubForum()) {
+        if (currentThread.isSubForum()) {
             if (position == 0) {
                 viewHeader.setVisibility(View.VISIBLE);
                 TextView textView = (TextView) viewHeader
@@ -330,20 +336,53 @@ public class ForumActivity extends VozFragmentActivity implements
                 viewHeader.setVisibility(View.GONE);
             }
         }
-        TextView title = (TextView) viewSection.findViewById(R.id.title);
-
-        if (currentRenderItem.isDeleted()) {
-            title.setTextColor(Color.LTGRAY);
+        // must set value manually since we want support prefix in a beautiful way
+        TextView title = (TextView) viewSection.findViewById(R.id.titleWithPrefix);
+        String titleText = currentThread.getTitle();
+        if (currentThread.isDeleted()) {
+            //title.setTextColor(Color.LTGRAY);
+            titleText = "<b><font color=\"#D3D3D3\">" + titleText + "</font></b>";
             viewSection.setBackgroundColor(getResources().getColor(R.color.delete_thread_color));
         } else {
-            if (currentRenderItem.isSticky()) { // set red background for text
-                title.setTextColor(Color.RED);
+            if (currentThread.isSticky()) { // set red background for text
+                //title.setTextColor(Color.RED);
+                titleText = "<b><font color=\"red\">" + titleText + "</font></b>";
             } else {
-                title.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
+                //title.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
+                if(VozConfig.instance().isDarkTheme()) {
+                    titleText = "<b><font color=\"white\">" + titleText + "</font></b>";
+                } else {
+                    titleText = "<b><font color=\"#23497C\">" + titleText + "</font></b>";
+                }
             }
         }
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
                 .getFontSize());
+        title.setText(Html.fromHtml(titleText));
+
+        if (!Utils.isNullOrEmpty(currentThread.prefix)) {
+            String prefix = "<b><font color=\"" + currentThread.prefixColor + "\">" + currentThread.prefix + "</font></b></a> - ";
+            int i1 = prefix.indexOf("[");
+            int i2 = prefix.indexOf("]");
+            title.setText(Html.fromHtml(prefix + titleText));
+//            Spannable spannable = new SpannableString(title.getText());
+//            final String groupLink = VOZ_LINK + "/" + currentThread.prefixLink;
+//            ClickableSpan showForumWithGroup = new ClickableSpan()
+//            {
+//                @Override
+//                public void onClick(View widget) {
+//                    List<String> list = VozCache.instance().navigationList;
+//                    // remove last element
+//                    if(list.size() > 0) list.remove(list.size() - 1);
+//                    ForumActivity.this.finish();
+//                    VozCache.instance().navigationList.add(groupLink);
+//                    Intent intent = new Intent(ForumActivity.this, ForumActivity.class);
+//                    startActivity(intent);
+//                }
+//            };
+//            spannable.setSpan(showForumWithGroup, i1, i2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            title.setText(spannable);
+        }
         TextView poster = (TextView) viewSection.findViewById(R.id.poster);
         poster.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
         poster.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()

@@ -23,6 +23,9 @@ public class Thread implements Serializable {
 	private boolean closed = false;
 	private String replyLink;
 	private boolean deleted;
+	public String prefix;
+	public String prefixColor;
+	public String prefixLink;
 
 	public String getTitle() {
 		return title;
