@@ -22,6 +22,6 @@ public class BindUtil {
 	}
 
 	public static String getBindKey(Object object, String propertyName) {
-		return object.getClass().getName() + "_" + propertyName;
+		return object.toString() + "_" + propertyName;
 	}
 }
