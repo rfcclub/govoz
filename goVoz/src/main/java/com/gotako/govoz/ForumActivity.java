@@ -96,11 +96,7 @@ public class ForumActivity extends VozFragmentActivity implements
         forumId = Integer.parseInt(firstParam.split("=")[1]);
         int currentForumId = VozCache.instance().getCurrentForum();
         if (currentForumId == forumId) {
-            if (VozCache.instance().cache().containsKey(VozConstant.FORUM_THREADS + currentForumId)) {
-                reloadThreadsFromCache();
-            } else { // load threads
                 loadThreads();
-            }
         } else {
             int foundIndex = -1;
             for (int i = 1; i < parameters.length; i++) {
@@ -190,9 +186,9 @@ public class ForumActivity extends VozFragmentActivity implements
         forumPage = VozCache.instance().getCurrentForumPage();
         insertForumToThreads();
         GoFastEngine.notify(this, "threads");
-        VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum(), threads);
-        VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum(), lastPage);
-        VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum(), forums);
+//        VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum(), threads);
+//        VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum(), lastPage);
+//        VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum(), forums);
         updateStatus();
     }
 
