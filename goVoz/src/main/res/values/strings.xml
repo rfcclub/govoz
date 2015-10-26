@@ -111,4 +111,5 @@
     <string name="yes">Có</string>
     <string name="no">Không</string>
     <string name="embarrased"><![CDATA[:\">]]></string>
+    <string name="not_implemented_yet">Tính năng này chưa được implement. Hãy đợi một thời gian.</string>
 </resources>

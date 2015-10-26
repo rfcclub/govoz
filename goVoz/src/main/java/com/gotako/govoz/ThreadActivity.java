@@ -89,6 +89,8 @@ public class ThreadActivity extends VozFragmentActivity implements
     private String threadName;
     private String pValue;
     private String replyLink;
+    private int threadId;
+    private int threadPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,8 +143,8 @@ public class ThreadActivity extends VozFragmentActivity implements
         String threadLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
         String[] parameters = threadLink.split("\\?")[1].split("\\&");
         String firstParam = parameters[0];
-        int threadId = Integer.parseInt(firstParam.split("=")[1]);
-        int threadPage = 1;
+        threadId = Integer.parseInt(firstParam.split("=")[1]);
+        threadPage = 1;
         if (parameters.length > 1) {
             threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
         }
@@ -253,6 +255,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         posts = result;
         lastPage = last;
         layout.removeAllViews();
+        threadPage = VozCache.instance().getCurrentThreadPage();
         viewInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         webViewList = new SparseArray<WebView>();
         for (int i = 0; i < posts.size(); i++) {
@@ -488,7 +491,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 String url = holder.getLink();
-                if(!Utils.isNullOrEmpty(url)) ThreadActivity.this.processLink(url);
+                if (!Utils.isNullOrEmpty(url)) ThreadActivity.this.processLink(url);
                 return true;
             }
 
@@ -535,7 +538,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         }
         if (!processed) {
             // if http link so open in browser
-            if(checkedUrl.startsWith(HTTP_PROTOCOL) || checkedUrl.startsWith(HTTPS_PROTOCOL)) {
+            if (checkedUrl.startsWith(HTTP_PROTOCOL) || checkedUrl.startsWith(HTTPS_PROTOCOL)) {
                 Intent intent = new Intent(this, BrowserActivity.class);
                 intent.putExtra("link", checkedUrl);
                 startActivity(intent);
@@ -570,8 +573,10 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     public void goToPage(int page) {
-        VozCache.instance().setCurrentThreadPage(page);
-        refresh();
+        if (VozCache.instance().getCurrentThreadPage() != page) {
+            VozCache.instance().setCurrentThreadPage(page);
+            refresh();
+        }
     }
 
     public void goLast() {
@@ -588,16 +593,8 @@ public class ThreadActivity extends VozFragmentActivity implements
         super.onResume();
         refreshActionBarIcon();
         updateNavigationPanel();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (VozCache.instance().navigationList.size() > 0)
-            VozCache.instance().navigationList.remove(VozCache.instance().navigationList.size() - 1);
-        VozCache.instance().setCurrentThread(-1);
-        VozCache.instance().setCurrentThreadPage(1);
-        this.finish();
-        overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
+        VozCache.instance().setCurrentThread(threadId);
+        VozCache.instance().setCurrentThreadPage(threadPage);
     }
 
     @Override
@@ -659,7 +656,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.ignore_one_user)
-                .setMessage(Utils.getString(this,R.string.really_want_to_ignore) + " " + post.getUser() + "?")
+                .setMessage(Utils.getString(this, R.string.really_want_to_ignore) + " " + post.getUser() + "?")
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -681,7 +678,7 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     private void viewProfile() {
-        // TODO Auto-generated method stub
+        Toast.makeText(this, Utils.getString(this, R.string.not_implemented_yet), Toast.LENGTH_SHORT).show();
     }
 
     private void sendPM() {
@@ -737,7 +734,7 @@ public class ThreadActivity extends VozFragmentActivity implements
 
     protected boolean canShowPinnedMenu() {
         /*if (navDrawerItems != null) {
-			intcurrentThread = VozCache.instance()
+            intcurrentThread = VozCache.instance()
 					.getCurrentThread();
 			String url = VOZ_LINK
 					+ currentThread.getThreadUrl()

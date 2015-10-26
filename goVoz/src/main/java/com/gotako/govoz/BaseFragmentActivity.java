@@ -216,6 +216,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         List<String> list = VozCache.instance().navigationList;
         // remove last element
         if(list.size() > 0) list.remove(list.size() - 1);
+        finish();
+        overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
     }
 
 	@Override
