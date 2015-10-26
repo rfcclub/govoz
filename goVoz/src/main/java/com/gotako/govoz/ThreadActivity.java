@@ -565,27 +565,20 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     public void goFirst() {
-        int currPage = VozCache.instance().getCurrentThreadPage();
-        if (currPage > 1) {
-            VozCache.instance().setCurrentThreadPage(1);
-            getThreads();
-        }
+        VozCache.instance().setCurrentThreadPage(1);
+        getThreads();
     }
 
     public void goToPage(int page) {
-        if (VozCache.instance().getCurrentThreadPage() != page) {
-            VozCache.instance().setCurrentThreadPage(page);
-            refresh();
-        }
+        VozCache.instance().setCurrentThreadPage(page);
+        getThreads();
+
     }
 
     public void goLast() {
-        int currPage = VozCache.instance().getCurrentThreadPage();
-        if (currPage < lastPage) {
-            currPage = lastPage;
-            VozCache.instance().setCurrentThreadPage(currPage);
-            getThreads();
-        }
+        VozCache.instance().setCurrentThreadPage(lastPage);
+        getThreads();
+
     }
 
     @Override
@@ -753,8 +746,8 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     protected boolean canShowUnpinnedMenu() {
-		/*if (navDrawerItems != null) {
-			com.gotako.govoz.data.Thread currentThread = VozCache.instance()
+        /*if (navDrawerItems != null) {
+            com.gotako.govoz.data.Thread currentThread = VozCache.instance()
 					.getCurrentThread();
 			String url = VOZ_LINK
 					+ currentThread.getThreadUrl()

@@ -60,7 +60,7 @@ public class ForumActivity extends VozFragmentActivity implements
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
         frameLayout.addView(layout);
         /*
-		 * overridePendingTransition(R.animator.right_slide_in,
+         * overridePendingTransition(R.animator.right_slide_in,
 		 * R.animator.left_slide_out);
 		 */
         overridePendingTransition(R.animator.right_slide_in,
@@ -96,7 +96,7 @@ public class ForumActivity extends VozFragmentActivity implements
         forumId = Integer.parseInt(firstParam.split("=")[1]);
         int currentForumId = VozCache.instance().getCurrentForum();
         if (currentForumId == forumId) {
-                loadThreads();
+            loadThreads();
         } else {
             int foundIndex = -1;
             for (int i = 1; i < parameters.length; i++) {
@@ -110,13 +110,6 @@ public class ForumActivity extends VozFragmentActivity implements
                 forumPage = Integer.parseInt(parameters[foundIndex].split("\\=")[1]);
             loadThreads(forumId, forumPage);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        VozCache.instance().setCurrentForum(-1);
-        VozCache.instance().setCurrentForumPage(1);
     }
 
     @SuppressWarnings("unchecked")
@@ -359,26 +352,20 @@ public class ForumActivity extends VozFragmentActivity implements
     }
 
     public void goFirst() {
-        if (VozCache.instance().getCurrentForumPage() > 1) {
-            VozCache.instance().setCurrentForumPage(1);
-            refresh();
-        }
+        VozCache.instance().setCurrentForumPage(1);
+        loadThreads();
+
     }
 
     public void goToPage(int page) {
-        if (VozCache.instance().getCurrentForumPage() != page) {
-            VozCache.instance().setCurrentForumPage(page);
-            refresh();
-        }
+        VozCache.instance().setCurrentForumPage(page);
+        loadThreads();
     }
 
     public void goLast() {
-        int currPage = VozCache.instance().getCurrentForumPage();
-        if (currPage < lastPage) {
-            currPage = lastPage;
-            VozCache.instance().setCurrentForumPage(currPage);
-            refresh();
-        }
+        VozCache.instance().setCurrentForumPage(lastPage);
+        loadThreads();
+
     }
 
     @Override
@@ -396,6 +383,8 @@ public class ForumActivity extends VozFragmentActivity implements
 
     @Override
     public void refresh() {
+        if(VozCache.instance().getCurrentForum() != forumId) VozCache.instance().setCurrentForum(forumId);
+        if(VozCache.instance().getCurrentForumPage() != forumPage) VozCache.instance().setCurrentForumPage(forumPage);
         loadThreads();
     }
 
@@ -436,8 +425,8 @@ public class ForumActivity extends VozFragmentActivity implements
     }
 
     protected void doPin() {
-		/*String forumId = VozCache.instance().getCurrentForum().getId();
-		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
+        /*String forumId = VozCache.instance().getCurrentForum().getId();
+        String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
 				+ String.valueOf(VozCache.instance().getCurrentForumPage());
 		Forum forum = VozCache.instance().getCurrentForum();
 		NavDrawerItem item = new NavDrawerItem(forum.getForumName(), forumUrl,
