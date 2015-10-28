@@ -188,7 +188,7 @@ public class MainActivity extends VozFragmentActivity implements
     @Override
     public void onGetChildView(int groupPosition, int childPosition, boolean isLastChild, View v, ViewGroup parent) {
         v.findViewById(R.id.forumSection).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
-        ((TextView) v.findViewById(R.id.forumName)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.white, R.color.voz_front_color)));
-        ((TextView) v.findViewById(R.id.viewing)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.white, R.color.black)));
+        ((TextView) v.findViewById(R.id.forumName)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.light_gray, R.color.voz_front_color)));
+        ((TextView) v.findViewById(R.id.viewing)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.light_gray, R.color.black)));
     }
 }

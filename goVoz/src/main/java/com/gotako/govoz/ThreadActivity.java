@@ -288,7 +288,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
-            String css = VozConfig.instance().isDarkTheme() ? "body{color: #fff; background-color: #000;}" : "body{color: #000; background-color: #F5F5F5;}";
+            String css = VozConfig.instance().isDarkTheme() ? "body{color: #e7e7e7; background-color: #000;}" : "body{color: #000; background-color: #F5F5F5;}";
             String head = "<head><style type='text/css'>" +
                     css + "\n" +
                     "div#permalink_section\n" +

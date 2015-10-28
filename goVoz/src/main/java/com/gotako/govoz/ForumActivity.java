@@ -185,9 +185,6 @@ public class ForumActivity extends VozFragmentActivity implements
         forumPage = VozCache.instance().getCurrentForumPage();
         insertForumToThreads();
         GoFastEngine.notify(this, "threads");
-//        VozCache.instance().cache().put(FORUM_THREADS + VozCache.instance().getCurrentForum(), threads);
-//        VozCache.instance().cache().put(FORUM_LAST_PAGE + VozCache.instance().getCurrentForum(), lastPage);
-//        VozCache.instance().cache().put(SUB_FORUMS + VozCache.instance().getCurrentForum(), forums);
         updateStatus();
     }
 
@@ -350,7 +347,7 @@ public class ForumActivity extends VozFragmentActivity implements
             } else {
                 //title.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
                 if(VozConfig.instance().isDarkTheme()) {
-                    titleText = "<b><font color=\"white\">" + titleText + "</font></b>";
+                    titleText = "<b><font color=\"#e7e7e7\">" + titleText + "</font></b>";
                 } else {
                     titleText = "<b><font color=\"#23497C\">" + titleText + "</font></b>";
                 }
@@ -387,7 +384,7 @@ public class ForumActivity extends VozFragmentActivity implements
         poster.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
         poster.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
                 .getFontSize() - 2);
-        ((TextView) viewSection.findViewById(R.id.lastUpdate)).setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
+        ((TextView) viewSection.findViewById(R.id.lastUpdate)).setTextColor(Utils.getColorByTheme(this, R.color.light_gray, R.color.black));
     }
 
     public void goFirst() {

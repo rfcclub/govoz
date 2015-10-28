@@ -122,7 +122,7 @@ public class PMViewActivity extends VozFragmentActivity implements
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            String css = VozConfig.instance().isDarkTheme()? "body{color: #fff; background-color: #000;}" :"body{color: #000; background-color: #F5F5F5;}";
+            String css = VozConfig.instance().isDarkTheme()? "body{color: #e7e7e7; background-color: #000;}" :"body{color: #000; background-color: #F5F5F5;}";
             Display display = getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
