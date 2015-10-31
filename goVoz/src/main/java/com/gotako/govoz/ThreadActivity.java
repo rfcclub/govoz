@@ -267,6 +267,12 @@ public class ThreadActivity extends VozFragmentActivity implements
             view.findViewById(R.id.banner).setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(false);
+            if(webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
+                webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            } else {
+                webView.setLayerType(View.LAYER_TYPE_NONE, null);
+            }
+            webView.setDrawingCacheEnabled(false);
             // disable all click listener in webview
             webView.setClickable(false);
             webView.setLongClickable(true);
@@ -307,7 +313,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             post.setContent(utfContent);
             webView.getSettings().setBuiltInZoomControls(false);
             webView.getSettings().setSupportZoom(false);
-            webView.setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+            webView.setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.voz_back_color)));
             try {
                 TaskHelper.disableSSLCertCheck();
             } catch (Exception e) {
@@ -320,6 +326,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             }
             webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
             setListenerToWebView(webView);
+            webView.invalidate();
             webViewList.append(i, webView);
 
             ImageView imageView = (ImageView) view.findViewById(R.id.avatar);

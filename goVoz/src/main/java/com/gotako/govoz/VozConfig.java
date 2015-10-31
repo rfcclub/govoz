@@ -45,6 +45,10 @@ public class VozConfig {
      * Default show sign
      */
     private boolean showSign = true;
+    /*
+     * should use hardware accelerated in webview or not
+     */
+    private boolean hardwareAccelerated;
 
 
     /**
@@ -103,32 +107,20 @@ public class VozConfig {
         editor.putBoolean("darkTheme", darkTheme);
         editor.putInt("loadingDrawable", loadingDrawable);
         editor.putBoolean("showSign", showSign);
+        editor.putBoolean("hardwareAccelerated", hardwareAccelerated);
         editor.commit();
     }
 
     public void load(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
-        if (prefs.contains("fontSize")) {
-            fontSize = prefs.getInt("fontSize", 14);
-        }
-        if (prefs.contains("loadImageByDemand")) {
-            loadImageByDemand = prefs.getBoolean("loadImageByDemand", false);
-        }
-        if (prefs.contains("autoReloadForum")) {
-            autoReloadForum = prefs.getBoolean("autoReloadForum", true);
-        }
-        if (prefs.contains("supportLongAvatar")) {
-            supportLongAvatar = prefs.getBoolean("supportLongAvatar", true);
-        }
-        if (prefs.contains("darkTheme")) {
-            darkTheme = prefs.getBoolean("darkTheme", false);
-        }
-        if (prefs.contains("loadingDrawable")) {
-            loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
-        }
-        if(prefs.contains("showSign")) {
-            showSign = prefs.getBoolean("showSign", true);
-        }
+        fontSize = prefs.getInt("fontSize", 14);
+        loadImageByDemand = prefs.getBoolean("loadImageByDemand", false);
+        autoReloadForum = prefs.getBoolean("autoReloadForum", true);
+        supportLongAvatar = prefs.getBoolean("supportLongAvatar", true);
+        darkTheme = prefs.getBoolean("darkTheme", false);
+        loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
+        showSign = prefs.getBoolean("showSign", true);
+        hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", false);
     }
 
     public int getLoadingDrawable() {
@@ -153,5 +145,12 @@ public class VozConfig {
 
     public void setShowSign(boolean showSign) {
         this.showSign = showSign;
+    }
+
+    public boolean isHardwareAccelerated() {
+        return hardwareAccelerated;
+    }
+    public void setHardwareAccelerated(boolean val) {
+        hardwareAccelerated = val;
     }
 }

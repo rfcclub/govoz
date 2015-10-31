@@ -66,8 +66,7 @@ public class MainActivity extends VozFragmentActivity implements
         display.getMetrics(outMetrics);
         VozCache.instance().setHeight(outMetrics.heightPixels);
         VozCache.instance().setWidth(outMetrics.widthPixels);
-        overridePendingTransition(android.R.anim.fade_in,
-                android.R.anim.fade_out);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         VozCache.instance().reset();
         VozCache.instance().setCanShowReplyMenu(false);
         VozConfig config = VozConfig.instance();

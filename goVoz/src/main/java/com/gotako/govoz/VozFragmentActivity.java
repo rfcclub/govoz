@@ -42,6 +42,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         } else {
             setTheme(R.style.AppTheme_Light);
         }
+        overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
     }
 

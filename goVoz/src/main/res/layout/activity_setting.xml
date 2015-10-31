@@ -288,6 +288,13 @@
 
     </GridLayout>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setting_hardware_accelerated"
+        android:id="@+id/hardwareAccelerated"
+        android:layout_below="@+id/gridLayout1"
+        />
 
 
 </RelativeLayout>

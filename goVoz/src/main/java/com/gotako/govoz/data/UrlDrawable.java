@@ -15,7 +15,7 @@ import android.graphics.drawable.PictureDrawable;
  *
  */
 public class UrlDrawable extends Drawable {
-	Drawable drawable;
+	public Drawable drawable;
 	int width;
 	int height;
 	/* (non-Javadoc)

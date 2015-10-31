@@ -217,7 +217,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         // remove last element
         if(list.size() > 0) list.remove(list.size() - 1);
         finish();
-        overridePendingTransition(R.animator.left_slide_in, R.animator.right_slide_out);
+        overridePendingTransition(R.animator.left_slide_in_half, R.animator.right_slide_out);
     }
 
 	@Override

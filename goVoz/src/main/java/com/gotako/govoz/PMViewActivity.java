@@ -55,8 +55,6 @@ public class PMViewActivity extends VozFragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VozCache.instance().setCanShowReplyMenu(true);
-        overridePendingTransition(R.animator.right_slide_in,
-                R.animator.left_slide_out);
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         View rootLayout = mInflater.inflate(R.layout.activity_pm_view, null);
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container);
