@@ -65,6 +65,7 @@ import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.CachePostService;
+import com.gotako.govoz.tasks.DownloadImageExTask;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.GotReplyQuoteTask;
 import com.gotako.govoz.tasks.IgnoreUserTask;
@@ -334,7 +335,8 @@ public class ThreadActivity extends VozFragmentActivity implements
                 UrlDrawable drawable = new UrlDrawable();
                 drawable.setWidth(75);
                 drawable.setHeight(75);
-                //imageView.setImageDrawable(drawable);
+                drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
+                imageView.setImageDrawable(drawable);
                 imageView.setScaleType(ScaleType.CENTER_CROP);
                 DownloadImageTask task = new DownloadImageTask(drawable,
                         imageView, this);

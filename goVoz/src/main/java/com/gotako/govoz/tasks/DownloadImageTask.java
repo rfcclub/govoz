@@ -72,14 +72,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
 				// change the reference of the current drawable to the result
 				// from the HTTP call
 				urlDrawable.setDrawable(d);
-	
-				/*
-				 * // ICS and above
-				 * container.setHeight(urlDrawable.getIntrinsicHeight() +
-				 * container.getHeight()); // pre ICS container.setEllipsize(null);
-				 */
-				// redraw the image by invalidating the container
-				ImageView imageView = ((ImageView) container);
+                ImageView imageView = ((ImageView) container);
 				imageView.setImageBitmap(bm);
 				if (VozConfig.instance().isSupportLongAvatar()) {
 					double ratio = bm.getWidth() / bm.getHeight();
@@ -131,7 +124,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
             	File file = new File(savePath.substring(0,savePath.lastIndexOf("/")));
             	file.mkdirs();
             	FileOutputStream fos = new FileOutputStream(savePath);
-            	bm.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+            	bm.compress(Bitmap.CompressFormat.WEBP, 90, fos);
                 fos.close();
             }
 		} catch (IllegalStateException e) {

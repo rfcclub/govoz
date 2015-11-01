@@ -116,7 +116,6 @@ public class DownloadThreadImageTask extends AsyncTask<String, Void, Drawable> {
             if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream stream = httpConn.getInputStream();
                 String savePath = context.getCacheDir() + "/" + urlString;
-
                 Bitmap bm = BitmapFactory.decodeStream(stream);
                 File file = new File(savePath.substring(0, savePath.lastIndexOf("/")));
                 file.mkdirs();
