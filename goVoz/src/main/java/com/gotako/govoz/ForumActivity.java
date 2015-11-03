@@ -54,6 +54,7 @@ public class ForumActivity extends VozFragmentActivity implements
     private String forumName = VozConstant.VOZ_SIGN;
     private int forumId;
     private int forumPage;
+    private SegmentedGroup segmentedGroup;
 
     @SuppressWarnings("rawtypes")
     @Override
@@ -79,7 +80,7 @@ public class ForumActivity extends VozFragmentActivity implements
         processNavigationLink();
         updateNavigationPanel();
         doTheming();
-        SegmentedGroup segmentedGroup = (SegmentedGroup) layout.findViewById(R.id.navigation_group);
+        segmentedGroup = (SegmentedGroup) layout.findViewById(R.id.navigation_group);
         if (segmentedGroup != null) {
             segmentedGroup.setTintColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color),
                     Utils.getColorByTheme(this, R.color.black, R.color.white));
@@ -129,10 +130,10 @@ public class ForumActivity extends VozFragmentActivity implements
 
     private void updateStatus() {
         setTitle(forumName);
-        listView = (ListView) findViewById(R.id.threadsList);
-        // listView.smoothScrollToPosition(0);
-        listView.setSelection(0);
         updateNavigationPanel();
+        listView = (ListView) findViewById(R.id.threadsList);
+        listView.setSelection(0);
+        final SegmentedGroup navigationGroup = (SegmentedGroup) findViewById(R.id.navigation_group);
     }
 
     public void loadThreads() {
@@ -154,6 +155,7 @@ public class ForumActivity extends VozFragmentActivity implements
         } else {
             VozCache.instance().setCurrentForumPage(_page);
         }
+        forumPage = VozCache.instance().getCurrentForumPage();
         // load threads for forum
         task.setShowProcessDialog(true);
         task.setContext(this);
@@ -181,10 +183,24 @@ public class ForumActivity extends VozFragmentActivity implements
         insertForumToThreads();
         GoFastEngine.notify(this, "threads");
         updateStatus();
+        /*int currentPage = VozCache.instance().getCurrentForumPage();
+        for (int i = 0; i < segmentedGroup.getChildCount(); i++) {
+            View view = segmentedGroup.getChildAt(i);
+            if (view.getTag() != null && view instanceof RadioButton) {
+                int page = (Integer) view.getTag();
+                if (currentPage == page) {
+                    ((RadioButton) view).setChecked(true);
+                    segmentedGroup.updateBackground();
+                    view.invalidate();
+                    segmentedGroup.invalidate();
+                    break;
+                }
+            }
+        }*/
     }
 
     private void updateNavigationPanel() {
-        SegmentedGroup navigationGroup = (SegmentedGroup) findViewById(R.id.navigation_group);
+        final SegmentedGroup navigationGroup = (SegmentedGroup) findViewById(R.id.navigation_group);
         navigationGroup.removeAllViews();
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         int currentPage = VozCache.instance().getCurrentForumPage();
@@ -205,6 +221,7 @@ public class ForumActivity extends VozFragmentActivity implements
         for (int i = prevStart; i <= currentPage; i++) {
             RadioButton prevPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
             prevPage.setText(String.valueOf(i));
+            prevPage.setTag(i);
             final int page = i;
             if (i == currentPage) prevPage.setChecked(true);
             prevPage.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +239,7 @@ public class ForumActivity extends VozFragmentActivity implements
         for (int i = currentPage + 1; i <= nextEnd; i++) {
             RadioButton nextPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
             nextPage.setText(String.valueOf(i));
+            nextPage.setTag(i);
             final int page = i;
             nextPage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -341,7 +359,7 @@ public class ForumActivity extends VozFragmentActivity implements
                 titleText = "<b><font color=\"red\">" + titleText + "</font></b>";
             } else {
                 //title.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.voz_front_color));
-                if(VozConfig.instance().isDarkTheme()) {
+                if (VozConfig.instance().isDarkTheme()) {
                     titleText = "<b><font color=\"#e7e7e7\">" + titleText + "</font></b>";
                 } else {
                     titleText = "<b><font color=\"#23497C\">" + titleText + "</font></b>";
@@ -414,8 +432,10 @@ public class ForumActivity extends VozFragmentActivity implements
 
     @Override
     public void refresh() {
-        if(VozCache.instance().getCurrentForum() != forumId) VozCache.instance().setCurrentForum(forumId);
-        if(VozCache.instance().getCurrentForumPage() != forumPage) VozCache.instance().setCurrentForumPage(forumPage);
+        if (VozCache.instance().getCurrentForum() != forumId)
+            VozCache.instance().setCurrentForum(forumId);
+        if (VozCache.instance().getCurrentForumPage() != forumPage)
+            VozCache.instance().setCurrentForumPage(forumPage);
         loadThreads();
     }
 
@@ -471,7 +491,7 @@ public class ForumActivity extends VozFragmentActivity implements
     }
 
     protected void doUnpin() {
-		/*String forumId = VozCache.instance().getCurrentForum().getId();
+        /*String forumId = VozCache.instance().getCurrentForum().getId();
 		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
 				+ String.valueOf(VozCache.instance().getCurrentForumPage());
 		Forum forum = VozCache.instance().getCurrentForum();

@@ -113,7 +113,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             VozCache.instance().setCanShowReplyMenu(false);
         }
         webViewList = new SparseArray<WebView>();
-        overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out);
+        //overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out);
         registerMenu();
         posts = new ArrayList<Post>();
         GoFastEngine.initialize(this);
