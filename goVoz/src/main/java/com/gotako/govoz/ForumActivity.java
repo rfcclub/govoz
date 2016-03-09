@@ -183,20 +183,6 @@ public class ForumActivity extends VozFragmentActivity implements
         insertForumToThreads();
         GoFastEngine.notify(this, "threads");
         updateStatus();
-        /*int currentPage = VozCache.instance().getCurrentForumPage();
-        for (int i = 0; i < segmentedGroup.getChildCount(); i++) {
-            View view = segmentedGroup.getChildAt(i);
-            if (view.getTag() != null && view instanceof RadioButton) {
-                int page = (Integer) view.getTag();
-                if (currentPage == page) {
-                    ((RadioButton) view).setChecked(true);
-                    segmentedGroup.updateBackground();
-                    view.invalidate();
-                    segmentedGroup.invalidate();
-                    break;
-                }
-            }
-        }*/
     }
 
     private void updateNavigationPanel() {
@@ -418,8 +404,7 @@ public class ForumActivity extends VozFragmentActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void doOnResume() {
         refreshActionBarIcon();
         updateNavigationPanel();
         VozCache.instance().setCurrentForumPage(forumPage);

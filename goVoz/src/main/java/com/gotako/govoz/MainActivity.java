@@ -168,8 +168,7 @@ public class MainActivity extends VozFragmentActivity implements
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void doOnResume() {
         refreshActionBarIcon();
     }
 
