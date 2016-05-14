@@ -32,9 +32,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import pl.droidsonroids.gif.GifDrawable;
-import pl.droidsonroids.gif.GifDrawableBuilder;
-
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class DownloadImageExTask extends AsyncTask<String, Void, Drawable> {

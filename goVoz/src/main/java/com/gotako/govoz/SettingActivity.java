@@ -20,7 +20,7 @@ public class SettingActivity extends Activity {
 	private VozConfig config;
 	private RadioButton currentCheckedRadio,darkThemeRadio,lightThemeRadio;
 	private CheckBox chkShowSign;
-
+	private CheckBox hardwareAccelerated;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,8 @@ public class SettingActivity extends Activity {
 		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
 		currentCheckedRadio.setChecked(true);
 
+		hardwareAccelerated = (CheckBox)findViewById(R.id.hardwareAccelerated);
+		hardwareAccelerated.setChecked(config.isHardwareAccelerated());
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
@@ -141,6 +143,7 @@ public class SettingActivity extends Activity {
 		config.setSupportLongAvatar(supportLongAvatar.isChecked());
 		config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
 		config.setShowSign(chkShowSign.isChecked());
+		config.setHardwareAccelerated(hardwareAccelerated.isChecked());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {

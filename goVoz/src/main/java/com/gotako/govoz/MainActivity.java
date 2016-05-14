@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -72,6 +74,22 @@ public class MainActivity extends VozFragmentActivity implements
         VozConfig config = VozConfig.instance();
         config.load(this);
         VozCache.instance().navigationList.clear();
+        forums = new Object[2];
+        forums[0] = new ArrayList<Forum>();
+        forums[1] = new HashMap<Forum, List<Forum>>();
+        list = (ExpandableListView) layout.findViewById(R.id.forumList);
+        list.setOnChildClickListener(this);
+        GoFastEngine.initialize(this);
+        doTheming();
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm.getActiveNetworkInfo() != null) {
+            doLoginAndGetVozForums();
+        } else {
+            Toast.makeText(this, "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void doLoginAndGetVozForums() {
         SharedPreferences prefs = this.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
         boolean autoLogin = false;
         if (prefs.contains(VozConstant.USERNAME) && prefs.contains(VozConstant.PASSWORD)) {
@@ -83,18 +101,11 @@ public class MainActivity extends VozFragmentActivity implements
                 albs.doLogin(username, password);
             }
         }
-        forums = new Object[2];
-        forums[0] = new ArrayList<Forum>();
-        forums[1] = new HashMap<Forum, List<Forum>>();
-        GoFastEngine.initialize(this);
-        list = (ExpandableListView) layout.findViewById(R.id.forumList);
-        list.setOnChildClickListener(this);
+
         if (!autoLogin) {
             getVozForums();
         }
-        doTheming();
     }
-
     private void getVozForums() {
         VozMainForumDownloadTask task = new VozMainForumDownloadTask(this);
         task.setContext(this);
@@ -180,7 +191,13 @@ public class MainActivity extends VozFragmentActivity implements
 
     @Override
     public void onGetGroupView(int groupPosition, boolean isLastChild, View v, ViewGroup parent) {
-        v.findViewById(R.id.forumGroupName).setBackground(getResources().getDrawable(Utils.getValueByTheme(R.drawable.gradient, R.drawable.gradient_light)));
+        if(Build.VERSION.SDK_INT >= 16) {
+            v.findViewById(R.id.forumGroupName).setBackground(
+                    getResources().getDrawable(Utils.getValueByTheme(R.drawable.gradient, R.drawable.gradient_light)));
+        } else {
+            v.findViewById(R.id.forumGroupName).setBackgroundColor(
+                    getResources().getColor(Utils.getValueByTheme(R.color.background_material_dark, R.color.background_material_light)));
+        }
 //        ((TextView) v.findViewById(R.id.forumGroupName)).setTextColor(R.color.white);
     }
 
