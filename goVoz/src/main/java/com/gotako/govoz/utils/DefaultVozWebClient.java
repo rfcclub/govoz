@@ -41,7 +41,11 @@ public class DefaultVozWebClient extends WebViewClient {
     }
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-        handler.proceed();
+        if(error.hasError(SslError.SSL_IDMISMATCH) || error.hasError(SslError.SSL_NOTYETVALID)) {
+            handler.cancel();
+        } else {
+            handler.proceed();
+        }
     }
 
     @Override

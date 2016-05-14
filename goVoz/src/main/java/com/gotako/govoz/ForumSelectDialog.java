@@ -24,11 +24,12 @@ public class ForumSelectDialog extends AbstractNoBorderDialog {
             Toast.makeText(activity,getResources().getString(R.string.error_forum_select_id),Toast.LENGTH_SHORT).show();
             return;
         }
+
         if(param.trim().equals("33")) {
-            if (VozCache.instance().getCookies() == null) {
+            /*if (VozCache.instance().getCookies() == null) {
                 Toast.makeText(activity,getResources().getString(R.string.error_not_login_go_forum),Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }*/
         }
         String forumUrl = FORUM_URL_F + param.trim() + FORUM_URL_ORDER + "1";
         VozCache.instance().navigationList.add(forumUrl);

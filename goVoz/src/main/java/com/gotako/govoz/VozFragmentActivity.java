@@ -280,5 +280,15 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        doOnResume();
+    }
+
+    protected void doOnResume() {
+        // do nothing
+    }
 }
 
