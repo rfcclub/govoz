@@ -48,7 +48,7 @@ public class VozConfig {
     /*
      * should use hardware accelerated in webview or not
      */
-    private boolean hardwareAccelerated;
+    private boolean hardwareAccelerated = true;
 
 
     /**

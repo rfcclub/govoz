@@ -70,18 +70,18 @@
                 android:gravity="top"
                 android:orientation="horizontal">
 
-                <ImageView
+                <!--<ImageView-->
+                    <!--android:id="@+id/avatar"-->
+                    <!--android:layout_width="54dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@drawable/user_icon" />-->
+                <com.felipecsl.gifimageview.library.GifImageView
                     android:id="@+id/avatar"
                     android:layout_width="54dp"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/user_icon" />
-                <!--<com.felipecsl.gifimageview.library.GifImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="54dp"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/user_icon" />-->
 
                 <GridLayout
                     android:id="@+id/gridUserPanel"

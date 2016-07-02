@@ -29,6 +29,10 @@ import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public abstract class AbstractDownloadTask<T> extends
         AsyncTask<String, Integer, List<T>> {
 
@@ -75,17 +79,22 @@ public abstract class AbstractDownloadTask<T> extends
             Document document = null;
             if (VozCache.instance().getCookies() == null) {
                 document = Jsoup.connect(urlString)
-                        .header("Accept-Encoding", "gzip")
+                        .header("Accept-Encoding", "gzip, deflate")
+                        .maxBodySize(0)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0")
                         .timeout(60000)
                         .post();
             } else {
                 document = Jsoup.connect(urlString)
                         .timeout(60000)
-                        .header("Accept-Encoding", "gzip")
+                        .header("Accept-Encoding", "gzip, deflate")
+                        .maxBodySize(0)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0")
                         .cookies(VozCache.instance().getCookies())
                         .data("securitytoken", VozCache.instance().getSecurityToken())
                         .post();
             }
+
             result = processResult(document);
             completed = true;
             afterDownload(document);

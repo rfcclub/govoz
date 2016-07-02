@@ -144,9 +144,11 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 							}
 						}
 					}
-					// get sign
+
 					StringBuilder ctent = new StringBuilder(first.toString());
 					post.setContent(ctent.toString());
+
+                    // get sign
 					Element possibleSign = first.nextElementSibling();
 					if(!possibleSign.hasAttr("align") && !possibleSign.hasAttr("style")) { // it could be sign
 						Elements floatDivs = possibleSign.select("div[style^=margin:20px;]");
@@ -159,7 +161,6 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						}
 						post.setUserSign("<div style='display: block;width:100%'>" + possibleSign.toString() + "</div>");
 					}
-
                     // try to get attachment
                     Element fieldSet = Utils.getFirstElement(tablePost.select("fieldset[class=fieldset]"));
                     if(fieldSet != null) {

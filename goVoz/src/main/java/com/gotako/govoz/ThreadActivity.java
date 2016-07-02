@@ -5,18 +5,10 @@ import static com.gotako.govoz.VozConstant.VOZ_LINK;
 import static com.gotako.govoz.VozConstant.VOZ_SIGN;
 import static com.gotako.govoz.VozConstant.*;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import org.apache.http.impl.client.HttpClients;
-import org.jsoup.nodes.Document;
-import org.w3c.dom.Text;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -24,12 +16,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.view.ContextMenu;
@@ -43,11 +32,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -57,16 +43,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
+import com.felipecsl.gifimageview.library.GifImageView;
 import com.gotako.gofast.GoFastEngine;
-import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.CachePostService;
-import com.gotako.govoz.tasks.DownloadImageExTask;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.GotReplyQuoteTask;
 import com.gotako.govoz.tasks.IgnoreUserTask;
@@ -93,6 +77,7 @@ public class ThreadActivity extends VozFragmentActivity implements
     private String replyLink;
     private int threadId;
     private int threadPage;
+    private List<GifImageView> gifImageViews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +91,7 @@ public class ThreadActivity extends VozFragmentActivity implements
         listView.setAnimationCacheEnabled(true);
         listView.setDrawingCacheEnabled(true);
         listView.setAlwaysDrawnWithCacheEnabled(true);
+        gifImageViews = new ArrayList<>();
         //pageNumber = (TextView) thread_layout.findViewById(R.id.pageNumber);
         layout = (LinearLayout) listView.findViewById(R.id.postListLayout);
         if (VozCache.instance().getCookies() != null) {
@@ -257,6 +243,8 @@ public class ThreadActivity extends VozFragmentActivity implements
         posts = result;
         lastPage = last;
         layout.removeAllViews();
+        stopAllGifViews();
+        gifImageViews.clear();
         threadPage = VozCache.instance().getCurrentThreadPage();
         viewInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         webViewList = new SparseArray<WebView>();
@@ -335,25 +323,26 @@ public class ThreadActivity extends VozFragmentActivity implements
             webView.invalidate();
             webViewList.append(i, webView);
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+            //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+            GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
             if (post.getAvatar() != null) {
                 UrlDrawable drawable = new UrlDrawable();
                 drawable.setWidth(75);
                 drawable.setHeight(75);
                 drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
-                imageView.setImageDrawable(drawable);
-                imageView.setScaleType(ScaleType.CENTER_CROP);
+                avatarView.setImageDrawable(drawable);
+                avatarView.setScaleType(ScaleType.CENTER_CROP);
                 DownloadImageTask task = new DownloadImageTask(drawable,
-                        imageView, this);
+                        avatarView, this);
                 task.execute(post.getAvatar());
             }
-            imageView.setClickable(false);
-            imageView.setLongClickable(true);
-            imageView.setFocusable(false);
-            imageView.setFocusableInTouchMode(false);
-            imageView.setOnLongClickListener(this);
-            imageView.setTag(i);
-
+            avatarView.setClickable(false);
+            avatarView.setLongClickable(true);
+            avatarView.setFocusable(false);
+            avatarView.setFocusableInTouchMode(false);
+            avatarView.setOnLongClickListener(this);
+            avatarView.setTag(i);
+            gifImageViews.add(avatarView);
             // post date
             TextView postDate = (TextView) view.findViewById(R.id.postDate);
             postDate.setText(post.getPostDate());
@@ -746,9 +735,16 @@ public class ThreadActivity extends VozFragmentActivity implements
     @Override
     protected void onStop() {
         super.onStop();
+        stopAllGifViews();
         /*
          * if (bounded) { unbindService(serviceConnection); } bounded = false;
 		 */
+    }
+
+    private void stopAllGifViews() {
+        for(GifImageView imageView : gifImageViews) {
+            if(imageView !=null) imageView.stopAnimation();
+        }
     }
 
     protected boolean canShowPinnedMenu() {
