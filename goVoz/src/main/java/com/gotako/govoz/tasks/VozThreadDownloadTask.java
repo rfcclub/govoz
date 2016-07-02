@@ -16,6 +16,8 @@ import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.data.ThreadDumpObject;
+import com.gotako.govoz.service.DownloadBatch;
+import com.gotako.govoz.service.ImageDownloadService;
 import com.gotako.util.Utils;
 
 public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
@@ -33,6 +35,8 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 	@Override
 	public List<Post> processResult(Document document) {
+		ImageDownloadService.service().batches.clear();
+		ImageDownloadService.service().set(context);
 		List<Post> posts = new ArrayList<Post>();
 		Element title = document.select("title").first();
 		threadName = title.text().trim();
@@ -115,15 +119,21 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 				if(first!=null) {
 					//resize image
 					Elements images = first.select("img");
+					DownloadBatch batch = ImageDownloadService.service().create();
 					for(Element image:images) {
 						// if not smilies so wrap it inside an inline block and restrict the size						
 						if(!image.attr("src").contains("images/smilies/")) {
 							if(image.attr("src").endsWith("gif")) { // transparent background
 								image.attr("style","display: block;max-width: 100%");
 							} else {
-								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loader64x64.gif) no-repeat center center");
+								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loading.gif) no-repeat center center");
 							}
 							image.wrap("<div style='display: inline-block'></div>");
+							if(image.attr("src").startsWith("http")) {
+								batch.add(image.attr("src"));
+								String newLink = "file://" + convertToLocalLink(image.attr("src"));
+								image.attr("src", newLink);
+							}
 						}						
 					}				
 					
@@ -159,7 +169,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						for(Element pre:allPres){
 							pre.attr("style", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 						}
-						post.setUserSign("<div style='display: block;width:100%'>" + possibleSign.toString() + "</div>");
+						post.setUserSign("<div style='display: block;width:100%;overflow: hidden'>" + possibleSign.toString() + "</div>");
 					}
                     // try to get attachment
                     Element fieldSet = Utils.getFirstElement(tablePost.select("fieldset[class=fieldset]"));
@@ -219,9 +229,10 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		return posts;
 	}
 
-	private void processQuotes(Document document) {
-				
+	private String convertToLocalLink(String src) {
+		return context.getCacheDir() + Utils.getPath(src);
 	}
+
 
 	private void checkThreadCloseStatus(Document document) {
 		try {

@@ -110,8 +110,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
 						firstByte = true;
 					}
 				}
-				if(i > 1500) {
-					break; // if sign does not exists in fisrt 1.5K bytes so break too, it's not ani gif.
+				if(i > 1000) {
+					break; // if sign does not exists in fisrt 1K bytes so break too, it's not ani gif.
 				}
 			}
 			i++;

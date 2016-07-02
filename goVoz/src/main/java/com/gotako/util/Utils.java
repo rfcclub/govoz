@@ -165,4 +165,18 @@ public class Utils {
     public static String getRandomMessage(String[] inboxMessages) {
         return inboxMessages[random.nextInt(inboxMessages.length-1)];
     }
+
+    public static String getPath(String url) {
+        int index = url.indexOf("/","https://".length());
+        return url.substring(index);
+    }
+
+    public static String getContentType(String url) {
+        if(url.endsWith("png")) return "image/png";
+        else if(url.endsWith("jpg")) return "image/jpg";
+        else if(url.endsWith("gif")) return "image/gif";
+        else if(url.endsWith("jpeg")) return "image/jpeg";
+        else if(url.endsWith("bmp")) return "image/bmp";
+        else return "image/jpeg";
+    }
 }
