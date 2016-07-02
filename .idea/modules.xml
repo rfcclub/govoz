@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/goFast/goFast.iml" filepath="$PROJECT_DIR$/goFast/goFast.iml" />
       <module fileurl="file://$PROJECT_DIR$/goVoz/goVoz.iml" filepath="$PROJECT_DIR$/goVoz/goVoz.iml" />
-      <module fileurl="file://$PROJECT_DIR$/govozAS.iml" filepath="$PROJECT_DIR$/govozAS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/govoz.iml" filepath="$PROJECT_DIR$/govoz.iml" />
     </modules>
   </component>
 </project>

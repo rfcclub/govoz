@@ -19,7 +19,6 @@
             android:layout_gravity="top"
             android:orientation="vertical"
             >
-            
         </LinearLayout>
     </ScrollView>
 

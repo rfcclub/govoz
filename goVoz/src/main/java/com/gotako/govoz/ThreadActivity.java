@@ -265,7 +265,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             Post post = posts.get(i);
             view.findViewById(R.id.postInfo).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
             view.findViewById(R.id.postInfo).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_user_panel_color));
-            view.findViewById(R.id.separate_line).setBackgroundColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
+//            view.findViewById(R.id.separate_line).setBackgroundColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                 view.findViewById(R.id.banner).setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
             } else {

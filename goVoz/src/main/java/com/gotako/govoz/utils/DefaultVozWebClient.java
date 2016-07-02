@@ -3,6 +3,7 @@ package com.gotako.govoz.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.http.SslError;
+import android.util.TypedValue;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -50,11 +51,12 @@ public class DefaultVozWebClient extends WebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+
         if (VozConfig.instance().isLoadImageByDemand()) {
             if (url.startsWith(VOZ_LINK)) {
                 return super.shouldInterceptRequest(view, url);
             } else if (isImageUrl(url)) {
-                return new WebResourceResponse("image/png", "", resources.openRawResource(R.drawable.no_available_image));
+                return new WebResourceResponse("image/png", "", resources.openRawResource(+R.drawable.no_available_image));
             } else {
                 return null;
             }

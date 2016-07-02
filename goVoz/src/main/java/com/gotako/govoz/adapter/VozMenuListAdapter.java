@@ -56,10 +56,10 @@ public class VozMenuListAdapter extends BaseAdapter {
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
         VozMenuItem item = itemList.get(position);
         if("-".equals(item.title)) {
-            convertView.findViewById(R.id.separate_line).setVisibility(View.VISIBLE);
+//            convertView.findViewById(R.id.separate_line).setVisibility(View.VISIBLE);
             convertView.findViewById(R.id.menu_item).setVisibility(View.GONE);
         } else { // normal item
-            convertView.findViewById(R.id.separate_line).setVisibility(View.GONE);
+//            convertView.findViewById(R.id.separate_line).setVisibility(View.GONE);
             convertView.findViewById(R.id.menu_item).setVisibility(View.VISIBLE);
             imgIcon.setImageResource(item.icon);
             txtTitle.setText(item.title);
