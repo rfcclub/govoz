@@ -514,6 +514,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             }
         };
         webView.setOnTouchListener(gestureListener);
+
     }
 
     protected void processLink(String url) {

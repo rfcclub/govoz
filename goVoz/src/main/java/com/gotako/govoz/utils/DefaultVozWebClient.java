@@ -63,7 +63,9 @@ public class DefaultVozWebClient extends WebViewClient {
         } else {
             if (isAttachmentImage(url)) {
                 return getAttachmentFromVoz(url);
-            } else {
+            } else if(isImageUrl(url) && !url.startsWith(VOZ_LINK)) {
+                return super.shouldInterceptRequest(view, url);
+            } else { // voz link ?
                 return super.shouldInterceptRequest(view, url);
             }
         }
