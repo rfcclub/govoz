@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -265,7 +266,11 @@ public class ThreadActivity extends VozFragmentActivity implements
             view.findViewById(R.id.postInfo).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
             view.findViewById(R.id.postInfo).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_user_panel_color));
             view.findViewById(R.id.separate_line).setBackgroundColor(Utils.getColorByTheme(this, R.color.white, R.color.black));
-            view.findViewById(R.id.banner).setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                view.findViewById(R.id.banner).setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
+            } else {
+                view.findViewById(R.id.banner).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
+            }
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(false);
             if(webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
@@ -653,29 +658,33 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     private void ignore() {
-        final Post post = posts.get(selectIndex);
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle(R.string.ignore_one_user)
-                .setMessage(Utils.getString(this, R.string.really_want_to_ignore) + " " + post.getUser() + "?")
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        IgnoreUserTask task = new IgnoreUserTask();
-                        task.execute(post.getUserId(), post.getUser());
-                        try {
-                            String result = task.get();
-                            refresh();
-                        } catch (InterruptedException e) {
+        if(VozCache.instance().isLoggedIn()) {
+            final Post post = posts.get(selectIndex);
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.ignore_one_user)
+                    .setMessage(Utils.getString(this, R.string.really_want_to_ignore) + " " + post.getUser() + "?")
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            IgnoreUserTask task = new IgnoreUserTask();
+                            task.execute(post.getUserId(), post.getUser());
+                            try {
+                                String result = task.get();
+                                refresh();
+                            } catch (InterruptedException e) {
 
-                        } catch (ExecutionException e) {
+                            } catch (ExecutionException e) {
 
+                            }
                         }
-                    }
 
-                })
-                .setNegativeButton(R.string.no, null)
-                .show();
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+        } else {
+            Toast.makeText(this, "Bạn phải login vào mới ignore được", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void viewProfile() {
@@ -683,23 +692,32 @@ public class ThreadActivity extends VozFragmentActivity implements
     }
 
     private void sendPM() {
-        String httpLink = VOZ_LINK + "/private.php?do=newpm";
-        VozCache.instance().navigationList.add(httpLink);
-        Post post = posts.get(selectIndex);
-        Intent intent = new Intent(this, CreatePMActivity.class);
-        intent.putExtra("pmRecipient", post.getUser() + ";");
-        startActivityForResult(intent, 1);
+        if(VozCache.instance().isLoggedIn()) {
+            String httpLink = VOZ_LINK + "/private.php?do=newpm";
+            VozCache.instance().navigationList.add(httpLink);
+            Post post = posts.get(selectIndex);
+            Intent intent = new Intent(this, CreatePMActivity.class);
+            intent.putExtra("pmRecipient", post.getUser() + ";");
+            startActivityForResult(intent, 1);
+        } else {
+
+            Toast.makeText(this, Utils.getRandomMessage(VozMessages.inboxMessages), Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
      *
      */
     private void replyQuote() {
-        Post post = posts.get(selectIndex);
-        post.getPostId();
-        GotReplyQuoteTask task = new GotReplyQuoteTask(this);
-        task.setCallback(this);
-        task.execute(post.getPostId());
+        if(VozCache.instance().isLoggedIn()) {
+            Post post = posts.get(selectIndex);
+            post.getPostId();
+            GotReplyQuoteTask task = new GotReplyQuoteTask(this);
+            task.setCallback(this);
+            task.execute(post.getPostId());
+        } else {
+            Toast.makeText(this, Utils.getRandomMessage(VozMessages.quoteMessages), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
