@@ -51,6 +51,7 @@ import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.CachePostService;
+import com.gotako.govoz.service.ImageDownloadService;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.GotReplyQuoteTask;
 import com.gotako.govoz.tasks.IgnoreUserTask;
@@ -322,7 +323,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             setListenerToWebView(webView);
             webView.invalidate();
             webViewList.append(i, webView);
-
+            ImageDownloadService.service().get(i).to(webView);
             //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
             GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
             if (post.getAvatar() != null) {
@@ -396,7 +397,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             layout.addView(view);
 
         }
-
+        ImageDownloadService.service().start();
         updateStatus();
         listView.fullScroll(ScrollView.FOCUS_UP);
     }
