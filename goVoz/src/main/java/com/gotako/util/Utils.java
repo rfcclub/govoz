@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -21,6 +22,7 @@ import com.gotako.govoz.ThreadActivity;
 import com.gotako.govoz.VozConfig;
 
 public class Utils {
+    private static Random random = new Random(System.nanoTime());
 
     public static boolean isEmpty(String str) {
         return str == null || str.trim().length() == 0;
@@ -158,5 +160,9 @@ public class Utils {
             builder.append(key +"=" + value);
         }
         return builder.toString();
+    }
+
+    public static String getRandomMessage(String[] inboxMessages) {
+        return inboxMessages[random.nextInt(inboxMessages.length-1)];
     }
 }
