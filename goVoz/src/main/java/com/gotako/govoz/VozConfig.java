@@ -53,6 +53,7 @@ public class VozConfig {
     private boolean hardwareAccelerated = true;
 
 
+    private boolean useBackgroundService = true;
     /**
      * Default constructor
      */
@@ -110,6 +111,7 @@ public class VozConfig {
         editor.putInt("loadingDrawable", loadingDrawable);
         editor.putBoolean("showSign", showSign);
         editor.putBoolean("hardwareAccelerated", hardwareAccelerated);
+        editor.putBoolean("useBackgroundService",useBackgroundService);
         editor.commit();
     }
 
@@ -162,5 +164,13 @@ public class VozConfig {
 
     public void setImageOptimizer(boolean boo) {
         imageOptimizer = boo;
+    }
+
+    public boolean isUseBackgroundService() {
+        return useBackgroundService;
+    }
+
+    public void setUseBackgroundService(boolean useBackgroundService) {
+        this.useBackgroundService = useBackgroundService;
     }
 }

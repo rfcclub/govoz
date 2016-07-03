@@ -36,16 +36,17 @@ import okio.Okio;
 public class DownloadBatch {
     private WebView webView;
     private String content;
-    private Queue<String> urls;
+    private List<String> links;
     private Context ctx;
 
     public DownloadBatch(Context context) {
-        urls = new ArrayBlockingQueue<String>(50);
+
+        links = new ArrayList<String>();
         ctx = context;
     }
 
     public DownloadBatch add(String url) {
-        urls.add(url);
+        links.add(url);
         return this;
     }
 
@@ -57,7 +58,7 @@ public class DownloadBatch {
 
     public void trigger() throws InterruptedException {
         if (!ready()) return;
-
+        final Queue<String>  urls = new ArrayBlockingQueue<String>(50, true, links);
         final CountDownLatch countDownLatch = new CountDownLatch(urls.size());
         for (int i = 0; i < 5; i++) {
             Thread thread = new Thread(new Runnable() {
@@ -122,6 +123,6 @@ public class DownloadBatch {
     }
 
     private boolean ready() {
-        return webView != null && urls.size() > 0;
+        return webView != null && links.size() > 0;
     }
 }
