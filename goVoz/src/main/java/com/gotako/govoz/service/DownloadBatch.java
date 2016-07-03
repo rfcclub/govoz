@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.gotako.govoz.VozConstant;
 import com.gotako.util.Utils;
 
 import java.io.File;
@@ -27,6 +28,7 @@ import okio.Okio;
 
 public class DownloadBatch {
     private WebView webView;
+    private String content;
     private Queue<String> urls;
     private Context ctx;
 
@@ -39,25 +41,28 @@ public class DownloadBatch {
         urls.add(url);
         return this;
     }
-    public DownloadBatch to(WebView webView) {
+
+    public DownloadBatch to(WebView webView, String content) {
         this.webView = webView;
+        this.content = content;
         return this;
     }
 
     public void trigger() throws InterruptedException {
-        if(!ready()) return;
-        this.webView = webView;
+        if (!ready()) return;
+
         final CountDownLatch countDownLatch = new CountDownLatch(urls.size());
-        for(int i=0;i<2;i ++) {
+        for (int i = 0; i < 2; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while(urls.size() > 0) {
+                    while (urls.size() > 0) {
                         String url = urls.poll();
                         download(url);
                         countDownLatch.countDown();
                     }
                 }
+
                 private void download(String url) {
                     OkHttpClient client = new OkHttpClient();
                     Request request = null;
@@ -69,7 +74,7 @@ public class DownloadBatch {
                         response = client.newCall(request).execute();
 
                         String savePath = ctx.getCacheDir() + Utils.getPath(url);
-                        File file = new File(savePath.substring(0,savePath.lastIndexOf("/")));
+                        File file = new File(savePath.substring(0, savePath.lastIndexOf("/")));
                         file.mkdirs();
                         BufferedSink sink = Okio.buffer(Okio.sink(new File(savePath)));
                         sink.writeAll(response.body().source());
@@ -84,12 +89,11 @@ public class DownloadBatch {
             thread.start();
         }
         countDownLatch.await();
-        webView.reload();
+        webView.loadDataWithBaseURL(VozConstant.VOZ_LINK, content, "text/html", "utf-8", null);
     }
 
     private boolean ready() {
         return webView != null && urls.size() > 0;
     }
-
 
 }

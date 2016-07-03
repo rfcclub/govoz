@@ -113,20 +113,22 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			}
 			// parse detail
 			Elements divInfos = tablePost.select("div[class=smallfont]");
-			parseDetailsTo(post, divInfos);	
+			parseDetailsTo(post, divInfos);
+			DownloadBatch batch = ImageDownloadService.service().create();
 			if(!post.isDeleted()) {
 				Element first = Utils.getFirstElement(tablePost.select("div[id^=post_message_]"));
 				if(first!=null) {
 					//resize image
 					Elements images = first.select("img");
-					DownloadBatch batch = ImageDownloadService.service().create();
 					for(Element image:images) {
 						// if not smilies so wrap it inside an inline block and restrict the size						
 						if(!image.attr("src").contains("images/smilies/")) {
 							if(image.attr("src").endsWith("gif")) { // transparent background
 								image.attr("style","display: block;max-width: 100%");
+								image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
 							} else {
 								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loading.gif) no-repeat center center");
+								image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
 							}
 							image.wrap("<div style='display: inline-block'></div>");
 							if(image.attr("src").startsWith("http")) {

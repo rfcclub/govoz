@@ -261,7 +261,7 @@ public class ThreadActivity extends VozFragmentActivity implements
                 view.findViewById(R.id.banner).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
             }
             final WebView webView = (WebView) view.findViewById(R.id.content);
-            webView.getSettings().setJavaScriptEnabled(false);
+            webView.getSettings().setJavaScriptEnabled(true);
             if(webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
                 webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             } else {
@@ -323,7 +323,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             setListenerToWebView(webView);
             webView.invalidate();
             webViewList.append(i, webView);
-            ImageDownloadService.service().get(i).to(webView);
+            ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
             //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
             GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
             if (post.getAvatar() != null) {
@@ -640,7 +640,6 @@ public class ThreadActivity extends VozFragmentActivity implements
     private void showImageInWebView() {
         Post post = posts.get(selectIndex);
         WebView webView = webViewList.get(selectIndex);
-        //webView.setWebViewClient(new WebViewClient() {});
         setListenerToWebView(webView);
         webView.loadDataWithBaseURL(VOZ_LINK,
                 post.getContent(), "text/html", "utf-8", null);
