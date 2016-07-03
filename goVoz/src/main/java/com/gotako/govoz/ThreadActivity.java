@@ -319,11 +319,12 @@ public class ThreadActivity extends VozFragmentActivity implements
             if (VozConfig.instance().isShowSign()) {
                 shouldLoadContent += post.getUserSign() != null ? post.getUserSign() : "";
             }
-            webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
+
+            ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
             setListenerToWebView(webView);
+            webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
             webView.invalidate();
             webViewList.append(i, webView);
-            ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
             //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
             GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
             if (post.getAvatar() != null) {

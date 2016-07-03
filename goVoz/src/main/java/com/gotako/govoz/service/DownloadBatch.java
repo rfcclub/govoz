@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.VozConstant;
 import com.gotako.util.Utils;
 
@@ -58,7 +59,7 @@ public class DownloadBatch {
         if (!ready()) return;
 
         final CountDownLatch countDownLatch = new CountDownLatch(urls.size());
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -85,9 +86,9 @@ public class DownloadBatch {
                         BufferedSink sink = Okio.buffer(Okio.sink(new File(savePath)));
                         sink.writeAll(response.body().source());
                         sink.close();
-                        // optimize(savePath);
+                        // if(VozConfig.instance().imageOptimizer()) optimize(savePath);
                     } catch (Exception ex) {
-                        Log.e("AVATAR_ERROR", ex.getMessage());
+                        if(ex.getMessage() != null) Log.e("AVATAR_ERROR", ex.getMessage());
                     }
                 }
 
@@ -108,6 +109,12 @@ public class DownloadBatch {
         DisplayMetrics displayMetrics = ctx.getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
+        double percentage = 1.00;
+        if(bm.getWidth() - width > 250) {
+            percentage = width / bm.getWidth();
+            height = (int)(bm.getHeight() * percentage);
+            bm = Bitmap.createScaledBitmap(bm, width, height , true);
+        }
 
         FileOutputStream fos = new FileOutputStream(savePath);
         bm.compress(Bitmap.CompressFormat.WEBP, 90, fos);
@@ -117,5 +124,4 @@ public class DownloadBatch {
     private boolean ready() {
         return webView != null && urls.size() > 0;
     }
-
 }

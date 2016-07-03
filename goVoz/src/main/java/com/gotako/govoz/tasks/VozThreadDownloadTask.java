@@ -118,6 +118,10 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			if(!post.isDeleted()) {
 				Element first = Utils.getFirstElement(tablePost.select("div[id^=post_message_]"));
 				if(first!=null) {
+					// process blockquote
+					cleanUp(first,"blockquote","margin: 0px;padding: 1px;border: none+;width: 100%;");
+					cleanUp(first,"pre","margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
+
 					//resize image
 					Elements images = first.select("img");
 					for(Element image:images) {
@@ -229,6 +233,13 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		checkThreadCloseStatus(document);
 		
 		return posts;
+	}
+
+	private void cleanUp(Element first, String ele, String stylesheet) {
+		Elements elements = first.select(ele);
+		for(Element element: elements) {
+			element.attr("style", stylesheet);
+		}
 	}
 
 	private String convertToLocalLink(String src) {

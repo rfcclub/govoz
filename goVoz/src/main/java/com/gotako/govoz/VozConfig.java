@@ -14,6 +14,8 @@ public class VozConfig {
 
     private static VozConfig vozConfig = null;
 
+    private boolean imageOptimizer = true;
+
     /**
      * load image by demand
      */
@@ -152,5 +154,13 @@ public class VozConfig {
     }
     public void setHardwareAccelerated(boolean val) {
         hardwareAccelerated = val;
+    }
+
+    public boolean imageOptimizer() {
+        return imageOptimizer;
+    }
+
+    public void setImageOptimizer(boolean boo) {
+        imageOptimizer = boo;
     }
 }
