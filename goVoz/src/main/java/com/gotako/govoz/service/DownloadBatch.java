@@ -1,6 +1,9 @@
 package com.gotako.govoz.service;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.WebView;
 
@@ -8,7 +11,10 @@ import com.gotako.govoz.VozConstant;
 import com.gotako.util.Utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -79,7 +85,8 @@ public class DownloadBatch {
                         BufferedSink sink = Okio.buffer(Okio.sink(new File(savePath)));
                         sink.writeAll(response.body().source());
                         sink.close();
-                    } catch (IOException ex) {
+                        // optimize(savePath);
+                    } catch (Exception ex) {
                         Log.e("AVATAR_ERROR", ex.getMessage());
                     }
                 }
@@ -90,6 +97,21 @@ public class DownloadBatch {
         }
         countDownLatch.await();
         webView.loadDataWithBaseURL(VozConstant.VOZ_LINK, content, "text/html", "utf-8", null);
+    }
+
+    private void optimize(final String savePath) throws Exception {
+        // if it's GIF do nothing
+        if(savePath.toLowerCase().endsWith("gif")) return;
+        InputStream is = new FileInputStream(savePath);
+        Bitmap bm = BitmapFactory.decodeStream(is);
+        is.close();
+        DisplayMetrics displayMetrics = ctx.getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;
+
+        FileOutputStream fos = new FileOutputStream(savePath);
+        bm.compress(Bitmap.CompressFormat.WEBP, 90, fos);
+        fos.close();
     }
 
     private boolean ready() {
