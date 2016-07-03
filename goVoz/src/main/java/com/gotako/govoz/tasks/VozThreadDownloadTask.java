@@ -118,8 +118,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			if(!post.isDeleted()) {
 				Element first = Utils.getFirstElement(tablePost.select("div[id^=post_message_]"));
 				if(first!=null) {
+					first.attr("style","margin: 0px;padding: 0px;border: none;width: 100%;overflow: hidden");
 					// process blockquote
-					cleanUp(first,"blockquote","margin: 0px;padding: 1px;border: none+;width: 100%;");
+					cleanUp(first,"blockquote","margin: 0px;padding: 1px;border: none;width: 100%;");
 					cleanUp(first,"pre","margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 
 					//resize image

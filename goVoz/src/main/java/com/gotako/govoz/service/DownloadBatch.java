@@ -59,7 +59,7 @@ public class DownloadBatch {
         if (!ready()) return;
 
         final CountDownLatch countDownLatch = new CountDownLatch(urls.size());
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -79,12 +79,12 @@ public class DownloadBatch {
                                 .addHeader("Content-Type", Utils.getContentType(url))
                                 .build();
                         response = client.newCall(request).execute();
-
                         String savePath = ctx.getCacheDir() + Utils.getPath(url);
                         File file = new File(savePath.substring(0, savePath.lastIndexOf("/")));
                         file.mkdirs();
                         BufferedSink sink = Okio.buffer(Okio.sink(new File(savePath)));
                         sink.writeAll(response.body().source());
+                        sink.flush();
                         sink.close();
                         // if(VozConfig.instance().imageOptimizer()) optimize(savePath);
                     } catch (Exception ex) {

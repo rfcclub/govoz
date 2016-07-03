@@ -2,6 +2,7 @@ package com.gotako.govoz.service;
 
 import android.content.Context;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -50,5 +51,13 @@ public class ImageDownloadService {
             });
             thread.start();
         }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File[] files = ctx.getCacheDir().listFiles();
+                ctx.getCacheDir().deleteOnExit();
+            }
+        });
+        thread.start();
     }
 }
