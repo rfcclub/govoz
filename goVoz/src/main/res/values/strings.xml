@@ -124,4 +124,5 @@
     <string name="three_star">3 sao</string>
     <string name="two_star">2 sao</string>
     <string name="one_star">1 sao</string>
+    <string name="experimental_text">Đây là tính năng thử nghiệm, nên có thể sẽ không chạy tốt với bài có nhiều hình ảnh.</string>
 </resources>

@@ -303,6 +303,11 @@
         android:id="@+id/useBackgroundService"
         android:layout_below="@+id/hardwareAccelerated"
         />
-
+    <TextView
+        android:id="@+id/experimental"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/useBackgroundService"
+        android:text="@string/experimental_text" />
 
 </RelativeLayout>
