@@ -104,6 +104,7 @@
     <orderEntry type="library" exported="" name="okio-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="bugsense-3.6.1" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.9.2" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
     <orderEntry type="library" exported="" name="htmlcleaner-2.7" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.1.0" level="project" />

@@ -129,13 +129,8 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					for(Element image:images) {
 						// if not smilies so wrap it inside an inline block and restrict the size						
 						if(!image.attr("src").contains("images/smilies/")) {
-							if(image.attr("src").endsWith("gif")) { // transparent background
-								image.attr("style","display: block;max-width: 100%");
-								image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
-							} else {
-								image.attr("style","display: block;max-width: 100%;background:url(file:///android_res/drawable/loading.gif) no-repeat center center");
-								image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
-							}
+							image.attr("style","display: block;max-width: 100%");
+							image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
 							image.wrap("<div style='display: inline-block'></div>");
 							if(VozConfig.instance().isUseBackgroundService()) {
 								if (image.attr("src").startsWith("http")) {

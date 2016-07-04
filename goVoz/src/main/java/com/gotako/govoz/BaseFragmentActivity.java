@@ -35,10 +35,10 @@ import android.widget.RelativeLayout;
  */
 public abstract class BaseFragmentActivity extends AppCompatActivity {
 	private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ListView mRightForumList;
-    private ListView mRightLinkList;
-    private ActionBarDrawerToggle mDrawerToggle;
+    protected ListView mDrawerList;
+    protected ListView mRightForumList;
+    protected ListView mRightLinkList;
+    protected ActionBarDrawerToggle mDrawerToggle;
 
     protected RelativeLayout mDrawerListContainer;
     
@@ -225,6 +225,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     	super.onBackPressed();
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
         	mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            mDrawerLayout.closeDrawer(Gravity.RIGHT);
         }
         List<String> list = VozCache.instance().navigationList;
         // remove last element
@@ -238,6 +240,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 		super.onResume();
         if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
         	mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            mDrawerLayout.closeDrawer(Gravity.RIGHT);
         }
         changeDefaultActionBar();
 	}

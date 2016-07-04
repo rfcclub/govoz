@@ -57,22 +57,11 @@ public class NavDrawerListAdapter extends BaseAdapter {
                     context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             convertView = mInflater.inflate(R.layout.drawer_list_item, null);
         }
-          
+
         ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
         TextView txtTitle = (TextView) convertView.findViewById(R.id.title);
-        //TextView txtCount = (TextView) convertView.findViewById(R.id.counter);
-          
-        imgIcon.setImageResource(navDrawerItems.get(position).icon);       
+
         txtTitle.setText(navDrawerItems.get(position).title);
-         
-        // displaying count
-        // check whether it set visible or not
-//        if(navDrawerItems.get(position).getCounterVisibility()){
-//            txtCount.setText(navDrawerItems.get(position).getCount());
-//        }else{
-//            // hide the counter view
-//            txtCount.setVisibility(View.GONE);
-//        }
         
         imgIcon.setOnClickListener(new View.OnClickListener() {
 			
@@ -80,13 +69,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				navDrawerItems.remove(position);
 				NavDrawerListAdapter.this.notifyDataSetChanged();
-				
-				try {
-					Utils.writeToFile(context.openFileOutput(VozConstant.PIN_ITEM_FILE_NAME, context.MODE_PRIVATE), navDrawerItems);
-				} catch (FileNotFoundException e) {
-					// ignore
-					e.printStackTrace();
-				}
+                // TODO update list to shared preferences
 			}
 		});
         

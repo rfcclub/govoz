@@ -10,24 +10,18 @@ import java.io.Serializable;
  *
  */
 public class NavDrawerItem implements Serializable {
+	public static int FORUM = 1;
+	public static int THREAD = 2;
 	public String title;
-	public int icon;
 	public String url;
-	public String type;
-	public int page;
-	public Object tag;
+	public int type;
 	
 	public NavDrawerItem() {}
 	
-	public NavDrawerItem(String title, String url, String type) {
+	public NavDrawerItem(String title, String url, int type) {
 		this.title = title;
 		this.url = url;
 		this.type = type;
-	}
-	
-	public NavDrawerItem(String title, String url) {
-		this.title = title;
-		this.url = url;
 	}
 
 	@Override

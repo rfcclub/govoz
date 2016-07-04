@@ -74,10 +74,10 @@ public class BaseActivity extends Activity {
 			buildListOfPredefinedLink(list, "f17", "17");
 			buildListOfPredefinedLink(list, "f145", "145");
 			buildListOfPredefinedLink(list, "Home", "1");
-			VozCache.instance().setPinItemList(list);
+			VozCache.instance().pinItemForumList = list;
 		}
 		
-		navDrawerItems = VozCache.instance().getPinItemList();
+		navDrawerItems = VozCache.instance().pinItemForumList;
 
 		// setting the nav drawer list adapter
 		adapter = new NavDrawerListAdapter(getApplicationContext(),
@@ -120,11 +120,9 @@ public class BaseActivity extends Activity {
 
 	private void buildListOfPredefinedLink(List list, String name, String id) {
 		NavDrawerItem item = new NavDrawerItem(name, FORUM_URL_F + id,
-				"forum");
+				NavDrawerItem.FORUM);
 		Forum f = new Forum();
 		f.setId(id);
-		item.tag = f;
-		item.page = 1;
 		list.add(item);
 	}
 	
@@ -198,17 +196,17 @@ public class BaseActivity extends Activity {
 			if (position < navDrawerItems.size()) {
 				NavDrawerItem item = navDrawerItems.get(position);
 
-				if ("forum".equals(item.type)) {
-					VozCache.instance().setCurrentForum((int)item.tag);
-					VozCache.instance().setCurrentForumPage(item.page);
+				if (NavDrawerItem.FORUM == item.type) {
+//					VozCache.instance().setCurrentForum((int)item.tag);
+//					VozCache.instance().setCurrentForumPage(item.page);
 					VozCache.instance().cache().clear();
 					// VozCache.instance().getLookAheadPosts().clear();
 					Intent intent = new Intent(BaseActivity.this,
 							ForumActivity.class);
 					startActivity(intent);
-				} else if ("thread".equals(item.type)) {
-					VozCache.instance().setCurrentThread((int)item.tag);
-					VozCache.instance().setCurrentThreadPage(item.page);
+				} else if (NavDrawerItem.THREAD == item.type) {
+//					VozCache.instance().setCurrentThread((int)item.tag);
+//					VozCache.instance().setCurrentThreadPage(item.page);
 					VozCache.instance().cache().clear();
 					// VozCache.instance().getLookAheadPosts().clear();
 					Intent intent = new Intent(BaseActivity.this,

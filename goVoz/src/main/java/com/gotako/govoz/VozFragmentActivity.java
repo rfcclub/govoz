@@ -19,13 +19,23 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.gotako.gofast.listener.BindingActionListener;
+import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
+import com.gotako.govoz.listeners.OnForumItemClickListener;
+import com.gotako.govoz.listeners.OnThreadItemClickListener;
 import com.gotako.govoz.tasks.UserLogoutTask;
 import com.gotako.util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import static com.gotako.govoz.VozConstant.FORUM_URL_F;
+import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 /**
@@ -45,6 +55,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         }
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
+        mRightForumList.setOnItemClickListener(new OnForumItemClickListener(this));
+        mRightLinkList.setOnItemClickListener(new OnThreadItemClickListener(this));
     }
 
     /*
@@ -121,7 +133,41 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     protected void createRightMenu() {
+        Gson gson = new Gson();
+        SharedPreferences prefs = getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        String jsonForumString = null;
+        jsonForumString = prefs.getString("rightForumPins", null);
+        List<NavDrawerItem> pinItemForumList = VozCache.instance().pinItemForumList;
+        pinItemForumList.clear();
+        if(jsonForumString != null) {
+            NavDrawerItem[] items = gson.fromJson(jsonForumString, NavDrawerItem[].class);
+            for(NavDrawerItem item : items) pinItemForumList.add(item);
+        } else {
+            pinItemForumList.add(buildForumItem("Chuyện trò linh tinh", "17"));
+            pinItemForumList.add(buildForumItem("Điểm báo", "33"));
+            pinItemForumList.add(buildForumItem("Review sản phẩm", "27"));
+            pinItemForumList.add(buildForumItem("From F17 with love", "145"));
+        }
 
+        jsonForumString = prefs.getString("rightThreadPins", null);
+        List<NavDrawerItem> pinItemThreadList = VozCache.instance().pinItemThreadList;
+        pinItemThreadList.clear();
+        if(jsonForumString != null) {
+            NavDrawerItem[] items = gson.fromJson(jsonForumString, NavDrawerItem[].class);
+            for(NavDrawerItem item : items) pinItemThreadList.add(item);
+        } else {
+            pinItemThreadList.add(buildThreadItem("Bóng đá VIỆT NAM (Tất cả vào đây)", "3925224"));
+            pinItemThreadList.add(buildThreadItem("Mục lục - Danh sách các bài viết có giá trị tham khảo của box review", "123078"));
+        }
+
+    }
+
+    private NavDrawerItem buildThreadItem(String title, String threadId) {
+        return new NavDrawerItem(title, THREAD_URL_T + threadId, NavDrawerItem.THREAD);
+    }
+
+    private NavDrawerItem buildForumItem(String forumName, String forumId) {
+        return new NavDrawerItem(forumName, FORUM_URL_F + forumId, NavDrawerItem.FORUM);
     }
 
     @Override
@@ -277,7 +323,11 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         VozFragmentActivity.this.startActivity(intent1);
                         break;
                     case 6:
-                        VozFragmentActivity.this.finishAffinity();
+                        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                            VozFragmentActivity.this.finishAffinity();
+                        } else {
+                            VozFragmentActivity.this.finish();
+                        }
                         break;
                     case 7:
                         doLogin();
