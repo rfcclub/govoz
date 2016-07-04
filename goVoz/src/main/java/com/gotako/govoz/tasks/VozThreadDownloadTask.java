@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
+import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.data.ThreadDumpObject;
@@ -136,10 +137,12 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 								image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
 							}
 							image.wrap("<div style='display: inline-block'></div>");
-							if(image.attr("src").startsWith("http")) {
-								batch.add(image.attr("src"));
-								String newLink = "file://" + convertToLocalLink(image.attr("src"));
-								image.attr("src", newLink);
+							if(VozConfig.instance().isUseBackgroundService()) {
+								if (image.attr("src").startsWith("http")) {
+									batch.add(image.attr("src"));
+									String newLink = "file://" + convertToLocalLink(image.attr("src"));
+									image.attr("src", newLink);
+								}
 							}
 						}						
 					}				

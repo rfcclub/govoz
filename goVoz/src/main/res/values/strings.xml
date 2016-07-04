@@ -113,4 +113,5 @@
     <string name="embarrased"><![CDATA[:\">]]></string>
     <string name="not_implemented_yet">Tính năng này chưa được implement. Hãy đợi một thời gian.</string>
     <string name="setting_hardware_accelerated">Sử dụng tăng tốc phần cứng</string>
+    <string name="use_backround_service">Download hình ảnh dùng dịch vụ nền</string>
 </resources>

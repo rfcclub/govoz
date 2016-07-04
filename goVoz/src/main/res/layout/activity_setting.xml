@@ -296,5 +296,13 @@
         android:layout_below="@+id/gridLayout1"
         />
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_backround_service"
+        android:id="@+id/useBackgroundService"
+        android:layout_below="@+id/hardwareAccelerated"
+        />
+
 
 </RelativeLayout>

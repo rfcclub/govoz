@@ -53,7 +53,7 @@ public class VozConfig {
     private boolean hardwareAccelerated = true;
 
 
-    private boolean useBackgroundService = true;
+    private boolean useBackgroundService = false;
     /**
      * Default constructor
      */
@@ -125,6 +125,7 @@ public class VozConfig {
         loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
         showSign = prefs.getBoolean("showSign", true);
         hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", false);
+        useBackgroundService = prefs.getBoolean("useBackgroundService", false);
     }
 
     public int getLoadingDrawable() {

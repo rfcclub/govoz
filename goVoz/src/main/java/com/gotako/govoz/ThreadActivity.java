@@ -319,8 +319,9 @@ public class ThreadActivity extends VozFragmentActivity implements
             if (VozConfig.instance().isShowSign()) {
                 shouldLoadContent += post.getUserSign() != null ? post.getUserSign() : "";
             }
-
-            ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
+            if(VozConfig.instance().isUseBackgroundService()) {
+                ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
+            }
             setListenerToWebView(webView);
             webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
             webView.invalidate();
@@ -376,29 +377,34 @@ public class ThreadActivity extends VozFragmentActivity implements
 
             ImageView imageViewHide = (ImageView) view
                     .findViewById(R.id.imageViewHidePost);
+            imageViewHide.setTag(true);
             imageViewHide.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     Boolean status = (Boolean) v.getTag();
-                    if (status != null && status.booleanValue()) {
-                        webView.setVisibility(View.GONE);
-                        subTitle.setVisibility(View.GONE);
-                        ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_down_white_18dp);
-                        v.setTag(Boolean.valueOf(false));
-                    } else {
-                        webView.setVisibility(View.VISIBLE);
-                        subTitle.setVisibility(View.VISIBLE);
-                        ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_up_white_18dp);
-                        v.setTag(Boolean.valueOf(true));
+                    if(status != null) {
+                        if (status.booleanValue()) {
+                            webView.setVisibility(View.GONE);
+                            subTitle.setVisibility(View.GONE);
+                            ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_down_white_18dp);
+                            v.setTag(Boolean.valueOf(false));
+                        } else {
+                            webView.setVisibility(View.VISIBLE);
+                            subTitle.setVisibility(View.VISIBLE);
+                            ((ImageView) v).setImageResource(R.drawable.ic_arrow_drop_up_white_18dp);
+                            v.setTag(Boolean.valueOf(true));
+                        }
                     }
                 }
             });
-            imageViewHide.setTag(true);
+
             layout.addView(view);
 
         }
-        ImageDownloadService.service().start();
+        if(VozConfig.instance().isUseBackgroundService()) {
+            ImageDownloadService.service().start();
+        }
         updateStatus();
         listView.fullScroll(ScrollView.FOCUS_UP);
     }

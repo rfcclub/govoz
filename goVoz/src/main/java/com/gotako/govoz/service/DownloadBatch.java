@@ -1,11 +1,14 @@
 package com.gotako.govoz.service;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.VozConstant;
@@ -60,7 +63,7 @@ public class DownloadBatch {
         if (!ready()) return;
         final Queue<String>  urls = new ArrayBlockingQueue<String>(50, true, links);
         final CountDownLatch countDownLatch = new CountDownLatch(urls.size());
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i <2; i++) {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
