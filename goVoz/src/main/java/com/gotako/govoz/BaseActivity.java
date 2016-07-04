@@ -80,8 +80,8 @@ public class BaseActivity extends Activity {
 		navDrawerItems = VozCache.instance().pinItemForumList;
 
 		// setting the nav drawer list adapter
-		adapter = new NavDrawerListAdapter(getApplicationContext(),
-				navDrawerItems);
+//		adapter = new NavDrawerListAdapter(getApplicationContext(),
+//				navDrawerItems);
 		mDrawerList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 

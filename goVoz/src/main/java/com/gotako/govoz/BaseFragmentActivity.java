@@ -83,9 +83,9 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         // setting the nav drawer list adapter
         leftMenuAdapter = new VozMenuListAdapter(getBaseContext(), navDrawerItems);
         mDrawerList.setAdapter(leftMenuAdapter);
-        forumPinAdapter = new NavDrawerListAdapter(getBaseContext(), forumPinItems);
+        forumPinAdapter = new NavDrawerListAdapter(this, forumPinItems);
         mRightForumList.setAdapter(forumPinAdapter);
-        threadPinAdapter = new NavDrawerListAdapter(getBaseContext(), threadPinItems);
+        threadPinAdapter = new NavDrawerListAdapter(this, threadPinItems);
         mRightLinkList.setAdapter(threadPinAdapter);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, //nav menu toggle icon
@@ -188,6 +188,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_star).setIcon(Utils.getValueByTheme(R.drawable.ic_star_border_white_18dp, R.drawable.ic_star_border_black_18dp));
+        menu.findItem(R.id.action_bookmark).setIcon(Utils.getValueByTheme(R.drawable.ic_create_white_18dp, R.drawable.ic_create_black_18dp));
         menu.findItem(R.id.action_refresh).setIcon(Utils.getValueByTheme(R.drawable.ic_refresh_white_18dp, R.drawable.ic_refresh_black_18dp));
         menu.findItem(R.id.action_reply).setIcon(Utils.getValueByTheme(R.drawable.ic_comment_white_18dp, R.drawable.ic_comment_black_18dp));
         // if nav drawer is opened, hide the action items
@@ -245,6 +247,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         }
         changeDefaultActionBar();
 	}
-    
-    
+
+
+    public abstract void savePinForumsList();
+    public abstract void savePinThreadsList();
 }

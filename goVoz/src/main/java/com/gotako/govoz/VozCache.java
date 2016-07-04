@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.jsoup.nodes.Document;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
@@ -198,4 +199,6 @@ public class VozCache {
 	public Map<String, Object> cache() {
 		return forumCache;
 	}
+
+
 }

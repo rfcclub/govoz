@@ -3,6 +3,7 @@
  */
 package com.gotako.govoz;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -162,11 +163,35 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     }
 
-    private NavDrawerItem buildThreadItem(String title, String threadId) {
+    @Override
+    public void savePinForumsList() {
+        SharedPreferences prefs = this.getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        NavDrawerItem[] forumsList = VozCache.instance().pinItemForumList.toArray(new NavDrawerItem[]{});
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(forumsList);
+        prefs.edit()
+                .putString("rightForumPins", jsonString)
+                .commit();
+
+    }
+
+    @Override
+    public void savePinThreadsList() {
+        SharedPreferences prefs = this.getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        NavDrawerItem[] forumsList = VozCache.instance().pinItemThreadList.toArray(new NavDrawerItem[]{});
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(forumsList);
+        prefs.edit()
+                .putString("rightThreadPins", jsonString)
+                .commit();
+
+    }
+
+    protected NavDrawerItem buildThreadItem(String title, String threadId) {
         return new NavDrawerItem(title, THREAD_URL_T + threadId, NavDrawerItem.THREAD);
     }
 
-    private NavDrawerItem buildForumItem(String forumName, String forumId) {
+    protected NavDrawerItem buildForumItem(String forumName, String forumId) {
         return new NavDrawerItem(forumName, FORUM_URL_F + forumId, NavDrawerItem.FORUM);
     }
 
@@ -183,6 +208,10 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         refresh.setOnMenuItemClickListener(this);
         MenuItem reply = menu.findItem(R.id.action_reply);
         reply.setOnMenuItemClickListener(this);
+        MenuItem bookmark = menu.findItem(R.id.action_bookmark);
+        bookmark.setOnMenuItemClickListener(this);
+        MenuItem star = menu.findItem(R.id.action_star);
+        star.setOnMenuItemClickListener(this);
     }
 
     @Override
@@ -194,10 +223,24 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             case R.id.action_reply:
                 doRep();
                 break;
+            case R.id.action_bookmark:
+                doBookmark();
+                break;
+            case R.id.action_star:
+                doRating();
+                break;
             default: // last option
 
         }
         return true;
+    }
+
+    public void doRating() {
+
+    }
+
+    public void doBookmark() {
+
     }
 
     private void doLoginWithPreset() {

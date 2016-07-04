@@ -3,6 +3,7 @@
  */
 package com.gotako.govoz;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
@@ -174,4 +175,6 @@ public class VozConfig {
     public void setUseBackgroundService(boolean useBackgroundService) {
         this.useBackgroundService = useBackgroundService;
     }
+
+
 }

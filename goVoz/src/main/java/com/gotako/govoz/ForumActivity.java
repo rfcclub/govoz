@@ -21,6 +21,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -191,7 +192,7 @@ public class ForumActivity extends VozFragmentActivity implements
         navigationGroup.removeAllViews();
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         int currentPage = VozCache.instance().getCurrentForumPage();
-        if (currentPage > 3) {
+        if (currentPage > 2) {
             RadioButton first = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
             first.setText("<<");
             first.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +203,7 @@ public class ForumActivity extends VozFragmentActivity implements
             });
             navigationGroup.addView(first);
         }
-        int prevStart = currentPage - 2;
+        int prevStart = currentPage - 1;
         if (prevStart < 1) prevStart = 1;
         int extraRight = 0;
         for (int i = prevStart; i <= currentPage; i++) {
@@ -220,8 +221,8 @@ public class ForumActivity extends VozFragmentActivity implements
             navigationGroup.addView(prevPage);
             extraRight++;
         }
-        int nextEnd = currentPage + 2;
-        if (nextEnd < 5) nextEnd = 5;
+        int nextEnd = currentPage + 1;
+        if (nextEnd < 4) nextEnd = 4;
         if (nextEnd > lastPage) nextEnd = lastPage;
         for (int i = currentPage + 1; i <= nextEnd; i++) {
             RadioButton nextPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
@@ -394,6 +395,20 @@ public class ForumActivity extends VozFragmentActivity implements
         VozCache.instance().setCurrentForumPage(lastPage);
         loadThreads();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        menu.findItem(R.id.action_bookmark).setVisible(true);
+        return ret;
+    }
+
+    @Override
+    public void doBookmark() {
+        VozCache.instance().pinItemForumList.add(buildForumItem(forumName, String.valueOf(forumId)));
+        savePinForumsList();
+        Toast.makeText(this, "Shortcut " + forumName + " đã được thêm", Toast.LENGTH_SHORT).show();
     }
 
     @Override

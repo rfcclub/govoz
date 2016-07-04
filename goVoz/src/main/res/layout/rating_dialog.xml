@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rate bài viết này:"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp"
+        />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical">
+        <RadioButton
+            android:text="@string/five_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating5"/>
+        <RadioButton
+            android:text="@string/four_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating4"/>
+        <RadioButton
+            android:text="@string/three_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:id="@+id/rating3"/>
+        <RadioButton
+            android:text="@string/two_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating2"/>
+        <RadioButton
+            android:text="@string/one_star"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rating1"/>
+        </RadioGroup>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:id="@+id/btnGo"
+                android:layout_width="80dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/agree" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -48,7 +48,9 @@ public class BrowserActivity extends VozFragmentActivity {
             webView.getSettings().setJavaScriptEnabled(true);
             if (realLink.contains(VozConstant.VOZ_SIGN)) {
                 Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
+                if(VozCache.instance().getCookies() != null) {
+                    headers.put("Cookie", Utils.flatMap(VozCache.instance().getCookies()));
+                }
                 webView.loadUrl(realLink, headers);
             } else {
                 webView.loadUrl(realLink);

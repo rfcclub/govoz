@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:layout_marginLeft="10dp"
-        android:textSize="16dp"
+        android:textSize="14sp"
         android:text="bookmarkSample"
         android:lines="1"
         android:maxLines="1"

@@ -114,4 +114,14 @@
     <string name="not_implemented_yet">Tính năng này chưa được implement. Hãy đợi một thời gian.</string>
     <string name="setting_hardware_accelerated">Sử dụng tăng tốc phần cứng</string>
     <string name="use_backround_service">Download hình ảnh dùng dịch vụ nền</string>
+    <string name="star">Rate</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="really_want_to_remove_shotcut">Bạn thật sự muốn bỏ lối tắt này ?</string>
+    <string name="remove_shortcut">Xoá lối tắt</string>
+    <string name="agree">Đồng ý</string>
+    <string name="five_star">5 sao</string>
+    <string name="four_star">4 sao</string>
+    <string name="three_star">3 sao</string>
+    <string name="two_star">2 sao</string>
+    <string name="one_star">1 sao</string>
 </resources>

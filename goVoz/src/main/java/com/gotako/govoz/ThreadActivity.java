@@ -123,8 +123,17 @@ public class ThreadActivity extends VozFragmentActivity implements
         boolean ret = super.onCreateOptionsMenu(menu);
         if (VozCache.instance().isLoggedIn()) {
             menu.findItem(R.id.action_reply).setVisible(true);
+            // menu.findItem(R.id.action_star).setVisible(true);
         }
+        menu.findItem(R.id.action_bookmark).setVisible(true);
         return ret;
+    }
+
+    @Override
+    public void doBookmark() {
+        VozCache.instance().pinItemThreadList.add(buildThreadItem(threadName, String.valueOf(threadId)));
+        savePinThreadsList();
+        Toast.makeText(this, "Shortcut " + threadName + "đã được thêm", Toast.LENGTH_SHORT).show();
     }
 
     private void processNavigationLink() {
@@ -425,7 +434,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             });
             navigationGroup.addView(first);
         }
-        int prevStart = currentPage - 2;
+        int prevStart = currentPage - 1;
         if (prevStart < 1) prevStart = 1;
         int extraRight = 0;
         for (int i = prevStart; i <= currentPage; i++) {
@@ -442,8 +451,8 @@ public class ThreadActivity extends VozFragmentActivity implements
             navigationGroup.addView(prevPage);
             extraRight++;
         }
-        int nextEnd = currentPage + 2;
-        if (nextEnd < 5) nextEnd = 5;
+        int nextEnd = currentPage + 1;
+        if (nextEnd < 5) nextEnd = 4;
         if (nextEnd > lastPage) nextEnd = lastPage;
         for (int i = currentPage + 1; i <= nextEnd; i++) {
             RadioButton nextPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
@@ -536,9 +545,12 @@ public class ThreadActivity extends VozFragmentActivity implements
                 Intent intent = new Intent(this, ForumActivity.class);
                 startActivity(intent);
             } else if (checkedUrl.contains(THREAD_SIGN)) {
-                processed = true;
-                Intent intent = new Intent(this, ThreadActivity.class);
-                startActivity(intent);
+                String[] params = checkedUrl.split("\\?")[1].split("\\&");
+                if(params.length> 1 && params[1].startsWith("page")) {
+                    processed = true;
+                    Intent intent = new Intent(this, ThreadActivity.class);
+                    startActivity(intent);
+                }
             } else if (checkedUrl.contains("attachment.php")) {
                 processed = true;
                 Intent intent = new Intent(this, ShowImageActivity.class);
