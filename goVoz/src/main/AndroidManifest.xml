@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gotako.govoz"
     android:installLocation="auto"
-    android:versionCode="41"
-    android:versionName="5.46" >
+    android:versionCode="42"
+    android:versionName="5.7.16" >
 
     <uses-sdk
         android:minSdkVersion="14"
