@@ -258,7 +258,7 @@ public class ThreadActivity extends VozFragmentActivity implements
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                 view.findViewById(R.id.banner).setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
             } else {
-                view.findViewById(R.id.banner).setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
+                view.findViewById(R.id.banner).setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.background_material_light_light));
             }
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(true);

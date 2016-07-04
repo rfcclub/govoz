@@ -90,23 +90,50 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="24dp"
-                android:layout_height="112dp"
-                android:orientation="horizontal" />
-
+                android:layout_height="match_parent"
+                android:layout_weight="60"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:text="Forum shortcuts"
+                    android:textStyle="bold"
+                    />
+                <ListView
+                    android:id="@+id/list_right_menu_forum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:choiceMode="singleChoice"
+                    android:divider="@color/list_divider"
+                    android:dividerHeight="1dp"
+                    android:listSelector="@drawable/list_selector" />
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:orientation="vertical" />
+                android:layout_height="match_parent"
+                android:layout_weight="40"
+                android:orientation="vertical" >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:text="Thread shortcuts"
+                    android:textStyle="bold"
+                    />
+                <ListView
+                    android:id="@+id/list_right_menu_thread"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:choiceMode="singleChoice"
+                    android:divider="@color/list_divider"
+                    android:dividerHeight="1dp"
+                    android:listSelector="@drawable/list_selector" />
+            </LinearLayout>
 
-            <ListView
-                android:id="@+id/list_right_menu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:choiceMode="singleChoice"
-                android:divider="@color/list_divider"
-                android:dividerHeight="1dp"
-                android:listSelector="@drawable/list_selector" />
+
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

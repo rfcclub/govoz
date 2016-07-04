@@ -45,8 +45,12 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 				String threadUrl = href.attr("href");
 				thread.setThreadUrl(threadUrl);
 				thread.setId(Integer.parseInt(threadUrl.substring(threadUrl.indexOf("t=")+2)));				
-				
+
 				thread.setTitle(href.ownText());
+				Element td = href.parent().parent();
+				if(td.tagName().equals("td")) {
+					thread.setSubTitle(td.attr("title"));
+				}
 				if("vozsticky".equals(href.attr("class"))) {
 					thread.setSticky(true);					
 				}

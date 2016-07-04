@@ -3,175 +3,186 @@ package com.gotako.govoz.data;
 import java.io.Serializable;
 
 public class Thread implements Serializable {
-	public final int SUBFORUM = 1;
-	public final int HEADER = 2;
-	public final int THREAD = 3;
-	private String title;
-	private String poster;
-	private String postDate;
-	private String threadUrl;
-	private String status;
-	private String lastUpdate;
-	private boolean isSubForum;
-	private boolean isSticky;
-	private int id;
-	private String securitytoken;
-	private String posthash;
-	private String poststarttime;
-	private String inputTitle;
-	private String p;
-	private boolean closed = false;
-	private String replyLink;
-	private boolean deleted;
-	public String prefix;
-	public String prefixColor;
-	public String prefixLink;
+    public final int SUBFORUM = 1;
+    public final int HEADER = 2;
+    public final int THREAD = 3;
+    private String title;
+    private String subTitle;
 
-	public String getTitle() {
-		return title;
-	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    private String poster;
+    private String postDate;
+    private String threadUrl;
+    private String status;
+    private String lastUpdate;
+    private boolean isSubForum;
+    private boolean isSticky;
+    private int id;
+    private String securitytoken;
+    private String posthash;
+    private String poststarttime;
+    private String inputTitle;
+    private String p;
+    private boolean closed = false;
+    private String replyLink;
+    private boolean deleted;
+    public String prefix;
+    public String prefixColor;
+    public String prefixLink;
 
-	public String getPoster() {
-		return poster;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setPoster(String poster) {
-		this.poster = poster;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getPostDate() {
-		return postDate;
-	}
+    public String getPoster() {
+        return poster;
+    }
 
-	public void setPostDate(String postDate) {
-		this.postDate = postDate;
-	}
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
 
-	public String getThreadUrl() {
-		return threadUrl;
-	}
+    public String getPostDate() {
+        return postDate;
+    }
 
-	public void setThreadUrl(String threadUrl) {
-		this.threadUrl = threadUrl;
-	}
+    public void setPostDate(String postDate) {
+        this.postDate = postDate;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getThreadUrl() {
+        return threadUrl;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setThreadUrl(String threadUrl) {
+        this.threadUrl = threadUrl;
+    }
 
-	public String getLastUpdate() {
-		return lastUpdate;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setLastUpdate(String lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public boolean isSubForum() {
-		return isSubForum;
-	}
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
 
-	public void setSubForum(boolean isSubForum) {
-		this.isSubForum = isSubForum;
-	}
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
-	public boolean isSticky() {
-		return isSticky;
-	}
+    public boolean isSubForum() {
+        return isSubForum;
+    }
 
-	public void setSticky(boolean isSticky) {
-		this.isSticky = isSticky;
-	}
+    public void setSubForum(boolean isSubForum) {
+        this.isSubForum = isSubForum;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public boolean isSticky() {
+        return isSticky;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setSticky(boolean isSticky) {
+        this.isSticky = isSticky;
+    }
 
-	public String getSecuritytoken() {
-		return securitytoken;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setSecuritytoken(String securitytoken) {
-		this.securitytoken = securitytoken;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getPosthash() {
-		return posthash;
-	}
+    public String getSecuritytoken() {
+        return securitytoken;
+    }
 
-	public void setPosthash(String posthash) {
-		this.posthash = posthash;
-	}
+    public void setSecuritytoken(String securitytoken) {
+        this.securitytoken = securitytoken;
+    }
 
-	public String getPoststarttime() {
-		return poststarttime;
-	}
+    public String getPosthash() {
+        return posthash;
+    }
 
-	public void setPoststarttime(String poststarttime) {
-		this.poststarttime = poststarttime;
-	}
+    public void setPosthash(String posthash) {
+        this.posthash = posthash;
+    }
 
-	public String getInputTitle() {
-		return inputTitle;
-	}
+    public String getPoststarttime() {
+        return poststarttime;
+    }
 
-	public void setInputTitle(String inputTitle) {
-		this.inputTitle = inputTitle;
-	}
+    public void setPoststarttime(String poststarttime) {
+        this.poststarttime = poststarttime;
+    }
 
-	public String getP() {
-		return p;
-	}
+    public String getInputTitle() {
+        return inputTitle;
+    }
 
-	public void setP(String p) {
-		this.p = p;
-	}
+    public void setInputTitle(String inputTitle) {
+        this.inputTitle = inputTitle;
+    }
 
-	/**
-	 * @return the closed
-	 */
-	public boolean isClosed() {
-		return closed;
-	}
+    public String getP() {
+        return p;
+    }
 
-	/**
-	 * @param closed the closed to set
-	 */
-	public void setClosed(boolean closed) {
-		this.closed = closed;
-	}
+    public void setP(String p) {
+        this.p = p;
+    }
 
-	/**
-	 * @return the replyLink
-	 */
-	public String getReplyLink() {
-		return replyLink;
-	}
+    /**
+     * @return the closed
+     */
+    public boolean isClosed() {
+        return closed;
+    }
 
-	/**
-	 * @param replyLink the replyLink to set
-	 */
-	public void setReplyLink(String replyLink) {
-		this.replyLink = replyLink;
-	}
+    /**
+     * @param closed the closed to set
+     */
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
 
-	public boolean isDeleted() {
-		return deleted;
-	}
+    /**
+     * @return the replyLink
+     */
+    public String getReplyLink() {
+        return replyLink;
+    }
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
+    /**
+     * @param replyLink the replyLink to set
+     */
+    public void setReplyLink(String replyLink) {
+        this.replyLink = replyLink;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getSubTitle() {
+        return subTitle;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
 }

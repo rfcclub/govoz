@@ -45,7 +45,8 @@ public class VozCache {
 	private int currentParentForumId = -1;
 	private int width;
 	private int height;
-	public List<NavDrawerItem> pinItemList;
+	public List<NavDrawerItem> pinItemThreadList;
+	public List<NavDrawerItem> pinItemForumList;
 	public List<VozMenuItem> menuItemList;
 	private Map<String, Object> forumCache = null;
 	public List<String> navigationList;
@@ -55,7 +56,8 @@ public class VozCache {
 		final int cacheSize = 1024 * 1024 * 20;
         memoryCache = new LruCache(cacheSize);
         forumCache = new HashMap<String, Object>();
-        pinItemList = new ArrayList<NavDrawerItem>();
+		pinItemThreadList = new ArrayList<NavDrawerItem>();
+		pinItemForumList = new ArrayList<NavDrawerItem>();
         navigationList = new ArrayList<String>();
 	}
 
@@ -192,13 +194,6 @@ public class VozCache {
 		this.lastPage = lastPage;
 	}
 
-	public List<NavDrawerItem> getPinItemList() {
-		return pinItemList;
-	}
-
-	public void setPinItemList(List<NavDrawerItem> pinItemList) {
-		this.pinItemList = pinItemList;
-	}
 
 	public Map<String, Object> cache() {
 		return forumCache;

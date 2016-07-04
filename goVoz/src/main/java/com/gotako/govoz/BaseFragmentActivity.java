@@ -5,13 +5,14 @@ package com.gotako.govoz;
 
 import java.util.List;
 
+import com.gotako.govoz.adapter.NavDrawerListAdapter;
 import com.gotako.govoz.adapter.VozMenuListAdapter;
+import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 import com.gotako.util.Utils;
 
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -36,6 +36,8 @@ import android.widget.RelativeLayout;
 public abstract class BaseFragmentActivity extends AppCompatActivity {
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private ListView mRightForumList;
+    private ListView mRightLinkList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     protected RelativeLayout mDrawerListContainer;
@@ -51,8 +53,11 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     private TypedArray navMenuIcons;
     private LinearLayout layoutSlidePanel;
     protected List<VozMenuItem> navDrawerItems;
-
+    protected List<NavDrawerItem> forumPinItems;
+    protected List<NavDrawerItem> threadPinItems;
     protected VozMenuListAdapter leftMenuAdapter;
+    protected NavDrawerListAdapter forumPinAdapter;
+    protected NavDrawerListAdapter threadPinAdapter;
     protected Toolbar mToolbar;
 
     @Override
@@ -65,15 +70,23 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
+        mRightForumList = (ListView) findViewById(R.id.list_right_menu_forum);
+        mRightLinkList = (ListView) findViewById(R.id.list_right_menu_thread);
         layoutSlidePanel = (LinearLayout) findViewById(R.id.layout_slidermenu);
         createLeftMenu();
+        createRightMenu();
         navDrawerItems = VozCache.instance().menuItemList;
+        forumPinItems = VozCache.instance().pinItemForumList;
+        threadPinItems = VozCache.instance().pinItemThreadList;
         // enabling action bar app icon and behaving it as toggle button
         changeDefaultActionBar();
         // setting the nav drawer list adapter
         leftMenuAdapter = new VozMenuListAdapter(getBaseContext(), navDrawerItems);
         mDrawerList.setAdapter(leftMenuAdapter);
-
+        forumPinAdapter = new NavDrawerListAdapter(getBaseContext(), forumPinItems);
+        mRightForumList.setAdapter(forumPinAdapter);
+        threadPinAdapter = new NavDrawerListAdapter(getBaseContext(), threadPinItems);
+        mRightLinkList.setAdapter(threadPinAdapter);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility

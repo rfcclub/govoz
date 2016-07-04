@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -309,8 +310,13 @@ public class ForumActivity extends VozFragmentActivity implements
     public void preProcess(int position, View convertView, Object... extra) {
         Thread currentThread = threads.get(position);
         View viewHeader = convertView.findViewById(R.id.subForumHeader);
-        viewHeader.setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            viewHeader.setBackground(Utils.getDrawableByTheme(this, R.drawable.gradient, R.drawable.gradient_light));
+        } else {
+            viewHeader.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.background_material_light_light));
+        }
         View viewSection = convertView.findViewById(R.id.forumSection);
+        viewSection.findViewById(R.id.tableRow2).setVisibility(View.GONE);
         viewSection.setBackgroundColor(Utils.getColorByTheme(this, R.color.black, R.color.voz_back_color));
         if (currentThread.isSubForum()) {
             if (position == 0) {
@@ -355,29 +361,16 @@ public class ForumActivity extends VozFragmentActivity implements
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, VozConfig.instance()
                 .getFontSize());
         title.setText(Html.fromHtml(titleText));
-
+        String subTitle = currentThread.getSubTitle();
+        if(subTitle != null && subTitle.length() > 0) {
+            viewSection.findViewById(R.id.tableRow2).setVisibility(View.VISIBLE);
+            ((TextView)viewSection.findViewById(R.id.subThreadTitle)).setText(subTitle);
+        }
         if (!Utils.isNullOrEmpty(currentThread.prefix)) {
             String prefix = "<b><font color=\"" + currentThread.prefixColor + "\">" + currentThread.prefix + "</font></b></a> - ";
             int i1 = prefix.indexOf("[");
             int i2 = prefix.indexOf("]");
             title.setText(Html.fromHtml(prefix + titleText));
-//            Spannable spannable = new SpannableString(title.getText());
-//            final String groupLink = VOZ_LINK + "/" + currentThread.prefixLink;
-//            ClickableSpan showForumWithGroup = new ClickableSpan()
-//            {
-//                @Override
-//                public void onClick(View widget) {
-//                    List<String> list = VozCache.instance().navigationList;
-//                    // remove last element
-//                    if(list.size() > 0) list.remove(list.size() - 1);
-//                    ForumActivity.this.finish();
-//                    VozCache.instance().navigationList.add(groupLink);
-//                    Intent intent = new Intent(ForumActivity.this, ForumActivity.class);
-//                    startActivity(intent);
-//                }
-//            };
-//            spannable.setSpan(showForumWithGroup, i1, i2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            title.setText(spannable);
         }
         TextView poster = (TextView) viewSection.findViewById(R.id.poster);
         poster.setTextColor(Utils.getColorByTheme(this, R.color.white, R.color.black));

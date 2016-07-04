@@ -51,13 +51,14 @@ public class ImageDownloadService {
             });
             thread.start();
         }
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File[] files = ctx.getCacheDir().listFiles();
-                ctx.getCacheDir().deleteOnExit();
-            }
-        });
-        thread.start();
+
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                File[] files = ctx.getCacheDir().listFiles();
+//                ctx.getCacheDir().deleteOnExit();
+//            }
+//        });
+//        thread.start();
     }
 }
