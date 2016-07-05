@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/select_page_goto_page" />
+                android:text="@string/do_search" />
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="80dp"

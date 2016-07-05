@@ -26,7 +26,7 @@
         android:layout_height="150dp" >
 
         <EditText
-            android:id="@+id/txtPageNumber"
+            android:id="@+id/txtSearchString"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -41,7 +41,7 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/txtPageNumber"
+            android:layout_below="@+id/txtSearchString"
             android:layout_marginRight="22dp"
             android:layout_marginTop="28dp"
             android:text="@string/dialog_cancel" />

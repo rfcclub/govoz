@@ -9,8 +9,6 @@
         android:id="@+id/forumSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
-        android:backgroundTintMode="screen"
         android:orientation="vertical">
         <TextView
             android:id="@+id/forumName"

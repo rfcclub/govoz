@@ -89,6 +89,17 @@ public class MainActivity extends VozFragmentActivity implements
             Toast.makeText(this, "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
         }
     }
+    @Override
+    protected void doTheming() {
+        super.doTheming();
+        if (VozConfig.instance().isDarkTheme()) {
+            findViewById(R.id.container).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+            ((ExpandableListView) findViewById(R.id.forumList)).setSelector(getResources().getDrawable(R.drawable.list_selector));
+        } else {
+            findViewById(R.id.container).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+            ((ExpandableListView) findViewById(R.id.forumList)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
+        }
+    }
     private void doLoginAndGetVozForums() {
         SharedPreferences prefs = this.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
         boolean autoLogin = false;
@@ -202,7 +213,14 @@ public class MainActivity extends VozFragmentActivity implements
 
     @Override
     public void onGetChildView(int groupPosition, int childPosition, boolean isLastChild, View v, ViewGroup parent) {
-        v.findViewById(R.id.forumSection).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+        //v.findViewById(R.id.forumSection).setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.white)));
+        if(Build.VERSION.SDK_INT >= 16) {
+            v.findViewById(R.id.forumSection).setBackground(
+                    getResources().getDrawable(Utils.getValueByTheme(R.drawable.expand_list_selector, R.drawable.expand_list_selector_light)));
+        } else {
+            v.findViewById(R.id.forumSection).setBackgroundColor(
+                    getResources().getColor(Utils.getValueByTheme(R.color.background_material_dark, R.color.background_material_light)));
+        }
         ((TextView) v.findViewById(R.id.forumName)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.light_gray, R.color.voz_front_color)));
         ((TextView) v.findViewById(R.id.viewing)).setTextColor(getResources().getColor(Utils.getValueByTheme(R.color.light_gray, R.color.black)));
     }

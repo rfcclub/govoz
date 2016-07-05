@@ -65,25 +65,15 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
      */
     protected void doTheming() {
         if (VozConfig.instance().isDarkTheme()) {
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector));
-                findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector));
-            } else {
-                findViewById(R.id.layout_slidermenu).setBackgroundColor(getResources().getColor(R.color.list_background));
-                findViewById(R.id.right_slider_menu).setBackgroundColor(getResources().getColor(R.color.list_background));
-            }
+            findViewById(R.id.layout_slidermenu).setBackgroundColor(getResources().getColor(R.color.list_background));
+            findViewById(R.id.right_slider_menu).setBackgroundColor(getResources().getColor(R.color.list_background));
             ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector));
             ((ListView) findViewById(R.id.list_right_menu_forum)).setSelector(getResources().getDrawable(R.drawable.list_selector));
             ((ListView) findViewById(R.id.list_right_menu_thread)).setSelector(getResources().getDrawable(R.drawable.list_selector));
 
         } else {
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                findViewById(R.id.layout_slidermenu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
-                findViewById(R.id.right_slider_menu).setBackground(getResources().getDrawable(R.drawable.list_selector_light));
-            } else {
-                findViewById(R.id.layout_slidermenu).setBackgroundColor(getResources().getColor(R.color.list_background_light));
-                findViewById(R.id.right_slider_menu).setBackgroundColor(getResources().getColor(R.color.list_background_light));
-            }
+            findViewById(R.id.layout_slidermenu).setBackgroundColor(getResources().getColor(R.color.list_background_light));
+            findViewById(R.id.right_slider_menu).setBackgroundColor(getResources().getColor(R.color.list_background_light));
             ((ListView) findViewById(R.id.list_slidermenu)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
             ((ListView) findViewById(R.id.list_right_menu_forum)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));
             ((ListView) findViewById(R.id.list_right_menu_thread)).setSelector(getResources().getDrawable(R.drawable.list_selector_light));

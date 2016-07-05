@@ -2,6 +2,7 @@ package com.gotako.govoz;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialog;
 import android.util.DisplayMetrics;
@@ -13,16 +14,27 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.gotako.govoz.AbstractNoBorderDialog;
+import com.gotako.govoz.ForumActivity;
+import com.gotako.govoz.R;
+import com.gotako.govoz.VozCache;
+
+import static com.gotako.govoz.VozConstant.FORUM_URL_F;
+import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
 
 /**
  * Created by Nam on 9/12/2015.
  */
-public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppCompatDialogFragment {
+public class SearchDialog extends AbstractNoBorderDialog {
+
     protected Activity activity;
     protected EditText editText;
     protected String title;
 
-    public AbstractNoBorderDialog() {
+    public SearchDialog() {
+
     }
 
 
@@ -51,16 +63,8 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
                              Bundle savedInstanceState) {
 
         final View view = inflater.inflate(R.layout.select_page_layout, container);
-
-        /* DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
-        getDialog().getWindow().setLayout((int) (width * 0.65), 440);*/
-
         editText = (EditText) view.findViewById(R.id.txtSearchString);
-
-        ((TextView) view.findViewById(R.id.txtTitle)).setText(title);
-
+        ((TextView) view.findViewById(R.id.txtTitle)).setText("Seach ");
         ((Button) view.findViewById(R.id.btnGo)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,23 +78,15 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
             @Override
             public void onClick(View v) {
                 dismiss();
-                cancel();
+
             }
         });
 
         return view;
     }
 
-    public abstract void doOkAction(String param);
+    public void doOkAction(String param) {
 
-
-
-    public void cancel() {
-        doCancelAction();
-    }
-
-    private void doCancelAction() {
-        // do nothing
     }
 
     @Override
@@ -107,10 +103,9 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
         getDialog().getWindow().setAttributes(lp);
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+
+
 }
