@@ -293,16 +293,19 @@ public class ForumActivity extends VozFragmentActivity implements
                 }
             }
             if (subForum != null) {
-                forums = new ArrayList<Forum>();
-                threads = new ArrayList<Thread>();
-                GoFastEngine.notify(this, "threads");
-                VozCache.instance().setCurrentParentForum(VozCache.instance().getCurrentForum());
-                VozCache.instance().setCurrentForum(Integer.parseInt(subForum.getId()));
-                subForum.setParent(VozCache.instance().getCurrentParentForum());
                 String forumUrl = FORUM_URL_F + subForum.getId() + FORUM_URL_ORDER + "1";
                 VozCache.instance().navigationList.add(forumUrl);
-                VozCache.instance().setCurrentForumPage(1);
-                loadThreads(Integer.parseInt(subForum.getId()), 1);
+                Intent intent = new Intent(this, ForumActivity.class);
+                startActivity(intent);
+//                forums = new ArrayList<Forum>();
+//                threads = new ArrayList<Thread>();
+//                GoFastEngine.notify(this, "threads");
+//                VozCache.instance().setCurrentParentForum(VozCache.instance().getCurrentForum());
+//                VozCache.instance().setCurrentForum(Integer.parseInt(subForum.getId()));
+//                subForum.setParent(VozCache.instance().getCurrentParentForum());
+//                String forumUrl = FORUM_URL_F + subForum.getId() + FORUM_URL_ORDER + "1";
+                //VozCache.instance().setCurrentForumPage(1);
+                //loadThreads(Integer.parseInt(subForum.getId()), 1);
             }
         }
     }
@@ -469,30 +472,10 @@ public class ForumActivity extends VozFragmentActivity implements
     }
 
     protected void doPin() {
-        /*String forumId = VozCache.instance().getCurrentForum().getId();
-        String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
-				+ String.valueOf(VozCache.instance().getCurrentForumPage());
-		Forum forum = VozCache.instance().getCurrentForum();
-		NavDrawerItem item = new NavDrawerItem(forum.getForumName(), forumUrl,
-				"forum");
-		item.tag = VozCache.instance().getCurrentForum();
-		item.page = VozCache.instance().getCurrentForumPage();
 
-		//pinPage(item);
-		pinMenu.setVisible(true);
-		unpinMenu.setVisible(false);*/
     }
 
     protected void doUnpin() {
-        /*String forumId = VozCache.instance().getCurrentForum().getId();
-		String forumUrl = FORUM_URL_F + forumId + FORUM_URL_ORDER
-				+ String.valueOf(VozCache.instance().getCurrentForumPage());
-		Forum forum = VozCache.instance().getCurrentForum();
-		NavDrawerItem item = new NavDrawerItem(forum.getForumName(), forumUrl,
-				"forum");
 
-		//unpinPage(item);
-		pinMenu.setVisible(false);
-		unpinMenu.setVisible(true);*/
     }
 }

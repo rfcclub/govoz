@@ -84,6 +84,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
                                 navDrawerItems.remove(position);
                                 NavDrawerListAdapter.this.notifyDataSetChanged();
                                 baseFragmentActivity.savePinForumsList();
+                                baseFragmentActivity.savePinThreadsList();
                             }
 
                         })
