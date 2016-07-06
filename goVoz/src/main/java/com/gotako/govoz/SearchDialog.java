@@ -64,7 +64,7 @@ public class SearchDialog extends AbstractNoBorderDialog {
 
         final View view = inflater.inflate(R.layout.select_page_layout, container);
         editText = (EditText) view.findViewById(R.id.txtSearchString);
-        ((TextView) view.findViewById(R.id.txtTitle)).setText("Seach ");
+        ((TextView) view.findViewById(R.id.txtTitle)).setText("Seach forums");
         ((Button) view.findViewById(R.id.btnGo)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,7 +86,9 @@ public class SearchDialog extends AbstractNoBorderDialog {
     }
 
     public void doOkAction(String param) {
-
+        Intent intent = new Intent(activity, SearchActivity.class);
+        intent.putExtra("searchString", param);
+        activity.startActivity(intent);
     }
 
     @Override
