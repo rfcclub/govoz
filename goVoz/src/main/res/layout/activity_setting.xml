@@ -230,15 +230,6 @@
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
             android:src="@drawable/load715" />
-        
-        <RadioButton
-            android1:id="@+id/radio159"
-            android1:layout_width="wrap_content"
-            android1:layout_height="wrap_content"
-            android1:layout_column="0"
-            android1:layout_gravity="center"
-            android1:layout_row="1"
-            android1:onClick="animationChoosing" />
 
         <RadioButton
             android1:id="@+id/radio257"
@@ -282,6 +273,15 @@
             android1:layout_width="wrap_content"
             android1:layout_height="wrap_content"
             android1:layout_column="5"
+            android1:layout_gravity="center"
+            android1:layout_row="1"
+            android1:onClick="animationChoosing" />
+
+        <RadioButton
+            android1:id="@+id/radio159"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:layout_column="0"
             android1:layout_gravity="center"
             android1:layout_row="1"
             android1:onClick="animationChoosing" />

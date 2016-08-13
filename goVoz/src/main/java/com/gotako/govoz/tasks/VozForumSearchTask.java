@@ -26,7 +26,7 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 
 	@Override
 	protected List<Thread> doInBackgroundInternal(String[] params) {
-		// TODO
+		// TODO do the search
 		return null;
 	}
 
