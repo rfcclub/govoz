@@ -23,7 +23,6 @@
   <color name="light_gray">#D3D3D3</color>
   <color name="pin_title_color">#ffffffff</color>
   <color name="colorPrimary">#000000</color>
-  <color name="white">#FFFFFF</color>
   <color name="light_gray_text">#e7e7e7</color>
   <color name="expand_list_selected_dark">#000000</color>
   <color name="background_material_light_dark">#505050</color>
@@ -50,5 +49,12 @@
   <color name="dark_jungle_green1">#1e1e1e</color>
   <color name="dark_pastel_green">#0fbf39</color>
   <color name="united_nations_blue">#4f9fe8</color>
+  <color name="white">#ffffff</color>
+  <color name="trolley_grey">#797979</color>
+  <color name="medium_jungle_green">#FF303030</color>
+  <color name="pastel_gray">#cdcccc</color>
+  <color name="sunglow">#ffca2b</color>
+  <color name="sunset_orange">#ff5454</color>
+  <color name="sandy_brown">#ffa95f</color>
 </resources>
 
