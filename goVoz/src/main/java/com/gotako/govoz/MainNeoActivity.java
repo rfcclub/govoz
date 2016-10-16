@@ -1,14 +1,18 @@
 package com.gotako.govoz;
 
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
-public class MainNeoActivity extends AppCompatActivity {
+import com.bugsense.trace.BugSenseHandler;
+
+public class MainNeoActivity extends VozFragmentActivity implements MainFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        BugSenseHandler.initAndStartSession(this, "2330a14e");
+        BugSenseHandler.setLogging(1000, "*:W");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_neo);
 
@@ -26,11 +30,16 @@ public class MainNeoActivity extends AppCompatActivity {
 
         if (findViewById(R.id.fragment_container) != null) {
             if(savedInstanceState != null) return;
-            MainFragment mainFragment = new MainFragment();
+            MainFragment mainFragment = MainFragment.newInstance();
             getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(R.id.fragment_container, mainFragment)
                                     .commit();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        // do nothing for now
     }
 }

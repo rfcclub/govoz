@@ -1,5 +1,13 @@
 package com.gotako.govoz.tasks;
 
+import com.gotako.govoz.VozCache;
+import com.gotako.govoz.data.Forum;
+import com.gotako.govoz.utils.DocumentUtil;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -12,14 +20,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import com.gotako.govoz.VozCache;
-import com.gotako.govoz.data.Forum;
-import com.gotako.govoz.utils.DocumentUtil;
 
 public class TaskHelper {
 
@@ -59,9 +59,9 @@ public class TaskHelper {
 					forum.setId(href.substring(href.lastIndexOf("=") + 1));
 					Element spanEle = hrefEle.nextElementSibling();
 					if (spanEle != null && spanEle.nodeName().equals("span")) {
-						forum.setViewing(spanEle.ownText());
+						forum.setViewing(spanEle.ownText().replace("Viewing", "đang xem"));
 					} else {
-						forum.setViewing("");
+						forum.setViewing("(0 đang xem)");
 					}
 
 					Elements tdEles = trElement.select("td");
