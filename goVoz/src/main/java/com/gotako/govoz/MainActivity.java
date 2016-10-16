@@ -73,6 +73,7 @@ public class MainActivity extends VozFragmentActivity implements
         VozCache.instance().setCanShowReplyMenu(false);
         VozConfig config = VozConfig.instance();
         config.load(this);
+
         VozCache.instance().navigationList.clear();
         forums = new Object[2];
         forums[0] = new ArrayList<Forum>();
