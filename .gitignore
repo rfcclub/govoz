@@ -1,5 +1,7 @@
 *.class
 .git
+.gradle
+.idea
 build/
 govoz/build/
 gofast/build/
