@@ -39,7 +39,7 @@ public class MainNeoActivity extends VozFragmentActivity implements MainFragment
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onForumClicked(String forumIndex) {
         // do nothing for now
     }
 }

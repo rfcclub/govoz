@@ -103,12 +103,12 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
+//    public void onButtonPressed(Uri uri) {
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -196,6 +196,6 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void onForumClicked(String forumIndex);
     }
 }
