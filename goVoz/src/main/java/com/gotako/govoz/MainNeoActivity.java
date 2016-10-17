@@ -1,13 +1,16 @@
 package com.gotako.govoz;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
 
 import com.bugsense.trace.BugSenseHandler;
 
-public class MainNeoActivity extends VozFragmentActivity implements MainFragment.OnFragmentInteractionListener {
+import static com.gotako.govoz.VozConstant.FORUM_URL_F;
+import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
+
+public class MainNeoActivity extends VozFragmentActivity
+        implements MainFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,20 @@ public class MainNeoActivity extends VozFragmentActivity implements MainFragment
 
     @Override
     public void onForumClicked(String forumIndex) {
-        // do nothing for now
+        VozCache.instance().setCurrentForum(Integer.parseInt(forumIndex));
+        VozCache.instance().setCurrentForumPage(1);
+        VozCache.instance().cache().clear();
+        String forumUrl = FORUM_URL_F + forumIndex + FORUM_URL_ORDER + "1";
+        VozCache.instance().navigationList.add(forumUrl);
+        ForumFragment forumFragment = ForumFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, forumFragment)
+                .commit();
+    }
+
+    @Override
+    public void onThreadClicked(Thread thread) {
+
     }
 }

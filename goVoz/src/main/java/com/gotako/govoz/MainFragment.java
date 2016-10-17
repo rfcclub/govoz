@@ -3,19 +3,15 @@ package com.gotako.govoz;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gotako.gofast.GoFastEngine;
-import com.gotako.gofast.adapter.ExpandableAdapter;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 
@@ -178,10 +174,19 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     }
 
     private View createChildForum(Forum forum, LayoutInflater layoutInflater) {
-        LinearLayout subForumLayout = (LinearLayout) layoutInflater.inflate(R.layout.sub_forum_item, null);
-        ((TextView) subForumLayout.findViewById(R.id.textForumCode)).setText(forum.getId());
+        final LinearLayout subForumLayout = (LinearLayout) layoutInflater.inflate(R.layout.sub_forum_item, null);
+        final String forumId = forum.getId();
+        ((TextView) subForumLayout.findViewById(R.id.textForumCode)).setText("f" + forumId);
         ((TextView) subForumLayout.findViewById(R.id.textForumName)).setText(forum.getForumName());
         ((TextView) subForumLayout.findViewById(R.id.textViewing)).setText(forum.getViewing());
+        subForumLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setSelected(true);
+                v.setBackgroundResource(android.R.color.holo_blue_dark);
+                if(mListener != null) mListener.onForumClicked(forumId);
+            }
+        });
         return subForumLayout;
     }
 

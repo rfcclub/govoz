@@ -1,24 +1,11 @@
 package com.gotako.govoz;
 
-import static com.gotako.govoz.VozConstant.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,18 +19,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.ReactiveCollectionField;
 import com.gotako.gofast.annotation.BindingCollection;
 import com.gotako.govoz.data.Forum;
-import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
 import com.gotako.util.Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import info.hoang8f.android.segment.SegmentedGroup;
+
+import static com.gotako.govoz.VozConstant.FORUM_POSITION;
+import static com.gotako.govoz.VozConstant.FORUM_URL_F;
+import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
+import static com.gotako.govoz.VozConstant.SUB_FORUMS;
+import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class ForumActivity extends VozFragmentActivity implements
         ActivityCallback<Thread>, OnItemClickListener, ExceptionCallback {
@@ -297,15 +291,6 @@ public class ForumActivity extends VozFragmentActivity implements
                 VozCache.instance().navigationList.add(forumUrl);
                 Intent intent = new Intent(this, ForumActivity.class);
                 startActivity(intent);
-//                forums = new ArrayList<Forum>();
-//                threads = new ArrayList<Thread>();
-//                GoFastEngine.notify(this, "threads");
-//                VozCache.instance().setCurrentParentForum(VozCache.instance().getCurrentForum());
-//                VozCache.instance().setCurrentForum(Integer.parseInt(subForum.getId()));
-//                subForum.setParent(VozCache.instance().getCurrentParentForum());
-//                String forumUrl = FORUM_URL_F + subForum.getId() + FORUM_URL_ORDER + "1";
-                //VozCache.instance().setCurrentForumPage(1);
-                //loadThreads(Integer.parseInt(subForum.getId()), 1);
             }
         }
     }
