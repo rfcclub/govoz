@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginStart="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:background="@drawable/frame_border_white"
+    tools:background="@drawable/frame_border_white"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_weight="0.2">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/post1"
+            android:scaleType="center">
+         </ImageView>
+        <TextView
+            android:text="1234"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/textReplies"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="0.8">
+
+        <TextView
+            android:text="Forum 1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textForumName"
+            android:layout_weight="1"
+            android:textStyle="normal|bold"
+            android:textColor="@color/dark_jungle_green2" />
+
+        <TextView
+            android:text="123 viewing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewing"
+            android:layout_weight="1"
+            android:textColor="@color/taupe_gray" />
+    </LinearLayout>
+</LinearLayout>

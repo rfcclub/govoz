@@ -96,7 +96,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 
 
@@ -174,7 +174,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     }
 
     private View createChildForum(Forum forum, LayoutInflater layoutInflater) {
-        final LinearLayout subForumLayout = (LinearLayout) layoutInflater.inflate(R.layout.sub_forum_item, null);
+        final LinearLayout subForumLayout = (LinearLayout) layoutInflater.inflate(R.layout.neo_forum_item, null);
         final String forumId = forum.getId();
         ((TextView) subForumLayout.findViewById(R.id.textForumCode)).setText("f" + forumId);
         ((TextView) subForumLayout.findViewById(R.id.textForumName)).setText(forum.getForumName());

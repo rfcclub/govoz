@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/linearRoot"
+    android:background="@color/medium_jungle_green">
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textMainForum"
+        android:height="30dp"
+        android:paddingLeft="5dp"
+        tools:text="Sub Forum Here"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearSubForum"
+        android:background="@drawable/frame_border_white"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        tools:background="@drawable/frame_border_white"
+        android:layout_marginStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <TextView
+            android:text="Sub-forum 1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3" />
+
+        <TextView
+            android:text="Sub-forum 2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView6" />
+
+        <TextView
+            android:text="Sub-forum 3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7" />
+    </LinearLayout>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textThreads"
+        android:height="40dp"
+        android:paddingLeft="5dp"
+        android:gravity="center_vertical"
+        tools:text="Threads in Forum"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearThreads"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            >
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
