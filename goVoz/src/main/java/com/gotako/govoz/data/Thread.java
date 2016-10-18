@@ -29,6 +29,7 @@ public class Thread implements Serializable {
     public String prefix;
     public String prefixColor;
     public String prefixLink;
+    public String replies;
 
     public String getTitle() {
         return title;

@@ -327,6 +327,7 @@ public class ForumActivity extends VozFragmentActivity implements
                 viewHeader.setVisibility(View.GONE);
             }
         }
+
         // must set value manually since we want support prefix in a beautiful way
         TextView title = (TextView) viewSection.findViewById(R.id.titleWithPrefix);
         String titleText = currentThread.getTitle();

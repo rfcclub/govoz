@@ -17,7 +17,6 @@ import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,8 @@ import java.util.Map;
 public class MainFragment extends Fragment implements ActivityCallback<Forum> {
 
     private OnFragmentInteractionListener mListener;
-    private Map<Integer, Forum> mForumGroups;
+    // private Map<Integer, Forum> mForumGroups;
+    private List<Forum> mForumGroups;
     private Map<Integer, List<Forum>> mForums;
 
     public MainFragment() {
@@ -129,13 +129,15 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
             Toast.makeText(getActivity(), "Cannot access to VozForum. Please try again later.", Toast.LENGTH_SHORT).show();
         }
 
-        mForumGroups = new HashMap<>();
+        mForumGroups = new ArrayList<>();
         mForums = new HashMap<>();
         Integer pos = -1;
+        Forum parentForum = null;
         for (Forum forum : result) {
-            if (forum.getForumGroupName() != null) {
+            if (parentForum == null || forum.getForumGroupName() != null) {
+                parentForum = forum;
+                mForumGroups.add(parentForum);
                 pos++;
-                mForumGroups.put(pos, forum);
             }
             if (forum.getForumGroupName() == null) {
                 List<Forum> list = mForums.get(pos);
@@ -147,7 +149,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
             }
         }
 
-        // TODO: Fill data to layout
+        // Fill data to layout
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
         updateForum(parent, layoutInflater);
@@ -155,10 +157,12 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     }
 
     private void updateForum(LinearLayout parent, LayoutInflater layoutInflater) {
-        Iterator<Integer> iterator = mForumGroups.keySet().iterator();
-        while (iterator.hasNext()) {
-            int index = iterator.next();
-            Forum forumGroup = mForumGroups.get(index);
+//        Iterator<Integer> iterator = mForumGroups.keySet().iterator();
+//        while (iterator.hasNext()) {
+        int index = 0;
+        for(Forum forumGroup : mForumGroups) {
+//            int index = iterator.next();
+//            Forum forumGroup = mForumGroups.get(index);
             LinearLayout forumGroupLayout = (LinearLayout) layoutInflater.inflate(R.layout.main_forum_item, null);
             ((TextView) forumGroupLayout.findViewById(R.id.textMainForum)).setText(forumGroup.getForumGroupName());
             LinearLayout forumsPlaceholder = (LinearLayout) forumGroupLayout.findViewById(R.id.linearSubForum);
@@ -170,6 +174,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
                 forumsPlaceholder.addView(view);
             }
             parent.addView(forumGroupLayout);
+            index++;
         }
     }
 

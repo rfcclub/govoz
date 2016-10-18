@@ -9,5 +9,9 @@
     <dimen name="radio_button_conner_radius">5dp</dimen>
     <dimen name="button_conner_radius">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="thread_user_size">13sp</dimen>
+    <dimen name="thread_extra_info_size">11sp</dimen>
+    <dimen name="thread_title_size">16sp</dimen>
+    <dimen name="thread_short_desc_size">13sp</dimen>
 
 </resources>

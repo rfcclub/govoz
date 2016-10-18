@@ -8,17 +8,17 @@
     android:background="@color/medium_jungle_green">
 
     <TextView
-        android:text="TextView"
+        android:text="@string/sub_forums_tile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textMainForum"
+        android:id="@+id/textSubForums"
         android:height="30dp"
         android:paddingLeft="5dp"
-        tools:text="Sub Forum Here"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textAllCaps="true"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        tools:text="@string/sub_forums_tile" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -53,35 +53,26 @@
     </LinearLayout>
 
     <TextView
-        android:text="TextView"
+        android:text="@string/threads_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textThreads"
+        android:id="@+id/textThreadsTitle"
         android:height="40dp"
         android:paddingLeft="5dp"
         android:gravity="center_vertical"
-        tools:text="Threads in Forum"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textAllCaps="true"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"
+        tools:text="@string/threads_in" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linearThreads"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginStart="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            >
-
-        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

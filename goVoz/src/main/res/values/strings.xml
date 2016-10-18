@@ -126,4 +126,6 @@
     <string name="one_star">1 sao</string>
     <string name="experimental_text">Đây là tính năng thử nghiệm, nên có thể sẽ không chạy tốt với bài có nhiều hình ảnh.</string>
     <string name="do_search">Tìm</string>
+    <string name="sub_forums_tile">DIỄN ĐÀN</string>
+    <string name="threads_in">CHỦ ĐỀ TRONG:</string>
 </resources>

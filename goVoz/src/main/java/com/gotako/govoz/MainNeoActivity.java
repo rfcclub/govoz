@@ -5,6 +5,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.gotako.govoz.data.Thread;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
@@ -57,6 +58,11 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void onThreadClicked(Thread thread) {
+
+    }
+
+    @Override
+    public void updateNavigationPanel() {
 
     }
 }

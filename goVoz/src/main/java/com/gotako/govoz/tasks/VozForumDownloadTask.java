@@ -1,18 +1,17 @@
 package com.gotako.govoz.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.Thread;
 import com.gotako.util.Utils;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 
@@ -76,6 +75,10 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 					String color = prefixColor.attr("style");
 					color = color.substring(color.indexOf("#"), color.length() - 1);
 					thread.prefixColor = color;
+				}
+				Element replies = Utils.getFirstElement(tr.select("a[href*=misc.php?do=whoposted]"));
+				if(replies != null) {
+					thread.replies = replies.text();
 				}
 			} else {
                 Element deleteImg = Utils.getFirstElement(tr.select("img[class=inlineimg][src*=images/misc/trashcan_small.gif][alt*=Deleted Post(s)]"));
