@@ -51,7 +51,7 @@ public class MainNeoActivity extends VozFragmentActivity
         ForumFragment forumFragment = ForumFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, forumFragment)
+                .replace(R.id.fragment_container, forumFragment)
                 .commit();
     }
 

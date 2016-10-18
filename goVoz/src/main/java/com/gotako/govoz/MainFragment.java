@@ -182,8 +182,8 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         subForumLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setSelected(true);
-                v.setBackgroundResource(android.R.color.holo_blue_dark);
+//                v.setSelected(true);
+//                v.setBackgroundResource(android.R.color.holo_blue_dark);
                 if(mListener != null) mListener.onForumClicked(forumId);
             }
         });
