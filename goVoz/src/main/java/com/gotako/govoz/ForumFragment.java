@@ -247,6 +247,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
             TextView subTitleView = (TextView) threadLayout.findViewById(R.id.textSubtile);
             subTitleView.setVisibility(View.VISIBLE);
             subTitleView.setText(subTitle);
+            if(titleText.length() >= 30) subTitleView.setMaxLines(1);
         }
         if (!Utils.isNullOrEmpty(thread.prefix)) {
             String prefix = "<b><font color=\"" + thread.prefixColor + "\">" + thread.prefix + "</font></b></a> - ";
