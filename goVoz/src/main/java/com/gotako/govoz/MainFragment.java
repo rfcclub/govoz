@@ -99,13 +99,6 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 
-
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -152,17 +145,14 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         // Fill data to layout
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
+        parent.removeAllViews();
         updateForum(parent, layoutInflater);
         parent.invalidate();
     }
 
     private void updateForum(LinearLayout parent, LayoutInflater layoutInflater) {
-//        Iterator<Integer> iterator = mForumGroups.keySet().iterator();
-//        while (iterator.hasNext()) {
         int index = 0;
         for(Forum forumGroup : mForumGroups) {
-//            int index = iterator.next();
-//            Forum forumGroup = mForumGroups.get(index);
             LinearLayout forumGroupLayout = (LinearLayout) layoutInflater.inflate(R.layout.main_forum_item, null);
             ((TextView) forumGroupLayout.findViewById(R.id.textMainForum)).setText(forumGroup.getForumGroupName());
             LinearLayout forumsPlaceholder = (LinearLayout) forumGroupLayout.findViewById(R.id.linearSubForum);
@@ -187,12 +177,16 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         subForumLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                v.setSelected(true);
-//                v.setBackgroundResource(android.R.color.holo_blue_dark);
                 if(mListener != null) mListener.onForumClicked(forumId);
             }
         });
         return subForumLayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getVozForums();
     }
 
     /**

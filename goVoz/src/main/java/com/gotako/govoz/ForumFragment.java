@@ -54,20 +54,12 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
     // TODO: Rename and change types and number of parameters
     public static ForumFragment newInstance() {
         ForumFragment fragment = new ForumFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
         processNavigationLink();
     }
 
@@ -280,6 +272,11 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
         }
         newThreads.addAll(mThreads);
         mThreads = newThreads;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public interface OnFragmentInteractionListener {

@@ -3,22 +3,17 @@
  */
 package com.gotako.govoz;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.jsoup.nodes.Document;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
 
-import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.NavDrawerItem;
-import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.data.VozMenuItem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Cache contains current state of application
@@ -201,4 +196,9 @@ public class VozCache {
 	}
 
 
+	public void removeLastNavigationLink() {
+		if(navigationList.size() > 0) {
+			navigationList.remove(navigationList.size() - 1);
+		}
+	}
 }

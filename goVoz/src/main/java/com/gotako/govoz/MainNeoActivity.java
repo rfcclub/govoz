@@ -11,7 +11,9 @@ import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
 
 public class MainNeoActivity extends VozFragmentActivity
-        implements MainFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
+        implements MainFragment.OnFragmentInteractionListener,
+        ForumFragment.OnFragmentInteractionListener,
+        ThreadFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +35,23 @@ public class MainNeoActivity extends VozFragmentActivity
         config.load(this);
 
         if (findViewById(R.id.fragment_container) != null) {
-            if(savedInstanceState != null) return;
+            if (savedInstanceState != null) return;
             MainFragment mainFragment = MainFragment.newInstance();
             getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .add(R.id.fragment_container, mainFragment)
-                                    .commit();
+                    .beginTransaction()
+                    .add(R.id.fragment_container, mainFragment)
+                    .commit();
         }
+    }
+
+    @Override
+    public void onPostClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onThreadClicked(String postLink) {
+
     }
 
     @Override
@@ -53,7 +65,18 @@ public class MainNeoActivity extends VozFragmentActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, forumFragment)
+                .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onOutsideLinkClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onOutsidePictureClicked(String postLink) {
+
     }
 
     @Override
@@ -64,5 +87,15 @@ public class MainNeoActivity extends VozFragmentActivity
     @Override
     public void updateNavigationPanel() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            VozCache.instance().removeLastNavigationLink();
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
