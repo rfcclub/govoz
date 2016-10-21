@@ -1,25 +1,20 @@
 package com.gotako.govoz.tasks;
-import static com.gotako.util.Utils.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.app.ProgressDialog;
 
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.data.Post;
-import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.service.DownloadBatch;
 import com.gotako.govoz.service.ImageDownloadService;
 import com.gotako.util.Utils;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
@@ -154,7 +149,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 								tableQuote.removeAttr("class");
 								Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
 								if(td != null) {
-									td.attr("style","border:1px solid");
+									td.attr("style","border:none;background-color: #F2F2F2");
 								}
 							}
 						}
@@ -256,10 +251,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			Element closeImage = Utils
 					.getFirstElement(table
 							.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]"));
-			if (closeImage != null)
-				closed = true;
-			else
-				closed = false;
+			closed = closeImage != null;
 			/*
 			 * String src = closeImage.attr("src"); src =
 			 * closeImage.attr("alt");

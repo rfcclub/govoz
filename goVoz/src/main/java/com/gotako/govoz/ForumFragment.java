@@ -215,7 +215,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
         return subForumLayout;
     }
 
-    private View createThread(Thread thread, LayoutInflater layoutInflater) {
+    private View createThread(final Thread thread, final LayoutInflater layoutInflater) {
         final LinearLayout threadLayout = (LinearLayout) layoutInflater.inflate(R.layout.neo_thread_item, null);
         TextView title = (TextView) threadLayout.findViewById(R.id.textTitle);
         String titleText = thread.getTitle();
@@ -252,6 +252,16 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
         poster.setText(thread.getPoster());
         ((TextView) threadLayout.findViewById(R.id.textLastUpdate)).setText(thread.getLastUpdate());
         ((TextView) threadLayout.findViewById(R.id.textReplies)).setText(thread.replies);
+        if(!thread.isDeleted()) {
+            threadLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null) {
+                        mListener.onThreadClicked(thread);
+                    }
+                }
+            });
+        }
         return threadLayout;
     }
 
@@ -277,6 +287,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread> 
     @Override
     public void onResume() {
         super.onResume();
+        processNavigationLink();
     }
 
     public interface OnFragmentInteractionListener {

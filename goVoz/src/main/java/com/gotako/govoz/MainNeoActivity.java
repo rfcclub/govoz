@@ -9,6 +9,7 @@ import com.gotako.govoz.data.Thread;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
+import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class MainNeoActivity extends VozFragmentActivity
         implements MainFragment.OnFragmentInteractionListener,
@@ -81,7 +82,19 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void onThreadClicked(Thread thread) {
-
+        VozCache.instance().setCurrentThread(thread.getId());
+        VozCache.instance().setCurrentThreadPage(1);
+        String url = VOZ_LINK + "/"
+                + thread.getThreadUrl()
+                + "&page="
+                + String.valueOf(VozCache.instance().getCurrentThreadPage());
+        VozCache.instance().navigationList.add(url);
+        ThreadFragment forumFragment = ThreadFragment.newInstance();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, forumFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

@@ -59,10 +59,10 @@ android {
 
 dependencies {
     compile project(':goFast')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     //compile 'com.android.support:support-v4:20.0.0'
     //compile 'com.felipecsl:gifimageview:2.1.0'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5.1'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     //compile files('libs/bugsense-3.6.1.jar')
     //compile files('libs/htmlcleaner-2.7.jar')
     //compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.16'
