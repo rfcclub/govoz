@@ -27,4 +27,11 @@
         app:showAsAction="always"
         android:visible="false"
         />
+    <item
+        android:id="@+id/action_rmenu"
+        android:title="@string/rmenu"
+        android:orderInCategory="103"
+        app:showAsAction="always"
+        android:visible="true"
+        />
 </menu>

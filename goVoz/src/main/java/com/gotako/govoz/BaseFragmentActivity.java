@@ -3,20 +3,12 @@
  */
 package com.gotako.govoz;
 
-import java.util.List;
-
-import com.gotako.govoz.adapter.NavDrawerListAdapter;
-import com.gotako.govoz.adapter.VozMenuListAdapter;
-import com.gotako.govoz.data.NavDrawerItem;
-import com.gotako.govoz.data.VozMenuItem;
-import com.gotako.util.Utils;
-
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -28,6 +20,13 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+
+import com.gotako.govoz.adapter.NavDrawerListAdapter;
+import com.gotako.govoz.adapter.VozMenuListAdapter;
+import com.gotako.govoz.data.NavDrawerItem;
+import com.gotako.govoz.data.VozMenuItem;
+
+import java.util.List;
 
 /**
  * @author lnguyen66
@@ -151,11 +150,11 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
     }
 
     public void refreshActionBarIcon() {
-        if (VozCache.instance().navigationList.size() > 0) {
-            mToolbar.setNavigationIcon(Utils.getValueByTheme(R.drawable.ic_arrow_back_white_18dp, R.drawable.ic_arrow_back_black_18dp));
+        if (VozCache.instance().mNeoNavigationList.size() > 0) {
+            mToolbar.setNavigationIcon(R.drawable.menu);
             mToolbar.invalidate();
         } else {
-            mToolbar.setNavigationIcon(Utils.getValueByTheme(R.drawable.ic_menu_white_18dp, R.drawable.ic_menu_black_18dp));
+            mToolbar.setNavigationIcon(R.drawable.back);
             mToolbar.invalidate();
         }
     }
@@ -188,10 +187,8 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_star).setIcon(Utils.getValueByTheme(R.drawable.ic_star_border_white_18dp, R.drawable.ic_star_border_black_18dp));
-        menu.findItem(R.id.action_bookmark).setIcon(Utils.getValueByTheme(R.drawable.ic_create_white_18dp, R.drawable.ic_create_black_18dp));
-        menu.findItem(R.id.action_refresh).setIcon(Utils.getValueByTheme(R.drawable.ic_refresh_white_18dp, R.drawable.ic_refresh_black_18dp));
-        menu.findItem(R.id.action_reply).setIcon(Utils.getValueByTheme(R.drawable.ic_comment_white_18dp, R.drawable.ic_comment_black_18dp));
+        menu.findItem(R.id.action_refresh).setIcon(R.drawable.reload);
+        menu.findItem(R.id.action_rmenu).setIcon(R.drawable.rmenu);
         // if nav drawer is opened, hide the action items
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
         return super.onPrepareOptionsMenu(menu);

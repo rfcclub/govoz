@@ -27,7 +27,6 @@
         android:id="@+id/layout_slidermenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginRight="56dp"
         android:layout_gravity="start"
         android:elevation="16dp"
@@ -37,29 +36,65 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/dark_jungle_green">
 
             <LinearLayout
                 android:id="@+id/logoLayout"
                 android:layout_width="match_parent"
                 android:layout_marginTop="4dp"
-                android:layout_height="76dp"
-                android:orientation="horizontal" >
+                android:layout_height="145dp"
+                android:background="@color/taupe"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical" >
 
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:id="@+id/logoVozView"
                     android:scaleType="fitCenter"
                     android:padding="1dp"
-                    android:src="@drawable/vozlogo" />
+                    android:src="@drawable/vozlogo"
+                    android:background="@drawable/circle_border" />
+                <TextView
+                    android:id="@+id/loggedInUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anonymous"
+                    android:layout_marginTop="15dp"
+                    android:textColor="@color/isabelline"
+                    android:textSize="20.0sp"
+                    />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/yourFavorite"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:orientation="vertical" />
-
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@color/liver">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/taupe"
+                    android:text="@string/yourPosts"
+                    android:textSize="13.0sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:background="@color/taupe"
+                    android:text="@string/yourThreads"
+                    android:textSize="13.0sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+            </LinearLayout>
             <ListView
                 android:id="@+id/list_slidermenu"
                 android:layout_width="match_parent"

@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.gotako.govoz.data.Thread;
 
 import info.hoang8f.android.segment.SegmentedGroup;
@@ -26,11 +25,12 @@ public class MainNeoActivity extends VozFragmentActivity
     protected Fragment mFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        BugSenseHandler.initAndStartSession(this, "2330a14e");
-        BugSenseHandler.setLogging(1000, "*:W");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_neo);
+        // setContentView(R.layout.activity_main_neo);
+        processToMainForum(savedInstanceState);
+    }
 
+    private void processToMainForum(Bundle savedInstanceState) {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -43,13 +43,13 @@ public class MainNeoActivity extends VozFragmentActivity
         VozConfig config = VozConfig.instance();
         config.load(this);
 
-        if (findViewById(R.id.fragment_container) != null) {
+        if (findViewById(R.id.frame_container) != null) {
             if (savedInstanceState != null) return;
             MainFragment mainFragment = MainFragment.newInstance();
             mFragment = mainFragment;
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragment_container, mainFragment)
+                    .add(R.id.frame_container, mainFragment)
                     .commit();
         }
     }
@@ -76,7 +76,7 @@ public class MainNeoActivity extends VozFragmentActivity
         mFragment = forumFragment;
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, forumFragment)
+                .replace(R.id.frame_container, forumFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -105,7 +105,7 @@ public class MainNeoActivity extends VozFragmentActivity
         mFragment = threadFragment;
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, threadFragment)
+                .replace(R.id.frame_container, threadFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -207,5 +207,6 @@ public class MainNeoActivity extends VozFragmentActivity
         } else {
             super.onBackPressed();
         }
+        overridePendingTransition(R.animator.left_slide_in_half, R.animator.right_slide_out);
     }
 }

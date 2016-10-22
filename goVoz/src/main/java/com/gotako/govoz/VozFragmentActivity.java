@@ -3,7 +3,6 @@
  */
 package com.gotako.govoz;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +20,6 @@ import android.widget.Toast;
 import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.gotako.gofast.listener.BindingActionListener;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
@@ -31,9 +29,7 @@ import com.gotako.govoz.tasks.UserLogoutTask;
 import com.gotako.util.Utils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.THREAD_URL_T;
@@ -48,12 +44,14 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        BugSenseHandler.initAndStartSession(this, "2330a14e");
+        BugSenseHandler.setLogging(1000, "*:W");
         VozConfig.instance().load(this);
-        if (VozConfig.instance().isDarkTheme()) {
+//        if (VozConfig.instance().isDarkTheme()) {
             setTheme(R.style.AppTheme);
-        } else {
-            setTheme(R.style.AppTheme_Light);
-        }
+//        } else {
+//            setTheme(R.style.AppTheme_Light);
+//        }
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
         mRightForumList.setOnItemClickListener(new OnForumItemClickListener(this));
@@ -92,34 +90,30 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         } else {
             VozCache.instance().menuItemList.clear();
         }
-        if (VozCache.instance().isLoggedIn()) {
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_logout),
-                    Utils.getValueByTheme(R.drawable.ic_input_white_18dp, R.drawable.ic_input_black_18dp), 9));
-        } else {
-            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login),
-                    Utils.getValueByTheme(R.drawable.ic_account_box_white_18dp, R.drawable.ic_account_box_black_18dp), 7));
-            if (VozCache.instance().isSavedPreference(this.getBaseContext())) {
-                VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login_with_pref),
-                        Utils.getValueByTheme(R.drawable.ic_assignment_ind_white_18dp, R.drawable.ic_assignment_ind_black_18dp), 8));
-            }
-        }
+
+//        if (VozCache.instance().isLoggedIn()) {
+//            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_logout),
+//                    Utils.getValueByTheme(R.drawable.ic_input_white_18dp, R.drawable.ic_input_black_18dp), 9));
+//        } else {
+//            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login),
+//                    Utils.getValueByTheme(R.drawable.ic_account_box_white_18dp, R.drawable.ic_account_box_black_18dp), 7));
+//            if (VozCache.instance().isSavedPreference(this.getBaseContext())) {
+//                VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login_with_pref),
+//                        Utils.getValueByTheme(R.drawable.ic_assignment_ind_white_18dp, R.drawable.ic_assignment_ind_black_18dp), 8));
+//            }
+//        }
+
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home),
-                Utils.getValueByTheme(R.drawable.ic_home_white_18dp, R.drawable.ic_home_black_18dp), 0));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread),
-                Utils.getValueByTheme(R.drawable.ic_open_in_new_white_18dp, R.drawable.ic_open_in_new_black_18dp), 1));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum),
-                Utils.getValueByTheme(R.drawable.ic_open_in_new_white_18dp, R.drawable.ic_open_in_new_black_18dp), 2));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home),R.drawable.home, 0));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.subscribe, 1));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum), R.drawable.subscribe, 2));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_subcribe), R.drawable.subscribe, 11));
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox),
-                Utils.getValueByTheme(R.drawable.ic_mail_white_18dp, R.drawable.ic_mail_black_18dp), 3));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search),
-                Utils.getValueByTheme(R.drawable.ic_search_white_18dp, R.drawable.ic_search_black_18dp), 4));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox), R.drawable.message, 3));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search), R.drawable.search, 4));
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting),
-                Utils.getValueByTheme(R.drawable.ic_settings_white_18dp, R.drawable.ic_settings_black_18dp), 5));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_exit),
-                Utils.getValueByTheme(R.drawable.ic_power_settings_new_white_18dp, R.drawable.ic_power_settings_new_black_18dp), 6));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting), R.drawable.settings, 5));
+        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_aboutus), R.drawable.aboutus, 10));
     }
 
     @Override

@@ -17,7 +17,7 @@
   <color name="list_background_pressed_end_light">#FFFFFF</color>
   <color name="list_background_pressed_start">#626262</color>
   <color name="list_background_pressed_end">#c5c4c4</color>
-  <color name="list_divider">#272727</color>
+  <color name="list_divider">#212121</color>
   <color name="counter_text_bg">#626262</color>
   <color name="counter_text_color">#c5c4c4</color>
   <color name="light_gray">#D3D3D3</color>
@@ -56,5 +56,7 @@
   <color name="sunglow">#ffca2b</color>
   <color name="sunset_orange">#ff5454</color>
   <color name="sandy_brown">#ffa95f</color>
+  <color name="taupe">#373737</color>
+  <color name="liver">#4b4b4b</color>
 </resources>
 

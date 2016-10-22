@@ -85,13 +85,13 @@
     <string name="error_not_login_go_forum">Bạn cần phải login vào trước mới đi đến forum này được.</string>
     <string name="error_not_login_go_inbox">Bạn cần phải login vào trước mới có thể vào hộp thư được.</string>
     <string name="err_cannot_access_forum">Không thể truy nhập vozForums. Xin vui lòng thử lại sau.</string>
-    <string name="left_menu_home">Trang chủ</string>
+    <string name="left_menu_home">Trang Chủ</string>
     <string name="left_menu_go_thread">Đi đến Thread</string>
     <string name="left_menu_go_forum">Đi đến Forum</string>
-    <string name="left_menu_inbox">Hộp thư</string>
-    <string name="left_menu_search">Tìm kiếm</string>
-    <string name="left_menu_setting">Cài đặt</string>
-    <string name="left_menu_exit">Thoát</string>
+    <string name="left_menu_inbox">Hộp Thư</string>
+    <string name="left_menu_search">Tìm Kiếm</string>
+    <string name="left_menu_setting">Cài Đặt</string>
+    <string name="left_menu_exit">Thoát Chương Trình</string>
     <string name="left_menu_login">Đăng nhập</string>
     <string name="left_menu_login_with_pref">Đăng nhập tự động bằng thông tin đã lưu</string>
     <string name="left_menu_logout">Đăng xuất</string>
@@ -129,4 +129,9 @@
     <string name="sub_forums_tile">DIỄN ĐÀN</string>
     <string name="threads_in">CHỦ ĐỀ TRONG:</string>
     <string name="thread_title">THREAD TITLE</string>
+    <string name="yourPosts">Bài viết của bạn</string>
+    <string name="yourThreads">Chủ đề của bạn</string>
+    <string name="left_menu_aboutus">Về GoVoz</string>
+    <string name="left_menu_go_subcribe">Theo Dõi</string>
+    <string name="rmenu">MENU</string>
 </resources>
