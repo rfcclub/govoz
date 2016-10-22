@@ -319,9 +319,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
                             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                         }
-                        if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
-                            mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        }
                         break;
                     case 1: // custom thread move
                         ThreadSelectDialog threadSelectDialog = new ThreadSelectDialog();
@@ -369,6 +366,9 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         break;
                     default:
                         break;
+                }
+                if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
+                    mDrawerLayout.closeDrawer(Gravity.LEFT);
                 }
             }
         }
