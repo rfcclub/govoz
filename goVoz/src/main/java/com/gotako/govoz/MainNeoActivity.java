@@ -93,13 +93,18 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void onThreadClicked(Thread thread) {
-        VozCache.instance().setCurrentThread(thread.getId());
-        VozCache.instance().setCurrentThreadPage(1);
         String url = VOZ_LINK + "/"
                 + thread.getThreadUrl()
                 + "&page="
                 + String.valueOf(VozCache.instance().getCurrentThreadPage());
-        NavigationItem forumItem = new NavigationItem(url, NavigationItem.THREAD);
+        goToThreadId(thread.getId(), url);
+    }
+
+    public void goToThreadId(int threadId, String threadUrl) {
+        VozCache.instance().setCurrentThread(threadId);
+        VozCache.instance().setCurrentThreadPage(1);
+
+        NavigationItem forumItem = new NavigationItem(threadUrl, NavigationItem.THREAD);
         VozCache.instance().mNeoNavigationList.add(forumItem);
         ThreadFragment threadFragment = ThreadFragment.newInstance();
         mFragment = threadFragment;
@@ -179,6 +184,7 @@ public class MainNeoActivity extends VozFragmentActivity
             navigationGroup.requestLayout();
             navigationGroup.invalidate();
         }
+        refreshActionBarIcon();
     }
 
     private void goToPage(int page) {

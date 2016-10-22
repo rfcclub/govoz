@@ -4,7 +4,6 @@
 package com.gotako.govoz;
 
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +18,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.gotako.govoz.adapter.NavDrawerListAdapter;
 import com.gotako.govoz.adapter.VozMenuListAdapter;
@@ -33,24 +31,17 @@ import java.util.List;
  *
  */
 public abstract class BaseFragmentActivity extends AppCompatActivity {
-	private DrawerLayout mDrawerLayout;
+	protected DrawerLayout mDrawerLayout;
     protected ListView mDrawerList;
     protected ListView mRightForumList;
     protected ListView mRightLinkList;
     protected ActionBarDrawerToggle mDrawerToggle;
-
-    protected RelativeLayout mDrawerListContainer;
-    
-    // nav drawer title
-    private CharSequence mDrawerTitle;
  
     // used to store app title
-    private CharSequence mTitle;
+    protected CharSequence mTitle;
  
     // slide menu items
-    private String[] navMenuTitles;
-    private TypedArray navMenuIcons;
-    private LinearLayout layoutSlidePanel;
+    protected LinearLayout layoutSlidePanel;
     protected List<VozMenuItem> navDrawerItems;
     protected List<NavDrawerItem> forumPinItems;
     protected List<NavDrawerItem> threadPinItems;
@@ -119,7 +110,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (VozCache.instance().navigationList.size() > 0) {
+                if (VozCache.instance().mNeoNavigationList.size() > 0) {
                     onBackPressed();
                 } else {
                     boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
@@ -151,10 +142,10 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 
     public void refreshActionBarIcon() {
         if (VozCache.instance().mNeoNavigationList.size() > 0) {
-            mToolbar.setNavigationIcon(R.drawable.menu);
+            mToolbar.setNavigationIcon(R.drawable.back);
             mToolbar.invalidate();
         } else {
-            mToolbar.setNavigationIcon(R.drawable.back);
+            mToolbar.setNavigationIcon(R.drawable.menu);
             mToolbar.invalidate();
         }
     }

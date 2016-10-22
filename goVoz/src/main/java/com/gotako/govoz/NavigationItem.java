@@ -8,6 +8,8 @@ public class NavigationItem {
     public static final int THREAD = 2;
     public static final int EXTERNAL_PICTURE = 3;
     public static final int EXTERNAL_LINK = 4;
+    public static final int INBOX = 5;
+    public static final int INBOX_DETAIL = 6;
     public String mLink;
     public int mType;
     public int mLastPage;

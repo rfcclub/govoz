@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -314,26 +315,27 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                 VozMenuItem item = navDrawerItems.get(position);
                 switch (item.type) {
                     case 0: // home
-                        VozCache.instance().navigationList.clear();
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
+                        VozCache.instance().mNeoNavigationList.clear();
+                        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        }
+                        if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
+                            mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        }
                         break;
-                    case 1:
+                    case 1: // custom thread move
                         ThreadSelectDialog threadSelectDialog = new ThreadSelectDialog();
-                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
                         threadSelectDialog.setActivity(VozFragmentActivity.this);
                         threadSelectDialog.setTitle(getResources().getString(R.string.thread_select_title));
                         threadSelectDialog.show(fm, "threadSelect");
                         break;
-                    case 2:
+                    case 2: // custom forum move
                         ForumSelectDialog forumSelectDialog = new ForumSelectDialog();
-                        // dialog.setStyle(DialogFragment.STYLE_NORMAL,  R.style.ThemeWithCorners);
                         forumSelectDialog.setActivity(VozFragmentActivity.this);
                         forumSelectDialog.setTitle(getResources().getString(R.string.forum_select_title));
                         forumSelectDialog.show(fm, "forumSelect");
                         break;
-                    case 3:
+                    case 3: // go to inbox
                         if(VozCache.instance().isLoggedIn()) {
                             String pmHttpsLink = VOZ_LINK + "/" + "private.php";
                             VozCache.instance().navigationList.add(pmHttpsLink);
@@ -345,7 +347,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         break;
                     case 4:
                         break;
-                    case 5:
+                    case 5: // go to setting
                         Intent intent1 = new Intent(VozFragmentActivity.this, SettingActivity.class);
                         VozFragmentActivity.this.startActivity(intent1);
                         break;

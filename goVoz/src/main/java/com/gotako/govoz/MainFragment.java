@@ -58,7 +58,6 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         VozCache.instance().navigationList.clear();
-
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) {
             doLoginAndGetVozForums();
@@ -93,6 +92,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     }
 
     private void updateNavigationPanel() {
+        getActivity().setTitle("GoVoz");
         if(mListener !=null) mListener.updateNavigationPanel(false);
     }
 
