@@ -31,22 +31,20 @@
                 <LinearLayout
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical|center_horizontal"
-                    >
-
-                    <!--<ImageView-->
-                        <!--android:id="@+id/avatar"-->
-                        <!--android:layout_width="54dp"-->
-                        <!--android:layout_height="54dp"-->
+                    android:gravity="center_vertical|center_horizontal">
+                        <com.felipecsl.gifimageview.library.GifImageView
+                            android:id="@+id/avatar"
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/user_icon" />
+                        <!--<ImageView-->
+                        <!--android:id="@+id/avatarBackground"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
                         <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@drawable/user_icon" />-->
-                    <com.felipecsl.gifimageview.library.GifImageView
-                    android:id="@+id/avatar"
-                    android:layout_width="54dp"
-                    android:layout_height="54dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/user_icon">
-                    </com.felipecsl.gifimageview.library.GifImageView>
+                        <!--android:src="@color/transparent"-->
+                        <!--android:background="@drawable/circle_border" />-->
                 </LinearLayout>
 
                 <LinearLayout

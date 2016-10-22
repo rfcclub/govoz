@@ -53,13 +53,11 @@ import static com.gotako.govoz.VozConstant.VOZ_SIGN;
  * Use the {@link ThreadFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ThreadFragment extends Fragment  implements ActivityCallback<Post>, View.OnLongClickListener {
+public class ThreadFragment extends Fragment  implements ActivityCallback<Post>, View.OnLongClickListener, PageNavigationListener {
 
     private OnFragmentInteractionListener mListener;
-    private int threadId;
-    private int threadPage;
-    private List<Post> posts;
-    private int lastPage;
+    private int mThreadId;
+    private List<Post> mPosts;
     private ScrollView listView = null;
     private LayoutInflater viewInflater;
     //private TextView pageNumber;
@@ -74,7 +72,7 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
 
     public ThreadFragment() {
         // Required empty public constructor
-        posts = new ArrayList<>();
+        mPosts = new ArrayList<>();
         gifImageViews = new ArrayList<>();
         webViewList = new SparseArray<>();
     }
@@ -91,52 +89,52 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
     }
 
     private void processNavigationLink() {
-        // last element of list should be forum link
-        String threadLink = VozCache.instance().navigationList.get(VozCache.instance().navigationList.size() - 1);
+        String threadLink = VozCache.instance().currentNavigateItem().mLink;
         String[] parameters = threadLink.split("\\?")[1].split("\\&");
         String firstParam = parameters[0];
-        threadId = Integer.parseInt(firstParam.split("=")[1]);
-        threadPage = 1;
+        mThreadId = Integer.parseInt(firstParam.split("=")[1]);
+        int threadPage = 1;
         if (parameters.length > 1) {
             threadPage = Integer.parseInt(parameters[1].split("\\=")[1]);
         }
         int currentForumId = VozCache.instance().getCurrentThread();
-        if (currentForumId != threadId) {
-            getThreads(false, threadId, threadPage);
+        if (currentForumId != mThreadId) {
+            getThreads(false, mThreadId, threadPage);
         } else {
-            VozCache.instance().setCurrentThreadPage(threadPage);
+            VozCache.instance().currentNavigateItem().mCurrentPage = threadPage;
             getThreads();
         }
     }
 
     private void getThreads() {
-        getThreads(false, VozCache.instance().getCurrentThread(), VozCache.instance().getCurrentThreadPage());
+        getThreads(false, VozCache.instance().getCurrentThread(), VozCache.instance().currentNavigateItem().mCurrentPage);
     }
 
     private void getThreads(boolean forceReload, int threadId, int threadPage) {
-        posts.clear();
+        mPosts.clear();
         int currentThreadId = VozCache.instance().getCurrentThread();
-        int currentThreadPage = VozCache.instance().getCurrentThreadPage();
+        int currentThreadPage = VozCache.instance().currentNavigateItem().mCurrentPage;
         if (threadId > 0 && currentThreadId != threadId) {
             VozCache.instance().setCurrentThread(threadId);
             currentThreadId = threadId;
         }
+
         if (threadPage > 0 && threadPage != currentThreadPage) {
-            VozCache.instance().setCurrentThreadPage(threadPage);
+            VozCache.instance().currentNavigateItem().mCurrentPage = threadPage;
             currentThreadPage = threadPage;
         }
         String key = String.valueOf(currentThreadId) + "_" + currentThreadPage;
         Object cacheObject = VozCache.instance().getDataFromCache(key);
-//        if (!forceReload && cacheObject != null && currentThreadPage < lastPage) {
+//        if (!forceReload && cacheObject != null && currentThreadPage < mLastPage) {
 //            VozThreadDownloadTask task = new VozThreadDownloadTask(this);
 //            ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
-//            List<Post> posts = task.processResult(threadDumpObject.document);
+//            List<Post> mPosts = task.processResult(threadDumpObject.document);
 //            threadName = threadDumpObject.threadName;
 //            threadIsClosed = threadDumpObject.closed;
 //            pValue = threadDumpObject.pValue;
 //            replyLink = threadDumpObject.replyLink;
-//            int lastPage = task.getLastPage();
-//            processResult(posts, lastPage);
+//            int mLastPage = task.getLastPage();
+//            processResult(mPosts, mLastPage);
 //        } else {
         doGetThread(currentThreadId, currentThreadPage);
 //        }
@@ -151,6 +149,10 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
                 + "&page="
                 + String.valueOf(currentThreadPage);
         task.execute(url);
+    }
+
+    private void updateNavigationPanel() {
+        if (mListener !=null) mListener.updateNavigationPanel(true);
     }
 
     @Override
@@ -194,6 +196,7 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
             pValue = (String) extra[4];
             replyLink = (String) extra[5];
             processResult(result, (Integer) extra[1]);
+            updateNavigationPanel();
         }
     }
 
@@ -204,24 +207,25 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
     }
 
     private void processResult(List<Post> result, int last) {
-        posts = result;
-        lastPage = last;
+        mPosts = result;
+        VozCache.instance().currentNavigateItem().mLastPage = last;
+
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         layout = (LinearLayout) getView().findViewById(R.id.linearMain);
         layout.removeAllViews();
         LinearLayout postLayout = (LinearLayout) layoutInflater.inflate(R.layout.thread_post_item, null);
-        // TODO set title of thread
-        // ((TextView)postLayout.findViewById(R.id.threadTitle)).setText();
+        ((TextView)postLayout.findViewById(R.id.threadTitle)).setText(threadName);
         layout.addView(postLayout);
+
         LinearLayout postsPlaceHolder = (LinearLayout) postLayout.findViewById(R.id.linearPosts);
         stopAllGifViews();
+
         gifImageViews.clear();
-        threadPage = VozCache.instance().getCurrentThreadPage();
         viewInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         webViewList = new SparseArray<>();
-        for (int i = 0; i < posts.size(); i++) {
+        for (int i = 0; i < mPosts.size(); i++) {
             View view = viewInflater.inflate(R.layout.neo_post_item, null);
-            Post post = posts.get(i);
+            Post post = mPosts.get(i);
             final WebView webView = (WebView) view.findViewById(R.id.content);
             webView.getSettings().setJavaScriptEnabled(true);
             if (webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
@@ -251,7 +255,8 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
             Display display = getActivity().getWindowManager().getDefaultDisplay();
             DisplayMetrics outMetrics = new DisplayMetrics();
             display.getMetrics(outMetrics);
-            String css = VozConfig.instance().isDarkTheme() ? "body{color: #e7e7e7; background-color: #000;}" : "body{color: #000; background-color: #F5F5F5;}";
+//            String css = VozConfig.instance().isDarkTheme() ? "body{color: #e7e7e7; background-color: #000;}" : "body{color: #000; background-color: #F5F5F5;}";
+            String css = "body{color: #000; background-color: #FFF;}";
             String head = "<head><style type='text/css'>" +
                     css + "\n" +
                     "div#permalink_section\n" +
@@ -456,6 +461,31 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
         return url.endsWith(".jpg") || url.endsWith(".gif") || url.endsWith(".png") || url.endsWith(".jpeg") || url.endsWith(".bmp");
     }
 
+    @Override
+    public void goFirst() {
+        VozCache.instance().currentNavigateItem().mCurrentPage = 1;
+        getThreads();
+    }
+
+    @Override
+    public void goLast() {
+        VozCache.instance().currentNavigateItem().mCurrentPage = VozCache.instance().currentNavigateItem().mLastPage;
+        getThreads();
+    }
+
+    @Override
+    public void goToPage(int page) {
+        VozCache.instance().currentNavigateItem().mCurrentPage = page;
+        getThreads();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainNeoActivity)getActivity()).mFragment = this;
+        getThreads();
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -473,6 +503,6 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
         void onForumClicked(String postLink);
         void onOutsideLinkClicked(String postLink);
         void onOutsidePictureClicked(String postLink);
-        void updateNavigationPanel();
+        void updateNavigationPanel(boolean visible);
     }
 }

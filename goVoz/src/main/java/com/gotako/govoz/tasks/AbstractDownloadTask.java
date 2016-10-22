@@ -1,22 +1,5 @@
 package com.gotako.govoz.tasks;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.security.cert.X509Certificate;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -29,22 +12,24 @@ import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractDownloadTask<T> extends
         AsyncTask<String, Integer, List<T>> {
 
     protected ActivityCallback<T> callback;
     protected AlertDialog myAlertDialog;
-    protected Context context;
+    protected Context mContext;
     protected CustomProgressDialog progressDialog;
     protected Dialog callingDialog;
-    protected Exception exception;
+    protected Exception mException;
     protected boolean showProcessDialog;
-    protected int retries = 0;
-    protected boolean noInternetConnection;
+    protected int mRetries = 0;
+    protected boolean mNoInternetConnection;
 
     public AbstractDownloadTask(ActivityCallback<T> callback) {
         this.callback = callback;
@@ -52,20 +37,20 @@ public abstract class AbstractDownloadTask<T> extends
 
     @Override
     protected void onPreExecute() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() == null) {
-            noInternetConnection = true;
+            mNoInternetConnection = true;
             return;
         }
-        if (showProcessDialog && context != null) {
-            progressDialog = new CustomProgressDialog(context, VozConfig.instance().getLoadingDrawable());
+        if (showProcessDialog && mContext != null) {
+            progressDialog = new CustomProgressDialog(mContext, VozConfig.instance().getLoadingDrawable());
             progressDialog.show();
         }
     }
 
     @Override
     protected List<T> doInBackground(String... params) {
-        if (noInternetConnection) return null;
+        if (mNoInternetConnection) return null;
         return doInBackgroundInternal(params);
     }
 
@@ -73,7 +58,7 @@ public abstract class AbstractDownloadTask<T> extends
         String urlString = params[0];
         List<T> result = new ArrayList<T>();
         boolean completed = false;
-        // while (retries >= 0 && !completed) {
+        // while (mRetries >= 0 && !completed) {
         try {
             TaskHelper.disableSSLCertCheck();
             Document document = null;
@@ -99,11 +84,11 @@ public abstract class AbstractDownloadTask<T> extends
             completed = true;
             afterDownload(document);
         } catch (Exception e) {
-            //Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("AbstractDownloadTask", e.getMessage(), e);
             processError(e);
         }
-        retries -= 1;
+        mRetries -= 1;
         // }
         return result;
     }
@@ -140,8 +125,8 @@ public abstract class AbstractDownloadTask<T> extends
 
     @Override
     protected void onPostExecute(List<T> result) {
-        if (noInternetConnection) {
-            Toast.makeText(context, "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
+        if (mNoInternetConnection) {
+            Toast.makeText(mContext, "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
             return;
         }
         doOnPostExecute(result);
@@ -163,7 +148,7 @@ public abstract class AbstractDownloadTask<T> extends
     }
 
     public void setContext(Context context) {
-        this.context = context;
+        this.mContext = context;
     }
 
     public void setShowProcessDialog(boolean showDialog) {
@@ -171,7 +156,7 @@ public abstract class AbstractDownloadTask<T> extends
     }
 
     public void setRetries(int retries) {
-        this.retries = retries;
+        this.mRetries = retries;
     }
 
 

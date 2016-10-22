@@ -62,20 +62,10 @@
                     android:textSize="@dimen/thread_user_size"
                     android:textStyle="normal|bold" />
                 <TextView
-                    android:id="@+id/textRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"
-                    android:gravity="right"
-                    android:text="textRating"
-                    android:textColor="@color/sunglow"
-                    android:textSize="@dimen/thread_extra_info_size"
-                    android:visibility="invisible" />
-                <TextView
                     android:id="@+id/textLastUpdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.3"
+                    android:layout_weight="0.4"
                     android:gravity="right"
                     android:text="textPostTime"
                     android:textColor="@color/dark_gray"

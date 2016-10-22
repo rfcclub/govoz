@@ -92,6 +92,10 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         task.execute(VozConstant.VOZ_LINK);
     }
 
+    private void updateNavigationPanel() {
+        if(mListener !=null) mListener.updateNavigationPanel(false);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -148,6 +152,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         parent.removeAllViews();
         updateForum(parent, layoutInflater);
         parent.invalidate();
+        updateNavigationPanel();
     }
 
     private void updateForum(LinearLayout parent, LayoutInflater layoutInflater) {
@@ -186,6 +191,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
     @Override
     public void onResume() {
         super.onResume();
+        ((MainNeoActivity)getActivity()).mFragment = this;
         getVozForums();
     }
 
@@ -201,5 +207,6 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
      */
     public interface OnFragmentInteractionListener {
         void onForumClicked(String forumIndex);
+        void updateNavigationPanel(boolean visible);
     }
 }

@@ -38,7 +38,7 @@ public class CustomProgressDialog extends Dialog {
 		iv = new ImageView(context);
 		iv.setImageResource(theme);		
 		layout.addView(iv, params);
-//		gv = new GifView(context);
+//		gv = new GifView(mContext);
 //		gv.setImageResource(theme);
 //		layout.addView(gv,params);
 //		gv.setVisibility(View.VISIBLE);

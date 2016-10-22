@@ -1,11 +1,18 @@
 package com.gotako.govoz;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.RadioButton;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.gotako.govoz.data.Thread;
+
+import info.hoang8f.android.segment.SegmentedGroup;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
@@ -16,6 +23,7 @@ public class MainNeoActivity extends VozFragmentActivity
         ForumFragment.OnFragmentInteractionListener,
         ThreadFragment.OnFragmentInteractionListener {
 
+    protected Fragment mFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         BugSenseHandler.initAndStartSession(this, "2330a14e");
@@ -38,6 +46,7 @@ public class MainNeoActivity extends VozFragmentActivity
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) return;
             MainFragment mainFragment = MainFragment.newInstance();
+            mFragment = mainFragment;
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.fragment_container, mainFragment)
@@ -61,8 +70,10 @@ public class MainNeoActivity extends VozFragmentActivity
         VozCache.instance().setCurrentForumPage(1);
         VozCache.instance().cache().clear();
         String forumUrl = FORUM_URL_F + forumIndex + FORUM_URL_ORDER + "1";
-        VozCache.instance().navigationList.add(forumUrl);
+        NavigationItem forumItem = new NavigationItem(forumUrl, NavigationItem.FORUM);
+        VozCache.instance().mNeoNavigationList.add(forumItem);
         ForumFragment forumFragment = ForumFragment.newInstance();
+        mFragment = forumFragment;
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, forumFragment)
@@ -88,18 +99,104 @@ public class MainNeoActivity extends VozFragmentActivity
                 + thread.getThreadUrl()
                 + "&page="
                 + String.valueOf(VozCache.instance().getCurrentThreadPage());
-        VozCache.instance().navigationList.add(url);
-        ThreadFragment forumFragment = ThreadFragment.newInstance();
+        NavigationItem forumItem = new NavigationItem(url, NavigationItem.THREAD);
+        VozCache.instance().mNeoNavigationList.add(forumItem);
+        ThreadFragment threadFragment = ThreadFragment.newInstance();
+        mFragment = threadFragment;
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, forumFragment)
+                .replace(R.id.fragment_container, threadFragment)
                 .addToBackStack(null)
                 .commit();
     }
 
     @Override
-    public void updateNavigationPanel() {
+    public void updateNavigationPanel(boolean visible) {
+        SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
+        if(navigationGroup == null) return;
+        navigationGroup.removeAllViews();
+        if (visible) {
+            NavigationItem item = VozCache.instance().currentNavigateItem();
+            LayoutInflater mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            int currentPage = item.mCurrentPage;
+            if (currentPage > 2) {
+                RadioButton first = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+                first.setText("<<");
+                first.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goFirst();
+                    }
+                });
+                navigationGroup.addView(first);
+            }
+            int prevStart = currentPage - 1;
+            if (prevStart < 1) prevStart = 1;
+            int extraRight = 0;
+            for (int i = prevStart; i <= currentPage; i++) {
+                RadioButton prevPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+                prevPage.setText(String.valueOf(i));
+                prevPage.setTag(i);
+                final int page = i;
+                if (i == currentPage) prevPage.setChecked(true);
+                prevPage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToPage(page);
+                    }
+                });
+                navigationGroup.addView(prevPage);
+                extraRight++;
+            }
+            int nextEnd = currentPage + 1;
+            if (nextEnd < 4) nextEnd = 4;
+            if (nextEnd > item.mLastPage) nextEnd = item.mLastPage;
+            for (int i = currentPage + 1; i <= nextEnd; i++) {
+                RadioButton nextPage = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+                nextPage.setText(String.valueOf(i));
+                nextPage.setTag(i);
+                final int page = i;
+                nextPage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goToPage(page);
+                    }
+                });
+                navigationGroup.addView(nextPage);
+            }
+            if (nextEnd < item.mLastPage) {
+                RadioButton last = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
+                last.setText(">>");
+                last.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goLast();
+                    }
+                });
+                navigationGroup.addView(last);
+            }
+            navigationGroup.updateBackground();
+            navigationGroup.requestLayout();
+            navigationGroup.invalidate();
+        }
+    }
 
+    private void goToPage(int page) {
+        if(mFragment instanceof PageNavigationListener) {
+            ((PageNavigationListener) mFragment).goToPage(page);
+        }
+    }
+
+    private void goLast() {
+        if(mFragment instanceof PageNavigationListener) {
+            ((PageNavigationListener) mFragment).goLast();
+        }
+    }
+
+    private void goFirst() {
+        if(mFragment instanceof PageNavigationListener) {
+            ((PageNavigationListener) mFragment).goFirst();
+        }
     }
 
     @Override

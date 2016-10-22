@@ -46,15 +46,16 @@ public class VozCache {
 	public List<VozMenuItem> menuItemList;
 	private Map<String, Object> forumCache = null;
 	public List<String> navigationList;
-	
+	public List<NavigationItem> mNeoNavigationList;
 	private VozCache() {
 		cookies = null;
 		final int cacheSize = 1024 * 1024 * 20;
         memoryCache = new LruCache(cacheSize);
-        forumCache = new HashMap<String, Object>();
-		pinItemThreadList = new ArrayList<NavDrawerItem>();
-		pinItemForumList = new ArrayList<NavDrawerItem>();
-        navigationList = new ArrayList<String>();
+        forumCache = new HashMap<>();
+		pinItemThreadList = new ArrayList<>();
+		pinItemForumList = new ArrayList<>();
+        navigationList = new ArrayList<>();
+		mNeoNavigationList = new ArrayList<>();
 	}
 
 	public static VozCache instance() {
@@ -197,8 +198,12 @@ public class VozCache {
 
 
 	public void removeLastNavigationLink() {
-		if(navigationList.size() > 0) {
-			navigationList.remove(navigationList.size() - 1);
+		if(mNeoNavigationList.size() > 0) {
+			mNeoNavigationList.remove(mNeoNavigationList.size() - 1);
 		}
+	}
+
+	public NavigationItem currentNavigateItem() {
+		return mNeoNavigationList.get(mNeoNavigationList.size() - 1);
 	}
 }

@@ -62,11 +62,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //compile 'com.android.support:support-v4:20.0.0'
     //compile 'com.felipecsl:gifimageview:2.1.0'
-    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     //compile files('libs/bugsense-3.6.1.jar')
     //compile files('libs/htmlcleaner-2.7.jar')
     //compile 'net.sourceforge.htmlcleaner:htmlcleaner:2.16'
     //compile 'org.sufficientlysecure:html-textview:1.2'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'

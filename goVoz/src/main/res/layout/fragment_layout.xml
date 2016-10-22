@@ -4,20 +4,36 @@
     android:layout_height="match_parent"
     tools:context="com.gotako.govoz.ForumFragment">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarStyle="insideOverlay"
-        android:fillViewport="true"
-        android:clipToPadding="true"
-        tools:scrollbarSize="20dp"
-        android:id="@+id/scrollviewMain">
-
+        android:orientation="vertical">
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_weight="0.8"
+            android:layout_gravity="top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ScrollView
+            android:id="@+id/scrollviewMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="true"
+            android:fillViewport="true"
+            android:scrollbarStyle="insideOverlay"
+            tools:scrollbarSize="20dp">
+
+            <LinearLayout
+                android:id="@+id/linearMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
+        </LinearLayout>
+        <include
+            layout="@layout/navigation_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linearMain"></LinearLayout>
-    </ScrollView>
-
+            android:layout_gravity="bottom"
+            android:layout_weight="0.2" />
+    </LinearLayout>
 </FrameLayout>

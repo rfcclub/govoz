@@ -32,7 +32,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	@Override
 	public List<Post> processResult(Document document) {
 		ImageDownloadService.service().batches.clear();
-		ImageDownloadService.service().set(context);
+		ImageDownloadService.service().set(mContext);
 		List<Post> posts = new ArrayList<Post>();
 		Element title = document.select("title").first();
 		threadName = title.text().trim();
@@ -237,7 +237,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	}
 
 	private String convertToLocalLink(String src) {
-		return context.getCacheDir() + Utils.getPath(src);
+		return mContext.getCacheDir() + Utils.getPath(src);
 	}
 
 

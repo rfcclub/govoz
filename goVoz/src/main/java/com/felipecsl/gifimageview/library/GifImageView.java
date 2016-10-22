@@ -165,7 +165,7 @@ public class GifImageView extends ImageView implements Runnable {
             Thread.sleep(framesDisplayDuration > 0 ? framesDisplayDuration : delay);
           }
         } catch (final Exception e) {
-          // suppress any exception
+          // suppress any mException
           // it can be InterruptedException or IllegalArgumentException
         }
       }
