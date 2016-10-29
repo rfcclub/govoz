@@ -144,14 +144,16 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
 
     @Override
     public void doCallback(List<Thread> result, Object... extra) {
+        mForums = (List<Forum>) extra[0];
         if (result == null || result.size() == 0) {
-            Toast.makeText(getActivity(),
-                    "Cannot access to VozForum. Please try again later.",
-                    Toast.LENGTH_SHORT).show();
-            return;
+            if(mForums == null || mForums.size() == 0) {
+                Toast.makeText(getActivity(),
+                        "Cannot access to VozForum. Please try again later.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         mThreads = result;
-        mForums = (List<Forum>) extra[0];
         VozCache.instance().currentNavigateItem().mLastPage = (Integer) extra[1];
         mForumName = (String) extra[2];
 
@@ -183,7 +185,11 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
             forumsPlaceholder.setVisibility(View.GONE);
             forumLayout.findViewById(R.id.textSubForums).setVisibility(View.GONE);
         }
-
+        if(mThreads.size() == 0) {
+            textThreadsTitle.setVisibility(View.INVISIBLE);
+        } else {
+            textThreadsTitle.setVisibility(View.VISIBLE);
+        }
         // thread insertion
         for (Thread thread : mThreads) {
             View view = createThread(thread, layoutInflater);

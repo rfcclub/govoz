@@ -206,6 +206,11 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     @Override
+    public void refresh() {
+        mFragment.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             VozCache.instance().removeLastNavigationLink();

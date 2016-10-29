@@ -3,6 +3,7 @@
  */
 package com.gotako.govoz;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,7 +56,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 //        }
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
-        mRightForumList.setOnItemClickListener(new OnForumItemClickListener(this));
+        mRightForumList.setOnItemClickListener(new OnRightMenuForumItemClickListener(this));
         mRightLinkList.setOnItemClickListener(new OnThreadItemClickListener(this));
     }
 
@@ -92,18 +93,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             VozCache.instance().menuItemList.clear();
         }
 
-//        if (VozCache.instance().isLoggedIn()) {
-//            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_logout),
-//                    Utils.getValueByTheme(R.drawable.ic_input_white_18dp, R.drawable.ic_input_black_18dp), 9));
-//        } else {
-//            VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login),
-//                    Utils.getValueByTheme(R.drawable.ic_account_box_white_18dp, R.drawable.ic_account_box_black_18dp), 7));
-//            if (VozCache.instance().isSavedPreference(this.getBaseContext())) {
-//                VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_login_with_pref),
-//                        Utils.getValueByTheme(R.drawable.ic_assignment_ind_white_18dp, R.drawable.ic_assignment_ind_black_18dp), 8));
-//            }
-//        }
-
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home),R.drawable.home, 0));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.subscribe, 1));
@@ -133,6 +122,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             pinItemForumList.add(buildForumItem("Điểm báo", "33"));
             pinItemForumList.add(buildForumItem("Review sản phẩm", "27"));
             pinItemForumList.add(buildForumItem("From F17 with love", "145"));
+            pinItemForumList.add(buildForumItem("Mua và bán", "84"));
         }
 
         jsonForumString = prefs.getString("rightThreadPins", null);
@@ -173,11 +163,11 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     }
 
     protected NavDrawerItem buildThreadItem(String title, String threadId) {
-        return new NavDrawerItem(title, THREAD_URL_T + threadId, NavDrawerItem.THREAD);
+        return new NavDrawerItem(title, threadId, NavDrawerItem.THREAD);
     }
 
     protected NavDrawerItem buildForumItem(String forumName, String forumId) {
-        return new NavDrawerItem(forumName, FORUM_URL_F + forumId, NavDrawerItem.FORUM);
+        return new NavDrawerItem(forumName, forumId, NavDrawerItem.FORUM);
     }
 
     @Override
@@ -267,17 +257,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     }
 
     @Override
-    public void preProcess(int position, View convertView, Object... extra) {
-        // do nothing
-    }
-
-    @Override
-    public void postProcess(int position, View convertView, Object... extra) {
-        // do nothing
-
-    }
-
-    @Override
     public void lastBreath(Exception ex) {
         ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
         BugSenseHandler.sendException(ex);
@@ -302,6 +281,26 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         leftMenuAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void preProcess(int position, View convertView, Object... extra) {
+
+    }
+
+    @Override
+    public void postProcess(int position, View convertView, Object... extra) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        doOnResume();
+    }
+
+    protected void doOnResume() {
+        // do nothing
+    }
+
     /**
      * Slide menu item click listener
      */
@@ -318,6 +317,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         VozCache.instance().mNeoNavigationList.clear();
                         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
                             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        } else {
+                            refresh();
                         }
                         break;
                     case 1: // custom thread move
@@ -374,14 +375,22 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        doOnResume();
-    }
+    private class OnRightMenuForumItemClickListener implements AdapterView.OnItemClickListener {
+        final VozFragmentActivity activity;
+        public OnRightMenuForumItemClickListener(VozFragmentActivity vozFragmentActivity) {
+            activity = vozFragmentActivity;
+        }
 
-    protected void doOnResume() {
-        // do nothing
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            NavDrawerItem forumItem = VozCache.instance().pinItemForumList.get(position);
+            if(activity instanceof MainNeoActivity) {
+                ((MainNeoActivity) activity).onForumClicked(forumItem.id);
+            }
+            if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+        }
     }
 }
 

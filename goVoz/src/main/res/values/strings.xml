@@ -135,4 +135,5 @@
     <string name="left_menu_go_subcribe">Theo Dõi</string>
     <string name="rmenu">MENU</string>
     <string name="pm_list_title">DANH SÁCH TIN NHẮN</string>
+    <string name="error_thread_select_id">Xin vui lòng nhập số. Id thread là số.</string>
 </resources>

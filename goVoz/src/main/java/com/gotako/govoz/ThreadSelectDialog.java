@@ -14,7 +14,7 @@ public class ThreadSelectDialog extends AbstractNoBorderDialog {
         try {
             threadId = Integer.parseInt(param);
         } catch(NumberFormatException ex) {
-            Toast.makeText(activity, getResources().getString(R.string.error_forum_select_id), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getResources().getString(R.string.error_thread_select_id), Toast.LENGTH_SHORT).show();
             return;
         }
 

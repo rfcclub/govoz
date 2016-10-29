@@ -3,6 +3,8 @@
  */
 package com.gotako.govoz.data;
 
+import com.gotako.govoz.VozConstant;
+
 import java.io.Serializable;
 
 /**
@@ -14,14 +16,20 @@ public class NavDrawerItem implements Serializable {
 	public static int THREAD = 2;
 	public String title;
 	public String url;
+	public String id;
 	public int type;
 	
 	public NavDrawerItem() {}
 	
-	public NavDrawerItem(String title, String url, int type) {
+	public NavDrawerItem(String title, String id, int type) {
 		this.title = title;
-		this.url = url;
+		this.id = id;
 		this.type = type;
+		if(type == FORUM) {
+			url = VozConstant.FORUM_URL_F + id;
+		} else {
+			url = VozConstant.THREAD_URL_T + id;
+		}
 	}
 
 	@Override
