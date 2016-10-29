@@ -91,9 +91,9 @@
     <string name="left_menu_inbox">Hộp Thư</string>
     <string name="left_menu_search">Tìm Kiếm</string>
     <string name="left_menu_setting">Cài Đặt</string>
-    <string name="left_menu_exit">Thoát Chương Trình</string>
+    <string name="left_menu_exit">Thoát GoVoz</string>
     <string name="left_menu_login">Đăng nhập</string>
-    <string name="left_menu_login_with_pref">Đăng nhập tự động bằng thông tin đã lưu</string>
+    <string name="left_menu_login_with_pref">Đăng nhập bằng thông tin đã lưu</string>
     <string name="left_menu_logout">Đăng xuất</string>
     <string name="login_success">Đăng nhập thành công !</string>
     <string name="insert_avatar">Insert Icon</string>
@@ -136,4 +136,6 @@
     <string name="rmenu">MENU</string>
     <string name="pm_list_title">DANH SÁCH TIN NHẮN</string>
     <string name="error_thread_select_id">Xin vui lòng nhập số. Id thread là số.</string>
+    <string name="inbox_string">Hộp thư</string>
+    <string name="sent_items_string">Đã gửi</string>
 </resources>

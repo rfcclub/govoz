@@ -8,89 +8,100 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/frame_border_white"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
         tools:background="@drawable/frame_border_white"
-        >
+        android:layout_marginBottom="10dp">
 
-        <LinearLayout
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="center"
-                android:src="@drawable/post1"></ImageView>
-
-            <TextView
-                android:id="@+id/textReplies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
-                android:text="1234"
-                android:textAlignment="center"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:id="@+id/ripple"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:orientation="vertical"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
-                <TextView
-                    android:id="@+id/textPostUser"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.2"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        android:src="@drawable/post1"></ImageView>
+
+                    <TextView
+                        android:id="@+id/textReplies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="1234"
+                        android:textAlignment="center"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.6"
-                    android:gravity="left"
-                    android:text="textPostUser"
-                    android:textColor="@color/dark_jungle_green1"
-                    android:textSize="@dimen/thread_user_size"
-                    android:textStyle="normal|bold" />
-                <TextView
-                    android:id="@+id/textLastUpdate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:gravity="right"
-                    android:text="textPostTime"
-                    android:textColor="@color/dark_gray"
-                    android:textSize="@dimen/thread_extra_info_size" />
+                    android:layout_weight="0.8"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textPostUser"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.6"
+                            android:gravity="left"
+                            android:text="textPostUser"
+                            android:textColor="@color/dark_jungle_green1"
+                            android:textSize="@dimen/thread_user_size"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/textLastUpdate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:gravity="right"
+                            android:text="textPostTime"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="@dimen/thread_extra_info_size" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="@integer/titleSize"
+                        android:text="textTitle\ntyex"
+                        android:textColor="@color/dark_jungle_green2"
+                        android:textSize="@dimen/thread_title_size"
+                        android:textStyle="normal|bold" />
+
+                    <TextView
+                        android:id="@+id/textSubtile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="@integer/titleSize"
+                        android:text="textSubtile\ntyex"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="@dimen/thread_short_desc_size"
+                        android:visibility="invisible" />
+                </LinearLayout>
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/textTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="@integer/titleSize"
-                android:text="textTitle\ntyex"
-                android:textColor="@color/dark_jungle_green2"
-                android:textSize="@dimen/thread_title_size"
-                android:textStyle="normal|bold" />
-
-            <TextView
-                android:id="@+id/textSubtile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="@integer/titleSize"
-                android:text="textSubtile\ntyex"
-                android:textColor="@color/dark_gray"
-                android:textSize="@dimen/thread_short_desc_size"
-                android:visibility="invisible" />
-        </LinearLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
     </LinearLayout>
 </LinearLayout>

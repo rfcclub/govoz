@@ -2,6 +2,7 @@ package com.gotako.govoz;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 
@@ -60,27 +62,9 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         VozCache.instance().navigationList.clear();
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) {
-            doLoginAndGetVozForums();
+            getVozForums();
         } else {
             Toast.makeText(getActivity(), "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void doLoginAndGetVozForums() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
-        boolean autoLogin = false;
-        if (prefs.contains(VozConstant.USERNAME) && prefs.contains(VozConstant.PASSWORD)) {
-            // if not login so do login
-            if (VozCache.instance().getCookies() == null) {
-                String username = prefs.getString(VozConstant.USERNAME, "guest");
-                String password = prefs.getString(VozConstant.PASSWORD, "guest");
-                AutoLoginBackgroundService albs = new AutoLoginBackgroundService(getActivity());
-                albs.doLogin(username, password);
-            }
-        }
-
-        if (!autoLogin) {
-            getVozForums();
         }
     }
 
@@ -179,7 +163,7 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         ((TextView) subForumLayout.findViewById(R.id.textForumCode)).setText("f" + forumId);
         ((TextView) subForumLayout.findViewById(R.id.textForumName)).setText(forum.getForumName());
         ((TextView) subForumLayout.findViewById(R.id.textViewing)).setText(forum.getViewing());
-        subForumLayout.setOnClickListener(new View.OnClickListener() {
+        subForumLayout.findViewById(R.id.ripple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mListener != null) mListener.onForumClicked(forumId);

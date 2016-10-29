@@ -1,51 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearSubForumRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:id="@+id/linearSubForumRoot"
-    android:background="@drawable/frame_border_white_selector">
+    android:clickable="true">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_weight="0.2">
-
-    <TextView
-        android:text="f1"
-        android:layout_height="40dp"
-        android:layout_width="40dp"
-        android:id="@+id/textForumCode"
-        android:background="@drawable/round_background_gray"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:gravity="center_vertical|center_horizontal" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
+    <com.balysv.materialripple.MaterialRippleLayout
+        android:id="@+id/ripple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="0.8">
+        >
 
-        <TextView
-            android:text="Forum 1"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textForumName"
-            android:layout_weight="1"
-            android:textStyle="normal|bold"
-            android:textColor="@color/dark_jungle_green2" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:text="123 viewing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewing"
-            android:layout_weight="1"
-            android:textColor="@color/taupe_gray" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_weight="0.2"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/textForumCode"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/round_background_gray"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="f1"
+                    android:textAlignment="center"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.8"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textForumName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Forum 1"
+                    android:textColor="@color/dark_jungle_green2"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:id="@+id/textViewing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="123 viewing"
+                    android:textColor="@color/taupe_gray" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
 </LinearLayout>

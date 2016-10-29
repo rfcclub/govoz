@@ -38,13 +38,6 @@
                             android:layout_height="54dp"
                             android:scaleType="centerCrop"
                             android:src="@drawable/user_icon" />
-                        <!--<ImageView-->
-                        <!--android:id="@+id/avatarBackground"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@color/transparent"-->
-                        <!--android:background="@drawable/circle_border" />-->
                 </LinearLayout>
 
                 <LinearLayout

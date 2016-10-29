@@ -74,24 +74,51 @@
                 android:gravity="center_vertical"
                 android:background="@color/liver">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/loginLink"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.5"
+                    android:layout_weight="50"
                     android:layout_marginTop="1dp"
-                    android:background="@color/taupe"
-                    android:text="@string/yourPosts"
+                    android:background="@drawable/left_menu_selector"
+                    android:text="@string/left_menu_login"
                     android:textSize="13.0sp"
                     android:gravity="center_vertical|center_horizontal"
                     />
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/preLoginLink"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="50"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:background="@drawable/left_menu_selector"
+                    android:text="@string/left_menu_login_with_pref"
+                    android:textSize="13.0sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:id="@+id/yourPosts"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/left_menu_selector"
+                    android:text="@string/yourPosts"
+                    android:textSize="13.0sp"
+                    android:visibility="gone"
+                    android:gravity="center_vertical|center_horizontal"
+                    />
+                <TextView
+                    android:id="@+id/yourThreads"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:layout_marginTop="1dp"
                     android:layout_marginLeft="1dp"
-                    android:background="@color/taupe"
+                    android:background="@drawable/left_menu_selector"
                     android:text="@string/yourThreads"
                     android:textSize="13.0sp"
+                    android:visibility="gone"
                     android:gravity="center_vertical|center_horizontal"
                     />
             </LinearLayout>
@@ -103,6 +130,39 @@
                 android:divider="@color/list_divider"
                 android:dividerHeight="1dp"
                 />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/bottomLayout"
+                >
+                <TextView
+                    android:id="@+id/exitLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/left_menu_exit"
+                    android:textSize="13.0sp"
+                    android:background="@drawable/left_bottom_link_selector"
+                    android:gravity="left|bottom"
+                    android:layout_gravity="bottom"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:id="@+id/logoutLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="@string/left_menu_logout"
+                    android:textSize="13.0sp"
+                    android:background="@drawable/left_bottom_link_selector"
+                    android:gravity="right|bottom"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_gravity="bottom"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

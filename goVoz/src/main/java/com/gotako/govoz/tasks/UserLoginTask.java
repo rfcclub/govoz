@@ -63,7 +63,8 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 				hasLogged = true;
 			}
 			if (hasLogged) {
-				VozCache.instance().setCookies(conn.response().cookies());				 
+				VozCache.instance().setCookies(conn.response().cookies());
+				VozCache.instance().milliSeconds = System.currentTimeMillis();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

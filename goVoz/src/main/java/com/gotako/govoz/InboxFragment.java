@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.gotako.govoz.data.PrivateMessage;
 import com.gotako.govoz.tasks.PMDownloadTask;
 
@@ -43,16 +46,23 @@ public class InboxFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadPrivateMessages();
+
+        loadPrivateMessages(0);
     }
 
-    private void loadPrivateMessages() {
+    private void loadPrivateMessages(int folderId) {
         PMDownloadTask task = new PMDownloadTask(this);
-        String pmHttpsLink = VOZ_LINK + "/" + "private.php";
+        String pmHttpsLink = VOZ_LINK + "/" + "private.php?s=&pp=50&folderid=" + String.valueOf(folderId);
         // load threads for forum
         task.setShowProcessDialog(true);
         task.setContext(getActivity());
         task.execute(pmHttpsLink);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadPrivateMessages(0);
     }
 
     @Override
@@ -69,11 +79,19 @@ public class InboxFragment extends Fragment implements
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
         parent.removeAllViews();
-        LinearLayout pmLayout = (LinearLayout) layoutInflater.inflate(R.layout.inbox_pm_item, null);
-        LinearLayout threadsPlaceholder = (LinearLayout) pmLayout.findViewById(R.id.linearThreads);
 
+        LinearLayout pmLayout = (LinearLayout) layoutInflater.inflate(R.layout.inbox_pm_item, null);
+        pmLayout.findViewById(R.id.inbox).setOnClickListener((view) -> {
+            loadPrivateMessages(0);
+        });
+        pmLayout.findViewById(R.id.sentitems).setOnClickListener((view) -> {
+            loadPrivateMessages(-1);
+        });
+        LinearLayout threadsPlaceholder = (LinearLayout) pmLayout.findViewById(R.id.linearThreads);
+        threadsPlaceholder.removeAllViews();
         // pm insertion
         for (PrivateMessage thread : mPMList) {
+
             View view = createPM(thread, layoutInflater);
             threadsPlaceholder.addView(view);
         }
@@ -88,11 +106,8 @@ public class InboxFragment extends Fragment implements
         ((TextView)threadLayout.findViewById(R.id.pmSender)).setText(thread.pmSender);
         ((TextView)threadLayout.findViewById(R.id.pmTitle)).setText(thread.pmTitle);
         ((TextView)threadLayout.findViewById(R.id.pmDate)).setText(thread.pmDate);
-        threadLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) mListener.onPMClicked(thread.pmLink);
-            }
+        threadLayout.findViewById(R.id.ripple).setOnClickListener(v -> {
+            if (mListener != null) mListener.onPMClicked(thread.pmLink);
         });
         return threadLayout;
     }
@@ -123,4 +138,6 @@ public class InboxFragment extends Fragment implements
 
         void onPMClicked(String pmLink);
     }
+
+
 }

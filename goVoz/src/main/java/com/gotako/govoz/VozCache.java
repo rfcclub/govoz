@@ -47,6 +47,8 @@ public class VozCache {
 	private Map<String, Object> forumCache = null;
 	public List<String> navigationList;
 	public List<NavigationItem> mNeoNavigationList;
+	public long milliSeconds;
+
 	private VozCache() {
 		cookies = null;
 		final int cacheSize = 1024 * 1024 * 20;

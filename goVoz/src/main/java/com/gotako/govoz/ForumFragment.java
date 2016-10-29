@@ -208,7 +208,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
         } else {
             subForumLayout.findViewById(R.id.textViewing).setVisibility(View.GONE);
         }
-        subForumLayout.setOnClickListener(new View.OnClickListener() {
+        subForumLayout.findViewById(R.id.ripple).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) mListener.onForumClicked(forumId);
@@ -228,11 +228,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
             if (thread.isSticky()) { // set red background for text
                 titleText = "<b><font color=\"red\">" + titleText + "</font></b>";
             } else {
-                if (VozConfig.instance().isDarkTheme()) {
-                    titleText = "<b><font color=\"#e7e7e7\">" + titleText + "</font></b>";
-                } else {
-                    titleText = "<b><font color=\"#23497C\">" + titleText + "</font></b>";
-                }
+                titleText = "<b><font color=\"#262626\">" + titleText + "</font></b>";
             }
         }
         title.setText(Html.fromHtml(titleText));
@@ -255,7 +251,7 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
         ((TextView) threadLayout.findViewById(R.id.textLastUpdate)).setText(thread.getLastUpdate());
         ((TextView) threadLayout.findViewById(R.id.textReplies)).setText(thread.replies);
         if(!thread.isDeleted()) {
-            threadLayout.setOnClickListener(new View.OnClickListener() {
+            threadLayout.findViewById(R.id.ripple).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(mListener != null) {

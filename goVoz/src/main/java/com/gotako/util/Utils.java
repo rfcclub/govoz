@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -178,5 +179,9 @@ public class Utils {
         else if(url.endsWith("jpeg")) return "image/jpeg";
         else if(url.endsWith("bmp")) return "image/bmp";
         else return "image/jpeg";
+    }
+
+    public static long convertToMinutes(long l) {
+        return TimeUnit.MILLISECONDS.toMinutes(l);
     }
 }

@@ -28,6 +28,9 @@ android {
         applicationId "com.gotako.govoz"
         minSdkVersion 14
         targetSdkVersion 16
+        jackOptions {
+            enabled true
+        }
     }
 
     buildTypes {
@@ -55,6 +58,10 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -75,4 +82,5 @@ dependencies {
     compile 'com.squareup.okio:okio:1.9.0'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.balysv:material-ripple:1.0.2'
 }

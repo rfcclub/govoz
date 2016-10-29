@@ -1,33 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/linearRoot"
-    android:background="@color/medium_jungle_green">
+    android:background="@color/medium_jungle_green"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="5"
+            android:text="@string/inbox_string" />
+
+        <Button
+            android:id="@+id/sentitems"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="5"
+            android:text="@string/sent_items_string" />
+    </LinearLayout>
 
     <TextView
-        android:text="@string/pm_list_title"
+        android:id="@+id/textThreadsTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textThreadsTitle"
         android:height="40dp"
-        android:paddingLeft="5dp"
         android:gravity="center_vertical"
-        android:paddingTop="5dp"
         android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/pm_list_title"
         android:textAllCaps="true"
         android:textColor="@color/white"
         tools:text="@string/pm_list_title" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/linearThreads"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        >
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearThreads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical"></LinearLayout>
 </LinearLayout>

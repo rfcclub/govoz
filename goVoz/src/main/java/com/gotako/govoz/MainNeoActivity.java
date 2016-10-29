@@ -1,15 +1,20 @@
 package com.gotako.govoz;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.gotako.govoz.data.Thread;
+import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
 
@@ -20,9 +25,12 @@ import static com.gotako.govoz.VozConstant.VOZ_LINK;
 public class MainNeoActivity extends VozFragmentActivity
         implements MainFragment.OnFragmentInteractionListener,
         ForumFragment.OnFragmentInteractionListener,
-        ThreadFragment.OnFragmentInteractionListener {
+        ThreadFragment.OnFragmentInteractionListener,
+        InboxFragment.OnFragmentInteractionListener,
+        InboxDetailFragment.OnFragmentInteractionListener {
 
     protected Fragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,17 @@ public class MainNeoActivity extends VozFragmentActivity
         VozCache.instance().setCanShowReplyMenu(false);
         VozConfig config = VozConfig.instance();
         config.load(this);
+
+        SharedPreferences prefs = getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
+        if (prefs.contains(VozConstant.USERNAME) && prefs.contains(VozConstant.PASSWORD)) {
+            // if not login so do login
+            if (VozCache.instance().getCookies() == null) {
+                String username = prefs.getString(VozConstant.USERNAME, "guest");
+                String password = prefs.getString(VozConstant.PASSWORD, "guest");
+                AutoLoginBackgroundService albs = new AutoLoginBackgroundService(this);
+                albs.doLogin(username, password);
+            }
+        }
 
         if (findViewById(R.id.frame_container) != null) {
             if (savedInstanceState != null) return;
@@ -82,6 +101,20 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     @Override
+    protected void doInbox() {
+        String pmHttpsLink = VOZ_LINK + "/" + "private.php";
+        NavigationItem item = new NavigationItem(pmHttpsLink, NavigationItem.INBOX);
+        VozCache.instance().mNeoNavigationList.add(item);
+        InboxFragment inboxFragment = InboxFragment.newInstance();
+        mFragment = inboxFragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, inboxFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
     public void onOutsideLinkClicked(String postLink) {
 
     }
@@ -117,8 +150,8 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void updateNavigationPanel(boolean visible) {
-        SegmentedGroup navigationGroup = (SegmentedGroup)findViewById(R.id.navigation_group);
-        if(navigationGroup == null) return;
+        SegmentedGroup navigationGroup = (SegmentedGroup) findViewById(R.id.navigation_group);
+        if (navigationGroup == null) return;
         navigationGroup.removeAllViews();
         if (visible) {
             NavigationItem item = VozCache.instance().currentNavigateItem();
@@ -188,20 +221,36 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     private void goToPage(int page) {
-        if(mFragment instanceof PageNavigationListener) {
+        if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goToPage(page);
         }
     }
 
     private void goLast() {
-        if(mFragment instanceof PageNavigationListener) {
+        if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goLast();
         }
     }
 
     private void goFirst() {
-        if(mFragment instanceof PageNavigationListener) {
+        if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goFirst();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        long currentTimeMillies = System.currentTimeMillis();
+        if (Utils.convertToMinutes(currentTimeMillies - VozCache.instance().milliSeconds) >= 30) {
+            if(VozCache.instance().isLoggedIn()) {
+                VozCache.instance().setCookies(null);
+            }
+            if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        } else {
+            if (mFragment != null) mFragment.onResume();
         }
     }
 
@@ -212,12 +261,30 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             VozCache.instance().removeLastNavigationLink();
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
         overridePendingTransition(R.animator.left_slide_in_half, R.animator.right_slide_out);
+    }
+
+    @Override
+    public void onPMClicked(String pmLink) {
+        NavigationItem item = new NavigationItem(VozConstant.VOZ_LINK + "/" + pmLink, NavigationItem.INBOX_DETAIL);
+        VozCache.instance().mNeoNavigationList.add(item);
+        InboxDetailFragment inboxFragment = InboxDetailFragment.newInstance();
+        mFragment = inboxFragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, inboxFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onLinkClick(String link) {
+
     }
 }

@@ -275,6 +275,7 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
             post.setContent(utfContent);
             webView.getSettings().setBuiltInZoomControls(false);
             webView.getSettings().setSupportZoom(false);
+
             webView.setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.voz_back_color)));
             try {
                 TaskHelper.disableSSLCertCheck();
@@ -337,10 +338,6 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
             TextView posted = (TextView) view.findViewById(R.id.posted);
             posted.setText(post.getPosted());
 
-//            // subtitle
-//            final TextView subTitle = (TextView) view
-//                    .findViewById(R.id.subTitle);
-//            subTitle.setText(post.getSubTitle());
 
             postsPlaceHolder.addView(view);
 

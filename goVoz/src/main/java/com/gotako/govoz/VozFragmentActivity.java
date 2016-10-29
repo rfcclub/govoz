@@ -57,7 +57,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
         mRightForumList.setOnItemClickListener(new OnRightMenuForumItemClickListener(this));
-        mRightLinkList.setOnItemClickListener(new OnThreadItemClickListener(this));
+        mRightLinkList.setOnItemClickListener(new OnRightMenuThreadItemClickListener(this));
     }
 
     /*
@@ -97,13 +97,14 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_home),R.drawable.home, 0));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_thread), R.drawable.subscribe, 1));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_forum), R.drawable.subscribe, 2));
-        VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_subcribe), R.drawable.subscribe, 11));
+        // VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_go_subcribe), R.drawable.subscribe, 11));
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_inbox), R.drawable.message, 3));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_search), R.drawable.search, 4));
         VozCache.instance().menuItemList.add(new VozMenuItem("-", -1, -1));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_setting), R.drawable.settings, 5));
         VozCache.instance().menuItemList.add(new VozMenuItem(Utils.getString(this, R.string.left_menu_aboutus), R.drawable.aboutus, 10));
+
     }
 
     @Override
@@ -135,7 +136,16 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             pinItemThreadList.add(buildThreadItem("Bóng đá VIỆT NAM (Tất cả vào đây)", "3925224"));
             pinItemThreadList.add(buildThreadItem("Mục lục - Danh sách các bài viết có giá trị tham khảo của box review", "123078"));
         }
-
+        findViewById(R.id.loginLink).setOnClickListener((view)-> {doLogin();});
+        findViewById(R.id.logoutLink).setOnClickListener((view) -> {doLogout();});
+        findViewById(R.id.preLoginLink).setOnClickListener((view) -> { doLoginWithPreset();});
+        findViewById(R.id.exitLink).setOnClickListener((view) -> {
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                VozFragmentActivity.this.finishAffinity();
+            } else {
+                VozFragmentActivity.this.finish();
+            }
+        });
     }
 
     @Override
@@ -264,15 +274,33 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     public void doAfterLogout(boolean result) {
+
         if (result) {
             refreshLeftMenu();
             refresh();
         }
+        refreshLinks();
     }
 
     public void doAfterAutoLogin() {
         refreshLeftMenu();
+        refreshLinks();
+    }
 
+    private void refreshLinks() {
+        if(VozCache.instance().isLoggedIn()) {
+            findViewById(R.id.loginLink).setVisibility(View.GONE);
+            findViewById(R.id.preLoginLink).setVisibility(View.GONE);
+            findViewById(R.id.yourPosts).setVisibility(View.VISIBLE);
+            findViewById(R.id.yourThreads).setVisibility(View.VISIBLE);
+            findViewById(R.id.logoutLink).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.loginLink).setVisibility(View.VISIBLE);
+            findViewById(R.id.preLoginLink).setVisibility(View.VISIBLE);
+            findViewById(R.id.yourPosts).setVisibility(View.GONE);
+            findViewById(R.id.yourThreads).setVisibility(View.GONE);
+            findViewById(R.id.logoutLink).setVisibility(View.GONE);
+        }
     }
 
     private void refreshLeftMenu() {
@@ -335,35 +363,20 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         break;
                     case 3: // go to inbox
                         if(VozCache.instance().isLoggedIn()) {
-                            String pmHttpsLink = VOZ_LINK + "/" + "private.php";
-                            VozCache.instance().navigationList.add(pmHttpsLink);
-                            Intent intentInbox = new Intent(VozFragmentActivity.this, InboxActivity.class);
-                            VozFragmentActivity.this.startActivity(intentInbox);
+//                            String pmHttpsLink = VOZ_LINK + "/" + "private.php";
+//                            VozCache.instance().navigationList.add(pmHttpsLink);
+//                            Intent intentInbox = new Intent(VozFragmentActivity.this, InboxActivity.class);
+//                            VozFragmentActivity.this.startActivity(intentInbox);
+                            doInbox();
                         } else {
                             Toast.makeText(VozFragmentActivity.this, getResources().getString(R.string.error_not_login_go_inbox), Toast.LENGTH_SHORT).show();
                         }
                         break;
-                    case 4:
+                    case 4: // search
                         break;
                     case 5: // go to setting
                         Intent intent1 = new Intent(VozFragmentActivity.this, SettingActivity.class);
                         VozFragmentActivity.this.startActivity(intent1);
-                        break;
-                    case 6:
-                        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                            VozFragmentActivity.this.finishAffinity();
-                        } else {
-                            VozFragmentActivity.this.finish();
-                        }
-                        break;
-                    case 7:
-                        doLogin();
-                        break;
-                    case 8:
-                        doLoginWithPreset();
-                        break;
-                    case 9:
-                        doLogout();
                         break;
                     default:
                         break;
@@ -373,6 +386,10 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                 }
             }
         }
+    }
+
+    protected void doInbox() {
+        // do nothing
     }
 
     private class OnRightMenuForumItemClickListener implements AdapterView.OnItemClickListener {
@@ -386,6 +403,24 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             NavDrawerItem forumItem = VozCache.instance().pinItemForumList.get(position);
             if(activity instanceof MainNeoActivity) {
                 ((MainNeoActivity) activity).onForumClicked(forumItem.id);
+            }
+            if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
+                mDrawerLayout.closeDrawer(Gravity.RIGHT);
+            }
+        }
+    }
+
+    private class OnRightMenuThreadItemClickListener implements AdapterView.OnItemClickListener {
+        final VozFragmentActivity activity;
+        public OnRightMenuThreadItemClickListener(VozFragmentActivity vozFragmentActivity) {
+            activity = vozFragmentActivity;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            NavDrawerItem threadItem = VozCache.instance().pinItemThreadList.get(position);
+            if(activity instanceof MainNeoActivity) {
+                ((MainNeoActivity) activity).goToThreadId(Integer.parseInt(threadItem.id), threadItem.url);
             }
             if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
                 mDrawerLayout.closeDrawer(Gravity.RIGHT);
