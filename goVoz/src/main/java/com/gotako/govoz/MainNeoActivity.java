@@ -260,6 +260,15 @@ public class MainNeoActivity extends VozFragmentActivity
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             VozCache.instance().mNeoNavigationList.clear();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } else {
+            if(mFragment instanceof InboxFragment || mFragment instanceof InboxDetailFragment) {
+                MainFragment mainFragment = MainFragment.newInstance();
+                mFragment = mainFragment;
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_container, mainFragment)
+                        .commit();
+            }
         }
 
     }
