@@ -53,7 +53,7 @@ import static com.gotako.govoz.VozConstant.VOZ_SIGN;
  * Use the {@link ThreadFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ThreadFragment extends Fragment  implements ActivityCallback<Post>, View.OnLongClickListener, PageNavigationListener {
+public class ThreadFragment extends VozFragment  implements ActivityCallback<Post>, View.OnLongClickListener, PageNavigationListener {
 
     private OnFragmentInteractionListener mListener;
     private int mThreadId;
@@ -477,11 +477,8 @@ public class ThreadFragment extends Fragment  implements ActivityCallback<Post>,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        ((MainNeoActivity)getActivity()).mFragment = this;
+    protected void doRefresh() {
         getThreads();
-
     }
 
     /**

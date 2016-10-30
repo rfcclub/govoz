@@ -33,7 +33,8 @@ public class UserLogoutTask extends AsyncTask<String, Integer, Boolean> {
 										VozCache.instance().getSecurityToken()) 
 					            .post();
 			VozCache.instance().setCookies(null);
-			VozCache.instance().setSecurityToken("guest");			
+			VozCache.instance().setSecurityToken("guest");
+			VozCache.instance().setUserId("guest");
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();

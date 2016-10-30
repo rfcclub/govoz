@@ -2,6 +2,7 @@ package com.gotako.govoz;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -241,17 +242,26 @@ public class MainNeoActivity extends VozFragmentActivity
     @Override
     protected void onResume() {
         super.onResume();
-        long currentTimeMillies = System.currentTimeMillis();
-        if (Utils.convertToMinutes(currentTimeMillies - VozCache.instance().milliSeconds) >= 30) {
-            if(VozCache.instance().isLoggedIn()) {
-                VozCache.instance().setCookies(null);
-            }
-            if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
-        } else {
-            if (mFragment != null) mFragment.onResume();
+    }
+
+    public void doResumeChecking() {
+        long currentMillis = System.currentTimeMillis();
+        boolean needReload = false;
+        if ((Utils.convertToMinutes(currentMillis - VozCache.instance().milliSeconds) >= 20)
+            || (VozCache.instance().mNeoNavigationList.size() == 0 && mFragment != null && !(mFragment instanceof MainFragment))) {
+            VozCache.instance().setCookies(null);
+            VozCache.instance().setUserId("guest");
+            refreshLinks();
+            reloadActivity();
         }
+    }
+
+    private void reloadActivity() {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            VozCache.instance().mNeoNavigationList.clear();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
     }
 
     @Override

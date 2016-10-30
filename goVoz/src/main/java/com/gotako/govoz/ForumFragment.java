@@ -30,7 +30,7 @@ import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
  * Use the {@link ForumFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForumFragment extends Fragment implements ActivityCallback<Thread>, PageNavigationListener {
+public class ForumFragment extends VozFragment implements ActivityCallback<Thread>, PageNavigationListener {
     private OnFragmentInteractionListener mListener;
 
     private List<Forum> mForums;
@@ -140,6 +140,11 @@ public class ForumFragment extends Fragment implements ActivityCallback<Thread>,
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    protected void doRefresh() {
+        processNavigationLink();
     }
 
     @Override

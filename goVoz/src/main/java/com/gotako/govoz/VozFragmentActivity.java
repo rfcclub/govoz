@@ -17,6 +17,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -287,19 +288,21 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         refreshLinks();
     }
 
-    private void refreshLinks() {
+    protected void refreshLinks() {
         if(VozCache.instance().isLoggedIn()) {
             findViewById(R.id.loginLink).setVisibility(View.GONE);
             findViewById(R.id.preLoginLink).setVisibility(View.GONE);
             findViewById(R.id.yourPosts).setVisibility(View.VISIBLE);
             findViewById(R.id.yourThreads).setVisibility(View.VISIBLE);
             findViewById(R.id.logoutLink).setVisibility(View.VISIBLE);
+            ((TextView)findViewById(R.id.loggedInUser)).setText(VozCache.instance().getUserId());
         } else {
             findViewById(R.id.loginLink).setVisibility(View.VISIBLE);
             findViewById(R.id.preLoginLink).setVisibility(View.VISIBLE);
             findViewById(R.id.yourPosts).setVisibility(View.GONE);
             findViewById(R.id.yourThreads).setVisibility(View.GONE);
             findViewById(R.id.logoutLink).setVisibility(View.GONE);
+            ((TextView)findViewById(R.id.loggedInUser)).setText(VozCache.instance().GUEST);
         }
     }
 

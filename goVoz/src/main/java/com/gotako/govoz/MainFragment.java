@@ -31,7 +31,7 @@ import java.util.Map;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment implements ActivityCallback<Forum> {
+public class MainFragment extends VozFragment implements ActivityCallback<Forum> {
 
     private OnFragmentInteractionListener mListener;
     // private Map<Integer, Forum> mForumGroups;
@@ -66,6 +66,11 @@ public class MainFragment extends Fragment implements ActivityCallback<Forum> {
         } else {
             Toast.makeText(getActivity(), "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void doRefresh() {
+        getVozForums();
     }
 
     private void getVozForums() {

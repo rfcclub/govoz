@@ -27,7 +27,7 @@ import static com.gotako.govoz.VozConstant.VOZ_LINK;
  * Use the {@link InboxFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class InboxFragment extends Fragment implements
+public class InboxFragment extends VozFragment implements
         ActivityCallback<PrivateMessage> {
 
     private InboxFragment.OnFragmentInteractionListener mListener;
@@ -60,8 +60,7 @@ public class InboxFragment extends Fragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void doRefresh() {
         loadPrivateMessages(0);
     }
 
