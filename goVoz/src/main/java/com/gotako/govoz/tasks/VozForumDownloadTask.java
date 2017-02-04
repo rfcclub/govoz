@@ -30,6 +30,9 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 		subforums = TaskHelper.parseSubForum(document);
 		Element title = document.select("title").first();
 		forumName = title.text().trim();
+		if(forumName.endsWith("- vozForums")) {
+			forumName = forumName.substring(0, forumName.length() - 11);
+		}
 		Elements selected = document.select("table[id=threadslist]");
 		if (selected.size() == 0)
 			return listThreads;

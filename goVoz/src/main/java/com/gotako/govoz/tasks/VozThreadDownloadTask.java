@@ -36,6 +36,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		List<Post> posts = new ArrayList<Post>();
 		Element title = document.select("title").first();
 		threadName = title.text().trim();
+		if(threadName.endsWith("- vozForums")) {
+			threadName = threadName.substring(0, threadName.length() - 11);
+		}
         Element errorElement = Utils.getFirstElement(document.select("td[class=tcat]"));
 		if(errorElement != null && errorElement.text().contains("vBulletin Message")) {
             errorMessage = Utils.getFirstElement(document.select("div[style=margin: 10px]")).text();
