@@ -46,21 +46,20 @@
                     android:layout_weight="0.8"
                     android:orientation="vertical"
                     android:paddingBottom="5dp"
+                    android:paddingRight="1dp"
                     android:paddingTop="5dp">
-
-                    <GridLayout
-                        android:id="@+id/gridUserPanel"
+                    <LinearLayout
+                        android:id="@+id/infoRow1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:columnCount="2"
-                        android:rowCount="3">
-
+                        android:orientation="horizontal"
+                        >
                         <TextView
                             android:id="@+id/user"
                             android:layout_gravity="left"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7"
                             android:text="user"
                             android:textColor="@color/dark_jungle_green2"
                             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -70,18 +69,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginRight="5dp"
+                            android:gravity="right"
+                            android:layout_weight="0.3"
                             android:text="postDate"
                             android:textColor="@color/taupe_gray"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
-
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/infoRow2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
                         <TextView
                             android:id="@+id/rank"
                             android:layout_gravity="left"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.6"
                             android:text="rank"
                             android:textColor="@color/taupe_gray"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -89,16 +94,26 @@
                         <TextView
                             android:id="@+id/joinDate"
                             android:layout_gravity="right"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginRight="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:gravity="right"
                             android:text="joinDate"
                             android:textColor="@color/taupe_gray"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
-
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/infoRow3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
                         <TextView
                             android:id="@+id/posted"
                             android:layout_gravity="left"
-                            android:layout_marginLeft="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.6"
                             android:text="posted"
                             android:textColor="@color/taupe_gray"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -106,11 +121,14 @@
                         <TextView
                             android:id="@+id/postCount"
                             android:layout_gravity="right"
-                            android:layout_marginRight="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.4"
+                            android:gravity="right"
                             android:text="postCount"
                             android:textColor="@color/taupe_gray"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
-                    </GridLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

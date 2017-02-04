@@ -138,8 +138,9 @@ public class MainNeoActivity extends VozFragmentActivity
         VozCache.instance().setCurrentThread(threadId);
         VozCache.instance().setCurrentThreadPage(1);
 
-        NavigationItem forumItem = new NavigationItem(threadUrl, NavigationItem.THREAD);
-        VozCache.instance().mNeoNavigationList.add(forumItem);
+        NavigationItem threadItem = new NavigationItem(threadUrl, NavigationItem.THREAD);
+        VozCache.instance().addNavigationItem(threadItem);
+        threadItem.mCurrentPage = 1;
         ThreadFragment threadFragment = ThreadFragment.newInstance();
         mFragment = threadFragment;
         getSupportFragmentManager()
@@ -244,7 +245,10 @@ public class MainNeoActivity extends VozFragmentActivity
         super.onResume();
     }
 
-    public void doResumeChecking() {
+    /*
+     * This method has error, need review
+     */
+    private void doResumeChecking() {
         long currentMillis = System.currentTimeMillis();
         boolean needReload = false;
         if ((Utils.convertToMinutes(currentMillis - VozCache.instance().milliSeconds) >= 20)

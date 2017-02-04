@@ -6,6 +6,7 @@ package com.gotako.govoz;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
+import android.util.SparseArray;
 
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
@@ -208,5 +209,9 @@ public class VozCache {
 
 	public NavigationItem currentNavigateItem() {
 		return mNeoNavigationList.get(mNeoNavigationList.size() - 1);
+	}
+
+	public void addNavigationItem(NavigationItem navItem) {
+		mNeoNavigationList.add(navItem);
 	}
 }

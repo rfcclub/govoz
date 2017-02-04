@@ -10,7 +10,6 @@ public class VozFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ((MainNeoActivity)getActivity()).doResumeChecking();
         doRefresh();
     }
 

@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -107,6 +108,9 @@ public class ThreadFragment extends VozFragment  implements ActivityCallback<Pos
     }
 
     private void getThreads() {
+        if (VozCache.instance().currentNavigateItem().mCurrentPage < 1) {
+            VozCache.instance().currentNavigateItem().mCurrentPage = 1;
+        }
         getThreads(false, VozCache.instance().getCurrentThread(), VozCache.instance().currentNavigateItem().mCurrentPage);
     }
 
@@ -248,8 +252,7 @@ public class ThreadFragment extends VozFragment  implements ActivityCallback<Pos
                 utfContent = new String(post.getContent().getBytes("UTF-8"))
                         .replace("\r", "").replace("\n", "");
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.d("DEBUG", "UnsupportedEncodingException", e);
             }
 
             Display display = getActivity().getWindowManager().getDefaultDisplay();

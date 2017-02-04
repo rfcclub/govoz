@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import com.gotako.gofast.ReactiveCollectionField;
 import com.gotako.gofast.annotation.BindingCollection;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.Thread;
-import com.gotako.govoz.tasks.VozForumDownloadTask;
 import com.gotako.govoz.tasks.VozForumSearchTask;
 import com.gotako.util.Utils;
 
@@ -37,7 +35,6 @@ import info.hoang8f.android.segment.SegmentedGroup;
 import static com.gotako.govoz.VozConstant.FORUM_POSITION;
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
-import static com.gotako.govoz.VozConstant.SUB_FORUMS;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class SearchActivity extends VozFragmentActivity implements

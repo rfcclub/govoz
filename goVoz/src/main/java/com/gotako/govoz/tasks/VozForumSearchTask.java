@@ -1,11 +1,14 @@
 package com.gotako.govoz.tasks;
 
+import android.util.Log;
+
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.Thread;
 import com.gotako.util.Utils;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -26,14 +29,39 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 
 	@Override
 	protected List<Thread> doInBackgroundInternal(String[] params) {
-		// TODO do the search
-		return null;
+		String searchString = params[0];
+		String showPost = params[1];
+		List<Thread> result = new ArrayList<Thread>();
+		try {
+			TaskHelper.disableSSLCertCheck();
+			Document document =  Jsoup.connect("https://vozforums.com/search.php?do=process")
+					.timeout(20000).cookies(VozCache.instance().getCookies())
+					.data("s", " ")
+					.data("securitytoken", VozCache.instance().getSecurityToken())
+					.data("do", "process")
+					.data("query", searchString)
+					.data("showposts", showPost)
+					.data("quicksearch", "1")
+					.data("childforums", "1")
+					.data("exactname", "1")
+					.execute()
+					.parse();
+
+			result = processResult(document);
+			afterDownload(document);
+		} catch (Exception e) {
+			Log.e("VozForumSearchTask", e.getMessage(), e);
+			processError(e);
+		}
+		mRetries -= 1;
+		return result;
 	}
 
 	@Override
 	public List<Thread> processResult(Document document) {
 		List<Thread> listThreads = new ArrayList<Thread>();
-		subforums = TaskHelper.parseSubForum(document);
+		// search result does not contains subforums
+		// subforums = TaskHelper.parseSubForum(document);
 		Element title = document.select("title").first();
 		forumName = title.text().trim();
 		Elements selected = document.select("table[id=threadslist]");
