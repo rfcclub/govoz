@@ -24,15 +24,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:inputType="number"
-            android:textSize="16sp" >
+            android:layout_marginBottom="5dp"
+            android:textSize="16sp"
+            android:inputType="text">
 
             <requestFocus />
         </EditText>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            >
+
+            <RadioButton
+                android:text="@string/show_threads_seach"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rdoShowThreads"
+                android:layout_weight="1" />
+s
+            <RadioButton
+                android:text="@string/show_posts_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rdoShowPosts"
+                android:layout_weight="1" />
+
+        </RadioGroup>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
             >
             <Button
                 android:id="@+id/btnGo"
@@ -41,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:text="@string/select_page_goto_page" />
+                android:text="@string/quick_search" />
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="80dp"
@@ -50,6 +74,21 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="@string/select_page_cancel" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            >
+            <Button
+                android:id="@+id/btnAdvanceSearch"
+                android:layout_width="80dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="@string/advance_search" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

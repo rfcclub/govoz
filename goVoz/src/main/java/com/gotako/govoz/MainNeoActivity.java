@@ -310,4 +310,8 @@ public class MainNeoActivity extends VozFragmentActivity
     public void onLinkClick(String link) {
 
     }
+
+    public void quickSearch(String searchString, String showPosts) {
+
+    }
 }

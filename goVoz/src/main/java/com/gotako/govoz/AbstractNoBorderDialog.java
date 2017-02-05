@@ -52,11 +52,6 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
 
         final View view = inflater.inflate(R.layout.select_page_layout, container);
 
-        /* DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
-        getDialog().getWindow().setLayout((int) (width * 0.65), 440);*/
-
         editText = (EditText) view.findViewById(R.id.txtSearchString);
 
         ((TextView) view.findViewById(R.id.txtTitle)).setText(title);
@@ -81,7 +76,7 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
         return view;
     }
 
-    public abstract void doOkAction(String param);
+    public abstract void doOkAction(String... param);
 
 
 
@@ -103,7 +98,7 @@ public abstract class AbstractNoBorderDialog extends android.support.v7.app.AppC
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int width = displaymetrics.widthPixels;
 
-        lp.width = (int) (width * 0.65);
+        lp.width = (int) (width * 0.9);
         getDialog().getWindow().setAttributes(lp);
     }
 

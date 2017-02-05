@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,8 +169,7 @@ public class InboxDetailFragment extends VozFragment implements
             try {
                 utfContent = new String(post.content.getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Log.d("DEBUG", "UnsupportedEncodingException", e);
             }
 
             Display display = getActivity().getWindowManager().getDefaultDisplay();

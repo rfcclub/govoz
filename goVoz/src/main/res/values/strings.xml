@@ -138,4 +138,8 @@
     <string name="error_thread_select_id">Xin vui lòng nhập số. Id thread là số.</string>
     <string name="inbox_string">Hộp thư</string>
     <string name="sent_items_string">Đã gửi</string>
+    <string name="quick_search">TÌM KIẾM</string>
+    <string name="show_threads_seach">Show Threads</string>
+    <string name="show_posts_search">Show Posts</string>
+    <string name="advance_search">TÌM KIẾM NÂNG CAO</string>
 </resources>

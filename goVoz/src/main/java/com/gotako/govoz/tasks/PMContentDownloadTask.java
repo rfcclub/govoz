@@ -45,7 +45,8 @@ public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageCo
             }
             Element tr3 = Utils.getElementAt(trs, 2);
             if (tr3 != null) {
-                privateMessage.content = Utils.getFirstElement(tr3.select("div[class=voz-post-message]")).text();
+//                privateMessage.content = Utils.getFirstElement(tr3.select("div[class=voz-post-message]")).text();
+                privateMessage.content = cleanUpContent(Utils.getFirstElement(tr3.select("div[class=voz-post-message]")));
                 privateMessage.pmTitle = Utils.getFirstElement(tr3.select("div[class=smallfont]")).text();
             }
             privateMessages.add(privateMessage);
@@ -75,6 +76,37 @@ public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageCo
         }
 
         return privateMessages;
+    }
+
+    private String cleanUpContent(Element first) {
+        if (first == null) return "";
+        cleanUp(first, "blockquote", "margin: 0px;padding: 1px;border: none;width: 100%;");
+        cleanUp(first, "pre", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
+        // resize quote
+        Elements quotes = first.select("div[style^=margin:20px;]");
+        if (quotes != null && quotes.size() > 0) {
+            for (Element quote : quotes) {
+                quote.attr("style", "width:100%");
+                Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
+                if (tableQuote != null) {
+                    tableQuote.attr("cellpadding", "1");
+                    tableQuote.attr("width", "100%");
+                    tableQuote.removeAttr("class");
+                    Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
+                    if (td != null) {
+                        td.attr("style", "border:none;background-color: #F2F2F2");
+                    }
+                }
+            }
+        }
+        return first.toString();
+    }
+
+    private void cleanUp(Element first, String ele, String stylesheet) {
+        Elements elements = first.select(ele);
+        for(Element element: elements) {
+            element.attr("style", stylesheet);
+        }
     }
 
     @Override

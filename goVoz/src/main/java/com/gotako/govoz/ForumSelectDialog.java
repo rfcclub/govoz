@@ -12,16 +12,16 @@ public class ForumSelectDialog extends AbstractNoBorderDialog {
     }
 
     @Override
-    public void doOkAction(String param) {
+    public void doOkAction(String... param) {
         try {
-            Integer.parseInt(param);
+            Integer.parseInt(param[0]);
         } catch(NumberFormatException ex) {
             Toast.makeText(activity,getResources().getString(R.string.error_forum_select_id),Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (activity instanceof MainNeoActivity) {
-            ((MainNeoActivity)activity).onForumClicked(param);
+            ((MainNeoActivity)activity).onForumClicked(param[0]);
         }
     }
 }

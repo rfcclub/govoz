@@ -62,7 +62,7 @@ public class PageSelectDialog extends android.support.v7.app.AppCompatDialogFrag
 	    activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 	    int width = displaymetrics.widthPixels;
 	    
-		getDialog().getWindow().setLayout((int) (width * 0.65), 440);
+		getDialog().getWindow().setLayout((int) (width * 0.85), 440);
 		editText = (EditText) view.findViewById(R.id.txtSearchString);
 		
 		((TextView) view.findViewById(R.id.txtTitle)).setText("Số trang tối đa: " + ((ForumActivity) activity).getLastPage());
