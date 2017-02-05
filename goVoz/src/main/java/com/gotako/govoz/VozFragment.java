@@ -16,4 +16,8 @@ public class VozFragment extends Fragment {
     protected void doRefresh() {
 
     }
+
+    public void forceRefresh() {
+
+    }
 }

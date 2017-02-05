@@ -34,14 +34,16 @@
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="8dp"
             >
 
             <RadioButton
                 android:text="@string/show_threads_seach"
+                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rdoShowThreads"
+                android:checked="true"
                 android:layout_weight="1" />
 s
             <RadioButton
@@ -56,7 +58,7 @@ s
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             >
             <Button
                 android:id="@+id/btnGo"

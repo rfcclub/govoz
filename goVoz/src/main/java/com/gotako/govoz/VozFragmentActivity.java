@@ -204,7 +204,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                refresh();
+                forceRefresh();
             break;
             case R.id.action_reply:
                 doRep();
@@ -219,6 +219,10 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
         }
         return true;
+    }
+
+    protected void forceRefresh() {
+
     }
 
     public void doRating() {
@@ -366,16 +370,16 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
                         break;
                     case 3: // go to inbox
                         if(VozCache.instance().isLoggedIn()) {
-//                            String pmHttpsLink = VOZ_LINK + "/" + "private.php";
-//                            VozCache.instance().navigationList.add(pmHttpsLink);
-//                            Intent intentInbox = new Intent(VozFragmentActivity.this, InboxActivity.class);
-//                            VozFragmentActivity.this.startActivity(intentInbox);
                             doInbox();
                         } else {
                             Toast.makeText(VozFragmentActivity.this, getResources().getString(R.string.error_not_login_go_inbox), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 4: // search
+                        SearchDialog searchDialog = new SearchDialog();
+                        searchDialog.setActivity(VozFragmentActivity.this);
+                        searchDialog.setTitle(getResources().getString(R.string.search_title));
+                        searchDialog.show(fm, "searchDialog");
                         break;
                     case 5: // go to setting
                         Intent intent1 = new Intent(VozFragmentActivity.this, SettingActivity.class);

@@ -3,7 +3,9 @@ package com.gotako.govoz.tasks;
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.data.Forum;
+import com.gotako.govoz.data.ForumDumpObject;
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.util.Utils;
 
 import org.jsoup.nodes.Document;
@@ -148,5 +150,15 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
+	}
+
+	@Override
+	public void afterDownload(Document document) {
+		ForumDumpObject forumDumpObject = new ForumDumpObject();
+		forumDumpObject.forumId = forumId;
+		forumDumpObject.document = document;
+		forumDumpObject.lastPage = lastPage;
+		forumDumpObject.forumName = forumName;
+		VozCache.instance().putDataToCache(forumId + "_" + VozCache.instance().getCurrentForumPage(), forumDumpObject);
 	}
 }

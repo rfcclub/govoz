@@ -30,13 +30,18 @@ public class MainNeoActivity extends VozFragmentActivity
         InboxFragment.OnFragmentInteractionListener,
         InboxDetailFragment.OnFragmentInteractionListener {
 
-    protected Fragment mFragment;
+    protected VozFragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setContentView(R.layout.activity_main_neo);
         processToMainForum(savedInstanceState);
+    }
+
+    @Override
+    protected void forceRefresh() {
+        if (mFragment != null) mFragment.forceRefresh();
     }
 
     private void processToMainForum(Bundle savedInstanceState) {

@@ -30,35 +30,6 @@ import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
  */
 public class SearchDialog extends AbstractNoBorderDialog {
 
-    protected Activity activity;
-    protected EditText editText;
-    protected String title;
-
-    public SearchDialog() {
-
-    }
-
-
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AppCompatDialog dialog = new AppCompatDialog(getActivity(), getTheme());
-        return dialog;
-    }
-
-    @Override
-    public void setupDialog(Dialog dialog, int style) {
-        switch (style) {
-            case STYLE_NO_INPUT:
-                dialog.getWindow().addFlags(
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                // fall through...
-            case STYLE_NO_FRAME:
-            case STYLE_NO_TITLE:
-                ((AppCompatDialog) dialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,7 +37,7 @@ public class SearchDialog extends AbstractNoBorderDialog {
         final View view = inflater.inflate(R.layout.quick_search_page_layout, container);
         editText = (EditText) view.findViewById(R.id.txtSearchString);
         RadioButton rdoShowPosts = (RadioButton) view.findViewById(R.id.rdoShowPosts);
-        ((TextView) view.findViewById(R.id.txtTitle)).setText("Seach forums");
+        ((TextView) view.findViewById(R.id.txtTitle)).setText(title);
         (view.findViewById(R.id.btnGo)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,24 +73,6 @@ public class SearchDialog extends AbstractNoBorderDialog {
 
     private void goToAdvanceSearch() {
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(getDialog().getWindow().getAttributes());
-
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        int width = displaymetrics.widthPixels;
-
-        lp.width = (int) (width * 0.95);
-        getDialog().getWindow().setAttributes(lp);
-    }
-
-    public void setActivity(Activity activity) {
-        this.activity = activity;
     }
 
 

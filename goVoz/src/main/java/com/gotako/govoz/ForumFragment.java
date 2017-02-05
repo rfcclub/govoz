@@ -12,8 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gotako.govoz.data.Forum;
+import com.gotako.govoz.data.ForumDumpObject;
+import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
+import com.gotako.govoz.tasks.VozThreadDownloadTask;
 import com.gotako.util.Utils;
 
 import java.util.List;
@@ -48,7 +52,6 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
      *
      * @return A new instance of fragment ForumFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ForumFragment newInstance() {
         ForumFragment fragment = new ForumFragment();
         return fragment;
@@ -57,7 +60,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        processNavigationLink();
+        // processNavigationLink();
     }
 
     private void updateNavigationPanel() {
@@ -90,7 +93,19 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
 
     public void loadThreads() {
         NavigationItem item = VozCache.instance().currentNavigateItem();
-        loadThreads(VozCache.instance().getCurrentForum(), item.mCurrentPage);
+        int forumId = VozCache.instance().getCurrentForum();
+        int page = item.mCurrentPage;
+        String key = String.valueOf(forumId) + "_" + page;
+        Object cacheObject = VozCache.instance().getDataFromCache(key);
+        boolean forceReload = VozConfig.instance().isAutoReloadForum();
+        if (!forceReload && cacheObject != null) {
+            VozForumDownloadTask task = new VozForumDownloadTask(this);
+            ForumDumpObject forumDumpObject = (ForumDumpObject) cacheObject;
+            List<Thread> threads = task.processResult(forumDumpObject.document);
+            doCallback(threads, task.getSubforums(), forumDumpObject.lastPage, forumDumpObject.forumName);
+        } else {
+            loadThreads(forumId, page);
+        }
     }
 
     public void loadThreads(int forumId, int page) {
@@ -107,7 +122,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         } else { // set current page
             VozCache.instance().currentNavigateItem().mCurrentPage = _page;
         }
-
+        VozCache.instance().setCurrentForumPage(_page);
         // load mThreads for forum
         task.setShowProcessDialog(true);
         task.setContext(getActivity());
