@@ -68,6 +68,10 @@ public class VozCache {
 		}
 		return vozCache;
 	}
+
+	public LruCache getDumpCache() {
+		return memoryCache;
+	}
 	public boolean isLoggedIn() {
 		return cookies != null;
 	}
@@ -213,5 +217,9 @@ public class VozCache {
 
 	public void addNavigationItem(NavigationItem navItem) {
 		mNeoNavigationList.add(navItem);
+	}
+
+	public void clearDumpCache(String key) {
+		memoryCache.remove(key);
 	}
 }

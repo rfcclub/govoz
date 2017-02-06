@@ -296,6 +296,15 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
     }
 
     @Override
+    public void forceRefresh() {
+        for (int i= 1;i <= 255; i++) {
+            String key = String.valueOf(mForumId) + "_" + String.valueOf(i);
+            VozCache.instance().clearDumpCache(key);
+        }
+        loadThreads();
+    }
+
+    @Override
     public void goFirst() {
         VozCache.instance().currentNavigateItem().mCurrentPage = 1;
         loadThreads();

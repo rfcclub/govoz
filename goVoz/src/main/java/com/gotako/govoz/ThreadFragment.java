@@ -85,6 +85,15 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     }
 
     @Override
+    public void forceRefresh() {
+        for (int i= 1;i <= 255; i++) {
+            String key = String.valueOf(mThreadId) + "_" + String.valueOf(i);
+            VozCache.instance().clearDumpCache(key);
+        }
+        getThreads();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         processNavigationLink();
