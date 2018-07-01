@@ -237,15 +237,6 @@ public class SearchActivity extends VozFragmentActivity implements
                 VozCache.instance().navigationList.add(forumUrl);
                 Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
-//                forums = new ArrayList<Forum>();
-//                threads = new ArrayList<Thread>();
-//                GoFastEngine.notify(this, "threads");
-//                VozCache.instance().setCurrentParentForum(VozCache.instance().getCurrentForum());
-//                VozCache.instance().setCurrentForum(Integer.parseInt(subForum.getId()));
-//                subForum.setParent(VozCache.instance().getCurrentParentForum());
-//                String forumUrl = FORUM_URL_F + subForum.getId() + FORUM_URL_ORDER + "1";
-                //VozCache.instance().setCurrentForumPage(1);
-                //loadThreads(Integer.parseInt(subForum.getId()), 1);
             }
         }
     }

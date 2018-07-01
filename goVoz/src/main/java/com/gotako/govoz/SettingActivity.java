@@ -22,6 +22,7 @@ public class SettingActivity extends Activity {
 	private CheckBox chkShowSign;
 	private CheckBox hardwareAccelerated;
 	private CheckBox useBackgroundService;
+	private CheckBox isPreloadForumsAndThreads;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,8 @@ public class SettingActivity extends Activity {
 		hardwareAccelerated.setChecked(config.isHardwareAccelerated());
 		useBackgroundService = (CheckBox) findViewById(R.id.useBackgroundService);
 		useBackgroundService.setChecked(config.isUseBackgroundService());
-
+		isPreloadForumsAndThreads = (CheckBox) findViewById(R.id.preloadThings);
+		isPreloadForumsAndThreads.setChecked(config.isPreloadForumsAndThreads());
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
@@ -149,6 +151,7 @@ public class SettingActivity extends Activity {
 		config.setShowSign(chkShowSign.isChecked());
 		config.setHardwareAccelerated(hardwareAccelerated.isChecked());
 		config.setUseBackgroundService(useBackgroundService.isChecked());
+		config.setPreloadForumsAndThreads(isPreloadForumsAndThreads.isChecked());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {

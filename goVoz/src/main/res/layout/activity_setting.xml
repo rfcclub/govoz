@@ -77,12 +77,13 @@
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="horizontal">
+
             <RadioButton
                 android:id="@+id/darkThemeRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:enabled="true"
                 android:checked="true"
+                android:enabled="true"
                 android:text="@string/setting_theme_dark"
                 android:textSize="14sp" />
             <RadioButton
@@ -115,14 +116,15 @@
         android:text="@string/supportLongAvatar"
         android:textSize="14sp"
         android:checked="true" />
+
     <CheckBox
         android:id="@+id/chkShowSign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/setting_show_sign"
-        android:layout_below="@+id/supportLongAvatar"
-        android:layout_alignParentLeft="true"
-        android:checked="true" />
+        android:layout_alignTop="@+id/supportLongAvatar"
+        android:layout_toEndOf="@+id/loadImageByDemand"
+        android:checked="true"
+        android:text="@string/setting_show_sign" />
 
     <CheckBox
         android:id="@+id/loadImageByDemand"
@@ -156,8 +158,9 @@
         android:id="@+id/saveConfig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/linearLayout1"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textView4"
+        android:layout_marginBottom="12dp"
         android:onClick="saveConfig"
         android:text="@string/setting_save_config"
         android:textSize="16sp" />
@@ -173,8 +176,8 @@
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_column="0"
             android:layout_gravity="left|top"
             android:layout_marginBottom="2dp"
@@ -183,19 +186,19 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android1:layout_row="0"
             android:layout_column="1"
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
-            android1:layout_row="0"
             android:src="@drawable/load257" />
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_column="2"
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
@@ -204,8 +207,8 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_column="3"
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
@@ -214,8 +217,8 @@
 
         <ImageView
             android:id="@+id/imageView5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_column="4"
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
@@ -224,8 +227,8 @@
 
         <ImageView
             android:id="@+id/imageView6"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_column="5"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
@@ -309,5 +312,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/useBackgroundService"
         android:text="@string/experimental_text" />
+
+    <CheckBox
+        android:id="@+id/preloadThings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/confirmIgnore"
+        android:layout_below="@+id/experimental"
+        android:text="@string/preloadForumAndThreadText" />
 
 </RelativeLayout>

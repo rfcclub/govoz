@@ -222,4 +222,8 @@ public class VozCache {
 	public void clearDumpCache(String key) {
 		memoryCache.remove(key);
 	}
+
+	public boolean hasDataInCache(String key) {
+		return memoryCache.get(key) != null;
+	}
 }

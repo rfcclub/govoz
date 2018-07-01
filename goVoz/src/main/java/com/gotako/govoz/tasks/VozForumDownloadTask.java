@@ -116,7 +116,7 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 
 	@Override
 	protected void onPostExecute(List<Thread> result) {
-		doOnPostExecute(result);
+		super.doOnPostExecute(result);
 		// do call back
 		if (callback != null) {
 			callback.doCallback(result, subforums, lastPage, forumName);

@@ -1,5 +1,7 @@
 package com.gotako.govoz.tasks;
 
+import android.widget.Toast;
+
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
@@ -31,6 +33,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 	@Override
 	public List<Post> processResult(Document document) {
+
 		ImageDownloadService.service().batches.clear();
 		ImageDownloadService.service().set(mContext);
 		List<Post> posts = new ArrayList<Post>();
@@ -153,6 +156,10 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 								Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
 								if(td != null) {
 									td.attr("style","border:none;background-color: #F2F2F2");
+								}
+								Element quoteLink = Utils.getFirstElement((tableQuote.select("div > a")));
+								if (quoteLink != null) {
+									quoteLink.remove();
 								}
 							}
 						}
@@ -286,11 +293,11 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 				for (Element child : divInfos.get(1).children()) {
 					String childText = child.text();
 					if (childText.contains("Join Date:")) {
-						post.setJoinDate(childText);
+						post.setJoinDate(childText.replace("Join Date:", "JD:"));
 					}
 					// <div> Posts: 20 </div>
 					if (childText.contains("Posts:")) {
-						post.setPosted(childText);
+						post.setPosted(childText.replace("Posts:", "P:"));
 					}
 				}
 				if (divInfos.size() > 2) {
@@ -338,6 +345,9 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
         threadDumpObject.pValue = pValue;
         threadDumpObject.replyLink = replyLink;
         threadDumpObject.threadName = threadName;
-		VozCache.instance().putDataToCache(threadId + "_" + VozCache.instance().getCurrentThreadPage(), threadDumpObject);
+        String key = threadId + "_" + VozCache.instance().getCurrentThreadPage();
+        if(VozCache.instance().hasDataInCache(key)) {
+            VozCache.instance().putDataToCache(key, threadDumpObject);
+        }
 	}
 }

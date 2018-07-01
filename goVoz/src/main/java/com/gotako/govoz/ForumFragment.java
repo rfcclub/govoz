@@ -2,6 +2,7 @@ package com.gotako.govoz;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.gotako.govoz.tasks.VozThreadDownloadTask;
 import com.gotako.util.Utils;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
@@ -126,7 +128,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         // load mThreads for forum
         task.setShowProcessDialog(true);
         task.setContext(getActivity());
-        task.setRetries(1);
+        task.setRetries(0);
         String forumUrl = FORUM_URL_F + _forumId + FORUM_URL_ORDER
                 + String.valueOf(_page);
         task.setForumId(String.valueOf(_forumId));
@@ -176,14 +178,16 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         mThreads = result;
         VozCache.instance().currentNavigateItem().mLastPage = (Integer) extra[1];
         mForumName = (String) extra[2];
-
-        // Fill data to layout
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
-        parent.removeAllViews();
-        updateThread(parent, layoutInflater);
-        parent.invalidate();
-        updateStatus();
+        Handler handler = new Handler();
+        handler.post(() -> {
+            // Fill data to layout
+            LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+            LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
+            parent.removeAllViews();
+            updateThread(parent, layoutInflater);
+            parent.invalidate();
+            updateStatus();
+        });
     }
 
     private void updateThread(LinearLayout parent, LayoutInflater layoutInflater) {

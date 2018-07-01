@@ -31,12 +31,15 @@ import com.gotako.govoz.service.ImageDownloadService;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
+import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Cache;
 
 import static com.gotako.govoz.VozConstant.ATTTACHMENT_SIGN;
 import static com.gotako.govoz.VozConstant.FORUM_SIGN;
@@ -140,6 +143,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         String key = String.valueOf(currentThreadId) + "_" + currentThreadPage;
         Object cacheObject = VozCache.instance().getDataFromCache(key);
         boolean forceReload = VozConfig.instance().isAutoReloadForum();
+
         if (!forceReload && cacheObject != null) {
             VozThreadDownloadTask task = new VozThreadDownloadTask(this);
             ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
@@ -151,7 +155,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             int mLastPage = task.getLastPage();
             processResult(mPosts, mLastPage);
         } else {
-        doGetThread(currentThreadId, currentThreadPage);
+            doGetThread(currentThreadId, currentThreadPage);
         }
     }
 
@@ -224,7 +228,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     private void processResult(List<Post> result, int last) {
         mPosts = result;
         VozCache.instance().currentNavigateItem().mLastPage = last;
-
+        CacheUtils.preloadThreads(VozCache.instance().currentNavigateItem());
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         layout = (LinearLayout) getView().findViewById(R.id.linearMain);
         layout.removeAllViews();
@@ -350,7 +354,6 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             // posted
             TextView posted = (TextView) view.findViewById(R.id.posted);
             posted.setText(post.getPosted());
-
 
             postsPlaceHolder.addView(view);
 

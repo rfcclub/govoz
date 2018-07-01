@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.balysv.materialripple.MaterialRippleLayout;
+// import com.balysv.materialripple.MaterialRippleLayout;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 
@@ -184,6 +184,10 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         getVozForums();
     }
 
+    @Override
+    public void forceRefresh() {
+        getVozForums();
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

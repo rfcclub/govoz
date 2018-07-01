@@ -55,6 +55,8 @@ public class VozConfig {
 
 
     private boolean useBackgroundService = false;
+
+    private boolean preloadForumsAndThreads = false;
     /**
      * Default constructor
      */
@@ -101,6 +103,10 @@ public class VozConfig {
         this.supportLongAvatar = supportLongAvatar;
     }
 
+    public void setPreloadForumsAndThreads(boolean preloadForumsAndThreads) {
+        this.preloadForumsAndThreads = preloadForumsAndThreads;
+    }
+
     public void save(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -113,6 +119,7 @@ public class VozConfig {
         editor.putBoolean("showSign", showSign);
         editor.putBoolean("hardwareAccelerated", hardwareAccelerated);
         editor.putBoolean("useBackgroundService",useBackgroundService);
+        editor.putBoolean("preloadForumsAndThreads", preloadForumsAndThreads);
         editor.commit();
     }
 
@@ -127,6 +134,7 @@ public class VozConfig {
         showSign = prefs.getBoolean("showSign", true);
         hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", false);
         useBackgroundService = prefs.getBoolean("useBackgroundService", false);
+        preloadForumsAndThreads = prefs.getBoolean("preloadForumsAndThreads", false);
     }
 
     public int getLoadingDrawable() {
@@ -175,6 +183,8 @@ public class VozConfig {
     public void setUseBackgroundService(boolean useBackgroundService) {
         this.useBackgroundService = useBackgroundService;
     }
-
+    public boolean isPreloadForumsAndThreads() {
+        return preloadForumsAndThreads;
+    }
 
 }

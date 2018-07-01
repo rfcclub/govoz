@@ -202,7 +202,7 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 			editor.commit();
 			Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
 			finish();
-			Intent intent = new Intent(this,MainActivity.class);
+			Intent intent = new Intent(this,MainNeoActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);			
 		} else {

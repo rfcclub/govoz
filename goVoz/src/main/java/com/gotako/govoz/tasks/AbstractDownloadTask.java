@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -62,6 +63,7 @@ public abstract class AbstractDownloadTask<T> extends
         try {
             TaskHelper.disableSSLCertCheck();
             Document document = null;
+            long startMillis = System.currentTimeMillis();
             if (VozCache.instance().getCookies() == null) {
                 document = Jsoup.connect(urlString)
                         .header("Accept-Encoding", "gzip, deflate")
@@ -79,8 +81,10 @@ public abstract class AbstractDownloadTask<T> extends
                         .data("securitytoken", VozCache.instance().getSecurityToken())
                         .post();
             }
-
+            System.out.println("Page load in: " + (System.currentTimeMillis() - startMillis) / 1000 );
+            startMillis = System.currentTimeMillis();
             result = processResult(document);
+            System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000 );
             completed = true;
             afterDownload(document);
         } catch (Exception e) {
@@ -90,6 +94,7 @@ public abstract class AbstractDownloadTask<T> extends
         }
         mRetries -= 1;
         // }
+
         return result;
     }
 
@@ -105,7 +110,6 @@ public abstract class AbstractDownloadTask<T> extends
     protected void processError(Exception e) {
         try {
             if (progressDialog != null) {
-                progressDialog.hide();
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -117,10 +121,14 @@ public abstract class AbstractDownloadTask<T> extends
     public abstract List<T> processResult(Document document);
 
     protected void suspendDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
+        Handler handler = new Handler();
+        handler.post(() -> {
+            if (progressDialog != null) {
+                progressDialog.hide();
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        });
     }
 
     @Override
