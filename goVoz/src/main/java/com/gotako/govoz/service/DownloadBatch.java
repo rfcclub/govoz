@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.webkit.WebSettings;
@@ -101,7 +102,8 @@ public class DownloadBatch {
             thread.start();
         }
         countDownLatch.await();
-        webView.loadDataWithBaseURL(VozConstant.VOZ_LINK, content, "text/html", "utf-8", null);
+        Handler handler = new Handler();
+        handler.post(()->webView.loadDataWithBaseURL(VozConstant.VOZ_LINK, content, "text/html", "utf-8", null));
     }
 
     private void optimize(final String savePath) throws Exception {

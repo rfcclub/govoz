@@ -17,6 +17,7 @@ public class Post implements Serializable {
     private String postDate;
     private String userId;
     private String userSign;
+    private boolean complexStructure;
 
     public String getUserSign() {
         return userSign;
@@ -143,4 +144,11 @@ public class Post implements Serializable {
     }
 
 
+    public void setComplexStructure(boolean complexStructure) {
+        this.complexStructure = complexStructure;
+    }
+
+    public boolean isComplexStructure() {
+        return complexStructure;
+    }
 }

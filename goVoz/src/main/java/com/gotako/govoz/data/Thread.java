@@ -30,6 +30,7 @@ public class Thread implements Serializable {
     public String prefixColor;
     public String prefixLink;
     public String replies;
+    public int rating;
 
     public String getTitle() {
         return title;
@@ -185,5 +186,13 @@ public class Thread implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public int getRating() {
+        return rating;
     }
 }

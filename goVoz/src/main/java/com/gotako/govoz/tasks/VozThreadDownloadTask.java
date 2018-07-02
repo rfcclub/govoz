@@ -1,7 +1,5 @@
 package com.gotako.govoz.tasks;
 
-import android.widget.Toast;
-
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
@@ -125,6 +123,34 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 					cleanUp(first,"blockquote","margin: 0px;padding: 1px;border: none;width: 100%;");
 					cleanUp(first,"pre","margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 
+                    // resize quote
+                    Elements quotes = first.select("div[style^=margin:20px;]");
+                    if(quotes!= null && quotes.size()>0) {
+                        for(Element quote:quotes){
+                            post.setComplexStructure(true);
+                            quote.attr("style", "width:99%;background-color: #F2F2F2");
+                            Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
+                            if (tableQuote!=null) {
+                                tableQuote.attr("cellpadding","1");
+                                tableQuote.attr("width","100%");
+                                tableQuote.removeAttr("class");
+                                tableQuote.attr("style", "table-layout: fixed;box-sizing: border-box");
+                                Element quoteLink = Utils.getFirstElement((tableQuote.select("div > a")));
+                                if (quoteLink != null) {
+                                    quoteLink.remove();
+                                }
+                                Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
+                                String quoteContent = null;
+                                if(td != null) {
+//                                    td.attr("style","border:none;background-color: #F2F2F2");
+                                    quoteContent = td.html();
+                                    tableQuote.remove();
+                                    quote.append("<div style='width: 99%;background-color: #F2F2F2'>" + quoteContent + "</div>");
+                                }
+                            }
+                        }
+                    }
+
 					//resize image
 					Elements images = first.select("img");
 					for(Element image:images) {
@@ -140,29 +166,8 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 									image.attr("src", newLink);
 								}
 							}
+							if (!post.isComplexStructure()) post.setComplexStructure(true);
 						}						
-					}				
-					
-					// resize quote
-					Elements quotes = first.select("div[style^=margin:20px;]");
-					if(quotes!= null && quotes.size()>0) {
-						for(Element quote:quotes){
-							quote.attr("style", "width:100%");
-							Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
-							if (tableQuote!=null) {
-								tableQuote.attr("cellpadding","1");
-								tableQuote.attr("width","100%");
-								tableQuote.removeAttr("class");
-								Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
-								if(td != null) {
-									td.attr("style","border:none;background-color: #F2F2F2");
-								}
-								Element quoteLink = Utils.getFirstElement((tableQuote.select("div > a")));
-								if (quoteLink != null) {
-									quoteLink.remove();
-								}
-							}
-						}
 					}
 
 					StringBuilder ctent = new StringBuilder(first.toString());
@@ -335,7 +340,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	}
 
 	@Override
-	public void afterDownload(Document document) {
+	public void afterDownload(Document document, String... params) {
 		String threadId = String.valueOf(VozCache.instance().getCurrentThread());
         ThreadDumpObject threadDumpObject = new ThreadDumpObject();
         threadDumpObject.threadId = VozCache.instance().getCurrentThread();
@@ -345,9 +350,11 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
         threadDumpObject.pValue = pValue;
         threadDumpObject.replyLink = replyLink;
         threadDumpObject.threadName = threadName;
-        String key = threadId + "_" + VozCache.instance().getCurrentThreadPage();
-        if(VozCache.instance().hasDataInCache(key)) {
-            VozCache.instance().putDataToCache(key, threadDumpObject);
+        String currentPage = String.valueOf(VozCache.instance().getCurrentThreadPage());
+        if (params.length > 1) {
+            currentPage = params[1];
         }
+        String key = threadId + "_" + currentPage;
+        VozCache.instance().putDataToCache(key, threadDumpObject);
 	}
 }

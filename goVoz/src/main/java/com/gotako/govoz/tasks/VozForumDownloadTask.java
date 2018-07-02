@@ -2,6 +2,7 @@ package com.gotako.govoz.tasks;
 
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
+import com.gotako.govoz.VozConstant;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.ForumDumpObject;
 import com.gotako.govoz.data.Thread;
@@ -61,6 +62,16 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 				Elements spans = tr.select("span[style^=cursor:pointer][onclick^=window.open('member.php?u=]");
 				if (spans.size() > 0) {
 					thread.setPoster(spans.get(0).ownText());
+				}
+				Element rating = Utils.getFirstElement(tr.select("img[class^=inlineimg][src^=images/rating]"));
+				if (rating != null) {
+				    try {
+                        StringBuilder ratingLink = new StringBuilder(rating.attr("src"));
+                        String rank = ratingLink.reverse().substring(4).split("_")[0];
+                        thread.setRating(Integer.parseInt(rank));
+                    } catch(Exception ex) {
+				        ex.printStackTrace();
+                    }
 				}
 				Elements selectTds = tr.select("td[class=alt2][title^=Replies:]");
 				// get last update
@@ -153,12 +164,16 @@ public class VozForumDownloadTask extends AbstractDownloadTask<Thread> {
 	}
 
 	@Override
-	public void afterDownload(Document document) {
+	public void afterDownload(Document document, String... params) {
 		ForumDumpObject forumDumpObject = new ForumDumpObject();
 		forumDumpObject.forumId = forumId;
 		forumDumpObject.document = document;
 		forumDumpObject.lastPage = lastPage;
 		forumDumpObject.forumName = forumName;
-		VozCache.instance().putDataToCache(forumId + "_" + VozCache.instance().getCurrentForumPage(), forumDumpObject);
+		String currentPage = String.valueOf(VozCache.instance().getCurrentForumPage());
+		if (params.length > 1) {
+			currentPage = params[1]; // page in caching preload
+		}
+		VozCache.instance().putDataToCache(forumId + "_" + currentPage, forumDumpObject);
 	}
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.ImageDownloadService;
+import com.gotako.govoz.tasks.CustomProgressDialog;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
@@ -35,11 +37,12 @@ import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
 
+import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.Cache;
 
 import static com.gotako.govoz.VozConstant.ATTTACHMENT_SIGN;
 import static com.gotako.govoz.VozConstant.FORUM_SIGN;
@@ -89,7 +92,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
 
     @Override
     public void forceRefresh() {
-        for (int i= 1;i <= 255; i++) {
+        for (int i = 1; i <= 255; i++) {
             String key = String.valueOf(mThreadId) + "_" + String.valueOf(i);
             VozCache.instance().clearDumpCache(key);
         }
@@ -154,6 +157,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             replyLink = threadDumpObject.replyLink;
             int mLastPage = task.getLastPage();
             processResult(mPosts, mLastPage);
+            updateNavigationPanel();
         } else {
             doGetThread(currentThreadId, currentThreadPage);
         }
@@ -171,7 +175,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     }
 
     private void updateNavigationPanel() {
-        if (mListener !=null) mListener.updateNavigationPanel(true);
+        if (mListener != null) mListener.updateNavigationPanel(true);
     }
 
     @Override
@@ -228,140 +232,155 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     private void processResult(List<Post> result, int last) {
         mPosts = result;
         VozCache.instance().currentNavigateItem().mLastPage = last;
-        CacheUtils.preloadThreads(VozCache.instance().currentNavigateItem());
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        layout = (LinearLayout) getView().findViewById(R.id.linearMain);
-        layout.removeAllViews();
-        LinearLayout postLayout = (LinearLayout) layoutInflater.inflate(R.layout.thread_post_item, null);
-        ((TextView)postLayout.findViewById(R.id.threadTitle)).setText(threadName);
-        layout.addView(postLayout);
-
-        LinearLayout postsPlaceHolder = (LinearLayout) postLayout.findViewById(R.id.linearPosts);
-        stopAllGifViews();
-
-        gifImageViews.clear();
-        viewInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (VozConfig.instance().isPreloadForumsAndThreads()) {
+            CacheUtils.preload(getActivity(), VozCache.instance().currentNavigateItem());
+        }
         webViewList = new SparseArray<>();
-        for (int i = 0; i < mPosts.size(); i++) {
-            View view = viewInflater.inflate(R.layout.neo_post_item, null);
-            Post post = mPosts.get(i);
-            final WebView webView = (WebView) view.findViewById(R.id.content);
-            webView.getSettings().setJavaScriptEnabled(true);
-            if (webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
-                webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            } else {
-                webView.setLayerType(View.LAYER_TYPE_NONE, null);
+        Handler handler = new Handler();
+        handler.post(() -> {
+            stopAllGifViews();
+            gifImageViews.clear();
+            viewInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            // LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layout = (LinearLayout) getView().findViewById(R.id.linearMain);
+            layout.removeAllViews();
+            LinearLayout postLayout = (LinearLayout) viewInflater.inflate(R.layout.thread_post_item, null);
+            ((TextView) postLayout.findViewById(R.id.threadTitle)).setText(threadName);
+            layout.addView(postLayout);
+            LinearLayout postsPlaceHolder = (LinearLayout) postLayout.findViewById(R.id.linearPosts);
+            layout.invalidate();
+            for (int i = 0; i < mPosts.size(); i++) {
+                View view = viewInflater.inflate(R.layout.neo_post_item, null);
+                Post post = mPosts.get(i);
+                final WebView webView = (WebView) view.findViewById(R.id.content);
+                final HtmlTextView htmlTextView = (HtmlTextView) view.findViewById(R.id.textContent);
+                if (post.isComplexStructure()) {
+                    webView.getSettings().setJavaScriptEnabled(true);
+                    if (webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
+                        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                    } else {
+                        webView.setLayerType(View.LAYER_TYPE_NONE, null);
+                    }
+                    webView.setDrawingCacheEnabled(false);
+                    // disable all click listener in webview
+                    webView.setClickable(false);
+                    webView.setLongClickable(true);
+                    webView.setFocusable(false);
+                    webView.setFocusableInTouchMode(false);
+                    webView.setOnLongClickListener(this);
+                    webView.getSettings().setDefaultFontSize(VozConfig.instance().getFontSize());
+                    webView.setTag(i); // position
+                    // webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+                    String utfContent = null;
+                    try {
+                        utfContent = new String(post.getContent().getBytes("UTF-8"))
+                                .replace("\r", "").replace("\n", "");
+                    } catch (UnsupportedEncodingException e) {
+                        Log.d("DEBUG", "UnsupportedEncodingException", e);
+                    }
+
+                    Display display = getActivity().getWindowManager().getDefaultDisplay();
+                    DisplayMetrics outMetrics = new DisplayMetrics();
+                    display.getMetrics(outMetrics);
+                    String css = "body{color: #000; background-color: #FFF;}";
+                    String head = "<head><style type='text/css'>" +
+                            css + "\n" +
+                            "div#permalink_section\n" +
+                            "{\n" +
+                            "    white-space: pre-wrap; \n" +
+                            "    white-space: -moz-pre-wrap;\n" +
+                            "    white-space: -pre-wrap; \n" +
+                            "    white-space: -o-pre-wrap;\n" +
+                            "    word-wrap: break-word;\n" +
+                            "    overflow: hidden;\n" +
+                            "}\n" +
+                            "</style></head>";
+                    utfContent = head + "<div style='width="
+                            + String.valueOf(outMetrics.widthPixels) + "'>"
+                            + utfContent + "</div>";
+                    post.setContent(utfContent);
+                    webView.getSettings().setBuiltInZoomControls(false);
+                    webView.getSettings().setSupportZoom(false);
+
+                    webView.setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.voz_back_color)));
+                    try {
+                        TaskHelper.disableSSLCertCheck();
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    String shouldLoadContent = post.getContent();
+                    if (VozConfig.instance().isShowSign()) {
+                        shouldLoadContent += post.getUserSign() != null ? post.getUserSign() : "";
+                    }
+                    if (VozConfig.instance().isUseBackgroundService()) {
+                        ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
+                    }
+                    setListenerToWebView(webView);
+                    webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
+                    webView.invalidate();
+                    webViewList.append(i, webView);
+                } else {
+                    webView.setVisibility(View.GONE);
+                    htmlTextView.setVisibility(View.VISIBLE);
+                    htmlTextView.setHtml(post.getContent().replace("images/smilies/",
+                            VOZ_LINK + "/images/smilies/"),
+                            new HtmlHttpImageGetter(htmlTextView));
+                    htmlTextView.invalidate();
+                }
+                //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+                GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
+                if (post.getAvatar() != null) {
+                    UrlDrawable drawable = new UrlDrawable();
+                    drawable.setWidth(75);
+                    drawable.setHeight(75);
+                    drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
+                    avatarView.setImageDrawable(drawable);
+                    avatarView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    DownloadImageTask task = new DownloadImageTask(drawable,
+                            avatarView, getActivity());
+                    task.execute(post.getAvatar());
+                }
+                avatarView.setClickable(false);
+                avatarView.setLongClickable(true);
+                avatarView.setFocusable(false);
+                avatarView.setFocusableInTouchMode(false);
+                avatarView.setOnLongClickListener(this);
+                avatarView.setTag(i);
+                gifImageViews.add(avatarView);
+                // post date
+                TextView postDate = (TextView) view.findViewById(R.id.postDate);
+                postDate.setText(post.getPostDate());
+
+                // post count
+                TextView postCount = (TextView) view.findViewById(R.id.postCount);
+                postCount.setText(post.getPostCount());
+
+                // user
+                TextView user = (TextView) view.findViewById(R.id.user);
+                user.setText(post.getUser());
+
+                // join date
+                TextView joinDate = (TextView) view.findViewById(R.id.joinDate);
+                joinDate.setText(post.getJoinDate());
+
+                // rank
+                TextView rank = (TextView) view.findViewById(R.id.rank);
+                rank.setText(post.getRank());
+
+                // posted
+                TextView posted = (TextView) view.findViewById(R.id.posted);
+                posted.setText(post.getPosted());
+
+                postsPlaceHolder.addView(view);
+
             }
-            webView.setDrawingCacheEnabled(false);
-            // disable all click listener in webview
-            webView.setClickable(false);
-            webView.setLongClickable(true);
-            webView.setFocusable(false);
-            webView.setFocusableInTouchMode(false);
-            webView.setOnLongClickListener(this);
-            webView.getSettings().setDefaultFontSize(VozConfig.instance().getFontSize());
-            webView.setTag(i); // position
-            // webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-            String utfContent = null;
-            try {
-                utfContent = new String(post.getContent().getBytes("UTF-8"))
-                        .replace("\r", "").replace("\n", "");
-            } catch (UnsupportedEncodingException e) {
-                Log.d("DEBUG", "UnsupportedEncodingException", e);
+            if (listView == null) {
+                listView = (ScrollView) getView().findViewById(R.id.scrollviewMain);
             }
-
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            DisplayMetrics outMetrics = new DisplayMetrics();
-            display.getMetrics(outMetrics);
-            String css = "body{color: #000; background-color: #FFF;}";
-            String head = "<head><style type='text/css'>" +
-                    css + "\n" +
-                    "div#permalink_section\n" +
-                    "{\n" +
-                    "    white-space: pre-wrap; \n" +
-                    "    white-space: -moz-pre-wrap;\n" +
-                    "    white-space: -pre-wrap; \n" +
-                    "    white-space: -o-pre-wrap;\n" +
-                    "    word-wrap: break-word;\n" +
-                    "    overflow: hidden;\n" +
-                    "}\n" +
-                    "</style></head>";
-            utfContent = head + "<div style='width="
-                    + String.valueOf(outMetrics.widthPixels) + "'>"
-                    + utfContent + "</div>";
-            post.setContent(utfContent);
-            webView.getSettings().setBuiltInZoomControls(false);
-            webView.getSettings().setSupportZoom(false);
-
-            webView.setBackgroundColor(getResources().getColor(Utils.getValueByTheme(R.color.black, R.color.voz_back_color)));
-            try {
-                TaskHelper.disableSSLCertCheck();
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            String shouldLoadContent = post.getContent();
-            if (VozConfig.instance().isShowSign()) {
-                shouldLoadContent += post.getUserSign() != null ? post.getUserSign() : "";
-            }
-            if (VozConfig.instance().isUseBackgroundService()) {
-                ImageDownloadService.service().get(i).to(webView, shouldLoadContent);
-            }
-            setListenerToWebView(webView);
-            webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
-            webView.invalidate();
-            webViewList.append(i, webView);
-            //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
-            GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
-            if (post.getAvatar() != null) {
-                UrlDrawable drawable = new UrlDrawable();
-                drawable.setWidth(75);
-                drawable.setHeight(75);
-                drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
-                avatarView.setImageDrawable(drawable);
-                avatarView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                DownloadImageTask task = new DownloadImageTask(drawable,
-                        avatarView, getActivity());
-                task.execute(post.getAvatar());
-            }
-            avatarView.setClickable(false);
-            avatarView.setLongClickable(true);
-            avatarView.setFocusable(false);
-            avatarView.setFocusableInTouchMode(false);
-            avatarView.setOnLongClickListener(this);
-            avatarView.setTag(i);
-            gifImageViews.add(avatarView);
-            // post date
-            TextView postDate = (TextView) view.findViewById(R.id.postDate);
-            postDate.setText(post.getPostDate());
-
-            // post count
-            TextView postCount = (TextView) view.findViewById(R.id.postCount);
-            postCount.setText(post.getPostCount());
-
-            // user
-            TextView user = (TextView) view.findViewById(R.id.user);
-            user.setText(post.getUser());
-
-            // join date
-            TextView joinDate = (TextView) view.findViewById(R.id.joinDate);
-            joinDate.setText(post.getJoinDate());
-
-            // rank
-            TextView rank = (TextView) view.findViewById(R.id.rank);
-            rank.setText(post.getRank());
-
-            // posted
-            TextView posted = (TextView) view.findViewById(R.id.posted);
-            posted.setText(post.getPosted());
-
-            postsPlaceHolder.addView(view);
-
-        }
-        if (listView == null) {
-            listView = (ScrollView) getView().findViewById(R.id.scrollviewMain);
-        }
-        listView.fullScroll(ScrollView.FOCUS_UP);
+            listView.fullScroll(ScrollView.FOCUS_UP);
+            listView.invalidate();
+        });
     }
 
     private void setListenerToWebView(WebView webView) {
@@ -432,7 +451,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
 //                startActivity(intent);
             } else if (checkedUrl.contains(THREAD_SIGN)) {
                 String[] params = checkedUrl.split("\\?")[1].split("\\&");
-                if(params.length> 1 && params[1].startsWith("page")) {
+                if (params.length > 1 && params[1].startsWith("page")) {
                     processed = true;
 //                    Intent intent = new Intent(this, ThreadActivity.class);
 //                    startActivity(intent);
@@ -509,10 +528,15 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
      */
     public interface OnFragmentInteractionListener {
         void onPostClicked(String postLink);
+
         void onThreadClicked(String postLink);
+
         void onForumClicked(String postLink);
+
         void onOutsideLinkClicked(String postLink);
+
         void onOutsidePictureClicked(String postLink);
+
         void updateNavigationPanel(boolean visible);
     }
 }

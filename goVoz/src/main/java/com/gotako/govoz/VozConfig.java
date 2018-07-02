@@ -29,7 +29,7 @@ public class VozConfig {
     /**
      * Auto reload forum when pressing Back
      */
-    private boolean autoReloadForum = true;
+    private boolean autoReloadForum = false;
 
     /**
      * Support long avatar
@@ -56,7 +56,7 @@ public class VozConfig {
 
     private boolean useBackgroundService = false;
 
-    private boolean preloadForumsAndThreads = false;
+    private boolean preloadForumsAndThreads = true;
     /**
      * Default constructor
      */

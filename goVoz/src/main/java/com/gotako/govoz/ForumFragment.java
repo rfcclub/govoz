@@ -1,6 +1,8 @@
 package com.gotako.govoz;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -8,21 +10,23 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.ForumDumpObject;
-import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.Thread;
-import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
-import com.gotako.govoz.tasks.VozThreadDownloadTask;
+import com.gotako.govoz.utils.CacheUtils;
+import com.gotako.network.UrlImageGetter;
 import com.gotako.util.Utils;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
@@ -102,6 +106,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         boolean forceReload = VozConfig.instance().isAutoReloadForum();
         if (!forceReload && cacheObject != null) {
             VozForumDownloadTask task = new VozForumDownloadTask(this);
+            task.setForumId(String.valueOf(forumId));
             ForumDumpObject forumDumpObject = (ForumDumpObject) cacheObject;
             List<Thread> threads = task.processResult(forumDumpObject.document);
             doCallback(threads, task.getSubforums(), forumDumpObject.lastPage, forumDumpObject.forumName);
@@ -178,15 +183,20 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         mThreads = result;
         VozCache.instance().currentNavigateItem().mLastPage = (Integer) extra[1];
         mForumName = (String) extra[2];
+        if(VozConfig.instance().isPreloadForumsAndThreads()) {
+            CacheUtils.preload(getActivity(), VozCache.instance().currentNavigateItem());
+        }
         Handler handler = new Handler();
         handler.post(() -> {
             // Fill data to layout
-            LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+            LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
             parent.removeAllViews();
             updateThread(parent, layoutInflater);
             parent.invalidate();
             updateStatus();
+            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollviewMain);
+            if (scrollView != null) scrollView.fullScroll(ScrollView.FOCUS_UP);
         });
     }
 
@@ -269,7 +279,30 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             int i2 = prefix.indexOf("]");
             title.setText(Html.fromHtml(prefix + titleText));
         }
+        if (thread.getRating() > 0) {
 
+            ImageView threadRating = (ImageView) threadLayout.findViewById(R.id.threadRating);
+            threadRating.setVisibility(View.VISIBLE);
+            switch (thread.getRating()) {
+                case 5:
+                    threadRating.setImageResource(R.drawable.rating_5);
+                    break;
+                case 4:
+                    threadRating.setImageResource(R.drawable.rating_4);
+                    break;
+                case 3:
+                    threadRating.setImageResource(R.drawable.rating_3);
+                    break;
+                case 2:
+                    threadRating.setImageResource(R.drawable.rating_2);
+                    break;
+                case 1:
+                default:
+                    threadRating.setImageResource(R.drawable.rating_1);
+                    break;
+            }
+
+        }
         TextView poster = (TextView) threadLayout.findViewById(R.id.textPostUser);
         poster.setText(thread.getPoster());
         ((TextView) threadLayout.findViewById(R.id.textLastUpdate)).setText(thread.getLastUpdate());

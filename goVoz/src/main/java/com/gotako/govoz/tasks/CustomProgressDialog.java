@@ -3,9 +3,11 @@
  */
 package com.gotako.govoz.tasks;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import com.gotako.govoz.R;
 import com.gotako.govoz.utils.GifView;
 import com.gotako.util.Utils;
 import com.wang.avi.AVLoadingIndicatorView;
+import com.wang.avi.indicators.BallGridPulseIndicator;
+import com.wang.avi.indicators.PacmanIndicator;
 
 /**
  * @author Nam
@@ -44,13 +48,13 @@ public class CustomProgressDialog extends Dialog {
 		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-//		iv = new ImageView(context);
-//		iv.setImageResource(theme);
-//		layout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-//		layout.addView(iv, params);
         aiv = new AVLoadingIndicatorView(context);
-        aiv.setIndicator("BallGridPulseIndicator");
-        aiv.setIndicatorColor(Color.DKGRAY);
+
+        aiv.setIndicator(new PacmanIndicator());
+        aiv.setIndicatorColor(Color.BLACK);
+        // float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getContext().getResources().getDisplayMetrics());
+        params.width = 75;
+        params.height = 75;
         layout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
 		layout.addView(aiv, params);
 		addContentView(layout, layoutParams);
@@ -58,21 +62,13 @@ public class CustomProgressDialog extends Dialog {
 
 	@Override
 	public void show() {
-		super.show();		
-//		RotateAnimation anim = new RotateAnimation(0.0f, 360.0f,
-//				Animation.RELATIVE_TO_SELF, .5f, Animation.RELATIVE_TO_SELF,
-//				.5f);
-//		anim.setInterpolator(new LinearInterpolator());
-//		anim.setRepeatCount(Animation.INFINITE);
-//		anim.setDuration(500);
-//		iv.setAnimation(anim);
-//		iv.startAnimation(anim);
-        aiv.show();
+		super.show();
+        aiv.smoothToShow();
 	}
 
 	@Override
     public void hide() {
 	    super.hide();
-	    aiv.hide();
+	    aiv.smoothToHide();
     }
 }

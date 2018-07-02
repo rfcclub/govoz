@@ -48,7 +48,7 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 					.parse();
 
 			result = processResult(document);
-			afterDownload(document);
+			afterDownload(document, params);
 		} catch (Exception e) {
 			Log.e("VozForumSearchTask", e.getMessage(), e);
 			processError(e);

@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class VozCache {
 	
-	public static final int LOOK_AHEAD_NUMBER = 2;
+	public static final int LOOK_AHEAD_NUMBER = 1;
     public static final String GUEST = "guest";
 	public static final String ANONYMOUS = "Anonymous";
 

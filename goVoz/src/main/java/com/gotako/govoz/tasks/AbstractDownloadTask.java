@@ -38,10 +38,12 @@ public abstract class AbstractDownloadTask<T> extends
 
     @Override
     protected void onPreExecute() {
-        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm.getActiveNetworkInfo() == null) {
-            mNoInternetConnection = true;
-            return;
+        if (mContext != null) { // if it has context so check connectivity
+            ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm.getActiveNetworkInfo() == null) {
+                mNoInternetConnection = true;
+                return;
+            }
         }
         if (showProcessDialog && mContext != null) {
             progressDialog = new CustomProgressDialog(mContext, VozConfig.instance().getLoadingDrawable());
@@ -86,7 +88,7 @@ public abstract class AbstractDownloadTask<T> extends
             result = processResult(document);
             System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000 );
             completed = true;
-            afterDownload(document);
+            afterDownload(document, params);
         } catch (Exception e) {
             //Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("AbstractDownloadTask", e.getMessage(), e);
@@ -98,7 +100,7 @@ public abstract class AbstractDownloadTask<T> extends
         return result;
     }
 
-    public void afterDownload(Document document) {
+    public void afterDownload(Document document, String... params) {
         // do nothing. It's the last chance to change download document.
     }
 
