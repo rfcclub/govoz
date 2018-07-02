@@ -127,7 +127,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                     Elements quotes = first.select("div[style^=margin:20px;]");
                     if(quotes!= null && quotes.size()>0) {
                         for(Element quote:quotes){
-                            post.setComplexStructure(true);
+                            //post.setComplexStructure(true);
                             quote.attr("style", "width:99%;background-color: #F2F2F2");
                             Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
                             if (tableQuote!=null) {
@@ -167,7 +167,13 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 								}
 							}
 							if (!post.isComplexStructure()) post.setComplexStructure(true);
-						}						
+						} else {
+						    String srcLink = image.attr("src").toLowerCase();
+						    if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
+						    else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
+						    else srcLink = srcLink.substring(srcLink.lastIndexOf("/")+ 1);
+                            image.attr("src", "file:///android_res/mipmap/" + srcLink);
+                        }
 					}
 
 					StringBuilder ctent = new StringBuilder(first.toString());
