@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
+import com.gotako.govoz.VozConstant;
 import com.gotako.govoz.data.Forum;
+import com.gotako.govoz.data.SearchDumpObject;
 import com.gotako.govoz.data.Thread;
 import com.gotako.util.Utils;
 
@@ -21,7 +23,7 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 	private List<Forum> subforums = new ArrayList<Forum>();
 	private int lastPage;
 	private String forumId;
-	private String forumName;
+    private String forumName;
 
 	public VozForumSearchTask(ActivityCallback<Thread> callback) {
 		super(callback);
@@ -31,22 +33,31 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 	protected List<Thread> doInBackgroundInternal(String[] params) {
 		String searchString = params[0];
 		String showPost = params[1];
+
 		List<Thread> result = new ArrayList<Thread>();
 		try {
+            Document document = null;
 			TaskHelper.disableSSLCertCheck();
-			Document document =  Jsoup.connect("https://vozforums.com/search.php?do=process")
-					.timeout(20000).cookies(VozCache.instance().getCookies())
-					.data("s", " ")
-					.data("securitytoken", VozCache.instance().getSecurityToken())
-					.data("do", "process")
-					.data("query", searchString)
-					.data("showposts", showPost)
-					.data("quicksearch", "1")
-					.data("childforums", "1")
-					.data("exactname", "1")
-					.execute()
-					.parse();
-
+			if (VozCache.instance().currentNavigateItem().mLink != null) {
+			    String customPage = params.length >= 3 ? params[2] : String.valueOf(VozCache.instance().currentNavigateItem().mCurrentPage);
+                document = Jsoup.connect(VozCache.instance().currentNavigateItem().mLink + "&page=" + customPage)
+                        .timeout(20000).cookies(VozCache.instance().getCookies())
+                        .execute()
+                        .parse();
+            } else {
+                document = Jsoup.connect("https://vozforums.com/search.php?do=process")
+                        .timeout(20000).cookies(VozCache.instance().getCookies())
+                        .data("s", " ")
+                        .data("securitytoken", VozCache.instance().getSecurityToken())
+                        .data("do", "process")
+                        .data("query", searchString)
+                        .data("showposts", showPost)
+                        .data("quicksearch", "1")
+                        .data("childforums", "1")
+                        .data("exactname", "1")
+                        .execute()
+                        .parse();
+            }
 			result = processResult(document);
 			afterDownload(document, params);
 		} catch (Exception e) {
@@ -128,13 +139,16 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 		}
 		//  get last page
 		String forumId = String.valueOf(VozCache.instance().getCurrentForum());
-		Elements pages = document.select("a[class=smallfont][href*=page=][href^=forumdisplay.php?f="+forumId+"][title^=Last Page]");
+		Elements pages = document.select("a[class=smallfont][href^=search.php?searchid][title^=Last Page]");
 		lastPage = VozCache.instance().getCurrentForumPage();
 		for(Element linkPage : pages) {
 			String href =linkPage.attr("href");
 			String extractLink = href.substring(href.indexOf("page=")+5);
 			int page = Integer.parseInt(extractLink);
 			if(page > lastPage) lastPage = page;
+			if (VozCache.instance().currentNavigateItem().mLink == null) {
+				VozCache.instance().currentNavigateItem().mLink = VozConstant.VOZ_LINK + "/" + href.substring(0, href.indexOf("&page="));
+			}
 		}
 		return listThreads;
 	}
@@ -152,22 +166,18 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 	protected List<Thread> doInBackground(String... params) {
 		return doInBackgroundInternal(params);
 	}
-	
-	public String getForumId() {
-		return forumId;
-	}
 
-	public void setForumId(String forumId) {
-		this.forumId = forumId;
-	}
-
-	public List<Forum> getSubforums() {
-		return subforums;
-	}
-
-	public void setSubforums(List<Forum> subforums) {
-		this.subforums = subforums;
-	}
+    @Override
+    public void afterDownload(Document document, String... params) {
+        SearchDumpObject searchDumpObject = new SearchDumpObject();
+        searchDumpObject.searchString = params[0];
+        searchDumpObject.showPosts = params[1];
+        searchDumpObject.document = document;
+        searchDumpObject.lastPage = lastPage;
+        String currentPage = String.valueOf(VozCache.instance().currentNavigateItem().mCurrentPage);
+        String currentSearchString = VozCache.instance().currentNavigateItem().mLink;
+        VozCache.instance().putDataToCache(currentSearchString + "&page=" + currentPage, searchDumpObject);
+    }
 
 	public int getLastPage() {
 		return lastPage;
@@ -176,4 +186,12 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
+
+    public String getForumName() {
+        return forumName;
+    }
+
+    public void setForumName(String forumName) {
+        this.forumName = forumName;
+    }
 }

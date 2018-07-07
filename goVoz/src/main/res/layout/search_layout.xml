@@ -13,22 +13,45 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginBottom="5dp"
-            android:textSize="16sp"
-        />
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/search_title"
+            android:textSize="16sp" />
+
         <EditText
             android:id="@+id/txtSearchString"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:inputType="number"
-            android:textSize="16sp" >
+            android:inputType="text|number"
+            android:textSize="16sp">
 
             <requestFocus />
         </EditText>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/rdoShowPosts">
+
+            <RadioButton
+                android:id="@+id/rdoShowThreads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/show_threads_seach" />
+
+            <RadioButton
+                android:id="@+id/rdoShowPosts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="@string/show_posts_search" />
+        </RadioGroup>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -37,7 +60,7 @@
             <Button
                 android:id="@+id/btnGo"
                 android:layout_width="80dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
@@ -45,7 +68,7 @@
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="80dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"

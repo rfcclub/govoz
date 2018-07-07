@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 // import com.balysv.materialripple.MaterialRippleLayout;
 import com.gotako.govoz.data.Forum;
+import com.gotako.govoz.data.VozDumpObject;
 import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 
 import java.util.ArrayList;
@@ -74,10 +75,16 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     }
 
     private void getVozForums() {
+        VozDumpObject dumpObject = (VozDumpObject) VozCache.instance().getDataFromCache(VozConstant.VOZ_LINK);
         VozMainForumDownloadTask task = new VozMainForumDownloadTask(this);
         task.setContext(getActivity());
-        task.setShowProcessDialog(true);
-        task.execute(VozConstant.VOZ_LINK);
+        if (dumpObject != null) {
+            List<Forum> forums = task.processResult(dumpObject.document);
+            doCallback(forums);
+        } else {
+            task.setShowProcessDialog(true);
+            task.execute(VozConstant.VOZ_LINK);
+        }
     }
 
     private void updateNavigationPanel() {

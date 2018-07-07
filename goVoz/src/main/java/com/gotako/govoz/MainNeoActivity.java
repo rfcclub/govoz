@@ -15,18 +15,21 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.tasks.VozForumSearchTask;
 import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
+import static com.gotako.govoz.VozConstant.SPLIT_SIGN;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class MainNeoActivity extends VozFragmentActivity
         implements MainFragment.OnFragmentInteractionListener,
         ForumFragment.OnFragmentInteractionListener,
         ThreadFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener,
         InboxFragment.OnFragmentInteractionListener,
         InboxDetailFragment.OnFragmentInteractionListener {
 
@@ -317,6 +320,14 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     public void quickSearch(String searchString, String showPosts) {
-
+        NavigationItem item = new NavigationItem(null, NavigationItem.SEARCH);
+        VozCache.instance().mNeoNavigationList.add(item);
+        SearchFragment searchFragment = SearchFragment.newInstance(searchString, showPosts);
+        mFragment = searchFragment;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_container, searchFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

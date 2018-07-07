@@ -10,6 +10,8 @@ public class NavigationItem {
     public static final int EXTERNAL_LINK = 4;
     public static final int INBOX = 5;
     public static final int INBOX_DETAIL = 6;
+    public static final int SEARCH = 7;
+
     public String mLink;
     public int mType;
     public int mLastPage;

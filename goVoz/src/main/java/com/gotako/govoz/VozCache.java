@@ -212,7 +212,11 @@ public class VozCache {
 	}
 
 	public NavigationItem currentNavigateItem() {
-		return mNeoNavigationList.get(mNeoNavigationList.size() - 1);
+		if (mNeoNavigationList.size() > 0) {
+			return mNeoNavigationList.get(mNeoNavigationList.size() - 1);
+		} else {
+			return null;
+		}
 	}
 
 	public void addNavigationItem(NavigationItem navItem) {

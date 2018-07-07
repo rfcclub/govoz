@@ -20,4 +20,5 @@ public class VozConstant {
 	public static final String FORUM_SIGN = "forumdisplay.php";
 	public static final String THREAD_SIGN = "showthread.php";
 	public static final String ATTTACHMENT_SIGN = "attachment.php";
+	public static final String SPLIT_SIGN = "______";
 }

@@ -229,7 +229,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         }
     }
 
-    private void processResult(List<Post> result, int last) {
+    protected void processResult(List<Post> result, int last) {
         mPosts = result;
         VozCache.instance().currentNavigateItem().mLastPage = last;
         if (VozConfig.instance().isPreloadForumsAndThreads()) {

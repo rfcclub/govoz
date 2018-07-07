@@ -73,7 +73,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         if (mListener != null) mListener.updateNavigationPanel(true);
     }
 
-    private void processNavigationLink() {
+    protected void processNavigationLink() {
         // last element of list should be forum link
         NavigationItem currentNavigationItem = VozCache.instance().currentNavigateItem();
         String forumLink = currentNavigationItem.mLink;

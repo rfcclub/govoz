@@ -5,6 +5,7 @@ import android.content.Context;
 import com.gotako.govoz.NavigationItem;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
+import com.gotako.govoz.tasks.VozForumSearchTask;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
@@ -37,6 +38,7 @@ public class CacheUtils {
             }
         }
     }
+
 
     private static void downloadForum(Context mContext, String currentForumId, int page) {
         VozForumDownloadTask task = new VozForumDownloadTask(null);

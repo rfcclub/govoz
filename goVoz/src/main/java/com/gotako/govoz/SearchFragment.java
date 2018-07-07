@@ -8,6 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gotako.govoz.data.SearchDumpObject;
+import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.tasks.VozForumSearchTask;
+
+import java.util.List;
+
+import static com.gotako.govoz.VozConstant.PASSWORD;
+import static com.gotako.govoz.VozConstant.SPLIT_SIGN;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,16 +26,13 @@ import android.view.ViewGroup;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class SearchFragment extends ForumFragment {
+    private static final String SEARCH_STRING = "searchString";
+    private static final String SHOW_POSTS = "showPosts";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private String mSearchString = null;
+    private String mShowPosts = null;
+    private boolean mForceReload = true;
     private OnFragmentInteractionListener mListener;
 
     public SearchFragment() {
@@ -37,40 +43,67 @@ public class SearchFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param searchString Parameter 1.
+     * @param showPosts Parameter 2.
      * @return A new instance of fragment SampleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
+    public static SearchFragment newInstance(String searchString, String showPosts) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(SEARCH_STRING, searchString);
+        args.putString(SHOW_POSTS, showPosts);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    protected void processNavigationLink() {
+        loadThreads();
+    }
+
+    @Override
+    protected void doRefresh() {
+        loadThreads();
+    }
+
+    @Override
+    public void loadThreads() {
+        // last element of list should be forum link
+        NavigationItem currentNavigationItem = VozCache.instance().currentNavigateItem();
+        String searchLink = currentNavigationItem.mLink;
+        boolean forceReload = VozConfig.instance().isAutoReloadForum() || mForceReload;
+        mForceReload = false; // reset force reload immediately
+        VozForumSearchTask searchTask = new VozForumSearchTask(this);
+        searchTask.setContext(getActivity());
+        if (searchLink != null) {
+            String key = searchLink + "&page=" + VozCache.instance().currentNavigateItem().mCurrentPage;
+            SearchDumpObject searchDumpObject = (SearchDumpObject) VozCache.instance().getDataFromCache(key);
+            if (!forceReload && searchDumpObject != null) {
+                List<Thread> threads = searchTask.processResult(searchDumpObject.document);
+                doCallback(threads, null, searchDumpObject.lastPage, searchTask.getForumName());
+            } else {
+                if (mSearchString != null && mShowPosts != null) {
+                    searchTask.setShowProcessDialog(true);
+                    searchTask.execute(mSearchString, mShowPosts);
+                }
+            }
+        } else {
+            if (mSearchString != null && mShowPosts != null) {
+                searchTask.setShowProcessDialog(true);
+                searchTask.execute(mSearchString, mShowPosts);
+            } else {
+                // TODO
+            }
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sample, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mSearchString = getArguments().getString(SEARCH_STRING);
+            mShowPosts = getArguments().getString(SHOW_POSTS);
         }
     }
 
@@ -102,7 +135,7 @@ public class SearchFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onThreadClicked(Thread thread);
+        void updateNavigationPanel(boolean visible);
     }
 }
