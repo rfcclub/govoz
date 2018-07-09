@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         VozCache.instance().navigationList.clear();
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm.getActiveNetworkInfo() != null) {
-            getVozForums();
+            // getVozForums();
         } else {
             Toast.makeText(getActivity(), "Không có kết nối đến mạng", Toast.LENGTH_SHORT).show();
         }
@@ -73,7 +74,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     protected void doRefresh() {
         getVozForums();
     }
-
+    private int mCount = 0;
     private void getVozForums() {
         VozDumpObject dumpObject = (VozDumpObject) VozCache.instance().getDataFromCache(VozConstant.VOZ_LINK);
         VozMainForumDownloadTask task = new VozMainForumDownloadTask(this);
@@ -84,11 +85,15 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
             else {
                 task.setShowProcessDialog(true);
                 task.execute(VozConstant.VOZ_LINK);
+                mCount+=1;
             }
         } else {
             task.setShowProcessDialog(true);
             task.execute(VozConstant.VOZ_LINK);
+            mCount+=1;
         }
+        Log.i("MainFragment", "Just load vozforums in " + mCount + " times");
+        System.out.println("MainFragment-Just load vozforums in " + mCount + " times");
     }
 
     private void updateNavigationPanel() {
@@ -203,7 +208,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     public void onResume() {
         super.onResume();
         ((MainNeoActivity)getActivity()).mFragment = this;
-        getVozForums();
+        // getVozForums();
     }
 
     @Override

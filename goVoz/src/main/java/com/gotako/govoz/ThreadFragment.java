@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -258,11 +259,14 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 final HtmlTextView htmlTextView = (HtmlTextView) view.findViewById(R.id.textContent);
                 if (post.isComplexStructure()) {
                     webView.getSettings().setJavaScriptEnabled(true);
+                    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+                    webView.getSettings().setPluginState(WebSettings.PluginState.ON);
                     if (webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
                         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
                     } else {
                         webView.setLayerType(View.LAYER_TYPE_NONE, null);
                     }
+
                     webView.setDrawingCacheEnabled(false);
                     // disable all click listener in webview
                     webView.setClickable(false);
@@ -326,7 +330,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                     webView.setVisibility(View.GONE);
                     htmlTextView.setVisibility(View.VISIBLE);
                     htmlTextView.setHtml(post.getContent(),
-                            new HtmlHttpImageGetter(htmlTextView));
+                            new HtmlAssetsImageGetter(htmlTextView));
                     htmlTextView.invalidate();
                 }
                 //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);

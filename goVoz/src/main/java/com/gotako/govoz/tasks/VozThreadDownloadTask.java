@@ -246,7 +246,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                 if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
                 else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
                 else srcLink = srcLink.substring(srcLink.lastIndexOf("/")+ 1);
-                image.attr("src", "file:///android_res/mipmap/" + srcLink);
+                image.attr("src", srcLink);
             }
         }
     }
