@@ -9,8 +9,11 @@ import com.gotako.govoz.service.DownloadBatch;
 import com.gotako.govoz.service.ImageDownloadService;
 import com.gotako.util.Utils;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -130,51 +133,13 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                             post.setComplexStructure(true);
                             quote.attr("style", "width:99%;background-color: #F2F2F2");
                             Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
-                            if (tableQuote!=null) {
-                                tableQuote.attr("cellpadding","1");
-                                tableQuote.attr("width","100%");
-                                tableQuote.removeAttr("class");
-                                tableQuote.attr("style", "table-layout: fixed;box-sizing: border-box");
-                                Element quoteLink = Utils.getFirstElement((tableQuote.select("div > a")));
-                                if (quoteLink != null) {
-                                    quoteLink.remove();
-                                }
-                                Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
-                                String quoteContent = null;
-                                if(td != null) {
-//                                    td.attr("style","border:none;background-color: #F2F2F2");
-                                    quoteContent = td.html();
-                                    tableQuote.remove();
-                                    quote.append("<div style='width: 99%;background-color: #F2F2F2'>" + quoteContent + "</div>");
-                                }
-                            }
+                            processQuote(tableQuote, quote);
                         }
                     }
 
 					//resize image
 					Elements images = first.select("img");
-					for(Element image:images) {
-						// if not smilies so wrap it inside an inline block and restrict the size						
-						if(!image.attr("src").contains("images/smilies/")) {
-							image.attr("style","display: block;max-width: 100%");
-							image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
-							image.wrap("<div style='display: inline-block'></div>");
-							if(VozConfig.instance().isUseBackgroundService()) {
-								if (image.attr("src").startsWith("http")) {
-									batch.add(image.attr("src"));
-									String newLink = "file://" + convertToLocalLink(image.attr("src"));
-									image.attr("src", newLink);
-								}
-							}
-							if (!post.isComplexStructure()) post.setComplexStructure(true);
-						} else {
-						    String srcLink = image.attr("src").toLowerCase();
-						    if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
-						    else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
-						    else srcLink = srcLink.substring(srcLink.lastIndexOf("/")+ 1);
-                            image.attr("src", "file:///android_res/mipmap/" + srcLink);
-                        }
-					}
+                    processImages(images, post, batch);
 
 					StringBuilder ctent = new StringBuilder(first.toString());
 					post.setContent(ctent.toString());
@@ -190,6 +155,16 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 						for(Element pre:allPres){
 							pre.attr("style", "margin: 0px;padding: 1px;border: 1px solid;width: 100%;text-align: left;overflow: hidden");
 						}
+                        // resize quote
+                        Elements quotesInSign = possibleSign.select("table[cellpadding=6][class*=voz-bbcode-quote]");
+                        if(quotesInSign!= null && quotesInSign.size()>0) {
+                            for(Element quote:quotesInSign){
+                                processQuote(quote, possibleSign);
+                            }
+                        }
+                        //resize image
+                        Elements quoteImages = first.select("img");
+                        processImages(quoteImages, null, batch);
 						post.setUserSign("<div style='display: block;width:100%;overflow: hidden'>" + possibleSign.toString() + "</div>");
 					}
                     // try to get attachment
@@ -250,7 +225,55 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		return posts;
 	}
 
-	private void cleanUp(Element first, String ele, String stylesheet) {
+    private void processImages(Elements images, Post post, DownloadBatch batch) {
+	    if (images == null) return;
+        for(Element image:images) {
+            // if not smilies so wrap it inside an inline block and restrict the size
+            if(!image.attr("src").contains("images/smilies/")) {
+                image.attr("style","display: block;max-width: 100%");
+                image.attr("onerror","this.src='file:///android_res/drawable/load_black_glass.gif';");
+                image.wrap("<div style='display: inline-block'></div>");
+                if(VozConfig.instance().isUseBackgroundService()) {
+                    if (image.attr("src").startsWith("http")) {
+                        batch.add(image.attr("src"));
+                        String newLink = "file://" + convertToLocalLink(image.attr("src"));
+                        image.attr("src", newLink);
+                    }
+                }
+                if (post!=null && !post.isComplexStructure()) post.setComplexStructure(true);
+            } else {
+                String srcLink = image.attr("src").toLowerCase();
+                if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
+                else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
+                else srcLink = srcLink.substring(srcLink.lastIndexOf("/")+ 1);
+                image.attr("src", "file:///android_res/mipmap/" + srcLink);
+            }
+        }
+    }
+
+    private void processQuote(Element tableQuote, Element context) {
+        if (tableQuote!=null) {
+            tableQuote.attr("cellpadding","1");
+            tableQuote.attr("width","100%");
+            tableQuote.removeAttr("class");
+            tableQuote.attr("style", "table-layout: fixed;box-sizing: border-box");
+            Element quoteLink = Utils.getFirstElement((tableQuote.select("div > a")));
+            if (quoteLink != null) {
+                quoteLink.remove();
+            }
+            Element td = Utils.getFirstElement(tableQuote.select("td[style*=inset]"));
+            String quoteContent = null;
+            if(td != null) {
+                quoteContent = td.html();
+                List<Node> nodes = Parser.parseFragment("<div style='width: 99%;background-color: #F2F2F2'>" + quoteContent + "</div>",
+                        context,
+                        context.baseUri());
+                tableQuote.replaceWith(nodes.get(0));
+            }
+        }
+    }
+
+    private void cleanUp(Element first, String ele, String stylesheet) {
 		Elements elements = first.select(ele);
 		for(Element element: elements) {
 			element.attr("style", stylesheet);
@@ -267,8 +290,6 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 			Element table = document
 					.select("table[cellpadding=0][cellspacing=0][border=0][width=100%][style=margin-bottom:3px;padding:0px 10px 0px 0px]")
 					.first();
-			// Element closeImage =
-			// table.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]").first();
 			Element closeImage = Utils
 					.getFirstElement(table
 							.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]"));
@@ -325,8 +346,10 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 	@Override
 	protected void onPostExecute(List<Post> result) {		
 		doOnPostExecute(result);
-		
 		// do call back
+		if (errorMessage == null && exception != null) {
+			errorMessage = exception.getMessage();
+		}
 		if (callback != null) {
 			callback.doCallback(result, errorMessage, lastPage, threadName, closed, pValue, replyLink);
 		}

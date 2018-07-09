@@ -37,7 +37,9 @@ import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
 
+import org.sufficientlysecure.htmltextview.HtmlAssetsImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
+import org.sufficientlysecure.htmltextview.HtmlResImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.UnsupportedEncodingException;
@@ -323,8 +325,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 } else {
                     webView.setVisibility(View.GONE);
                     htmlTextView.setVisibility(View.VISIBLE);
-                    htmlTextView.setHtml(post.getContent().replace("images/smilies/",
-                            VOZ_LINK + "/images/smilies/"),
+                    htmlTextView.setHtml(post.getContent(),
                             new HtmlHttpImageGetter(htmlTextView));
                     htmlTextView.invalidate();
                 }

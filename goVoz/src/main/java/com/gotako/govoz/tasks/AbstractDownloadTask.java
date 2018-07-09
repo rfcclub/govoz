@@ -31,6 +31,8 @@ public abstract class AbstractDownloadTask<T> extends
     protected boolean showProcessDialog;
     protected int mRetries = 0;
     protected boolean mNoInternetConnection;
+    protected boolean hasError = false;
+    protected Exception exception = null;
 
     public AbstractDownloadTask(ActivityCallback<T> callback) {
         this.callback = callback;
@@ -83,10 +85,10 @@ public abstract class AbstractDownloadTask<T> extends
                         .data("securitytoken", VozCache.instance().getSecurityToken())
                         .post();
             }
-            System.out.println("Page load in: " + (System.currentTimeMillis() - startMillis) / 1000 );
+            System.out.println("Page load in: " + (System.currentTimeMillis() - startMillis) / 1000);
             startMillis = System.currentTimeMillis();
             result = processResult(document);
-            System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000 );
+            System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000);
             completed = true;
             afterDownload(document, params);
         } catch (Exception e) {
@@ -115,22 +117,19 @@ public abstract class AbstractDownloadTask<T> extends
                 progressDialog.dismiss();
                 progressDialog = null;
             }
-        } catch (Exception e1) {
-            Log.e("AbstractDownloadTask", e1.getMessage(), e1);
+        } finally {
+            hasError = true;
+            exception = e;
         }
     }
 
     public abstract List<T> processResult(Document document);
 
     protected void suspendDialog() {
-        Handler handler = new Handler();
-        handler.post(() -> {
-            if (progressDialog != null) {
-                progressDialog.hide();
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-        });
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     @Override
@@ -140,8 +139,13 @@ public abstract class AbstractDownloadTask<T> extends
             return;
         }
         doOnPostExecute(result);
-        if (callback != null)
-            callback.doCallback(result);
+        if (callback != null) {
+            String errorMessage = null;
+            if (hasError && exception != null) {
+                errorMessage = exception.getMessage();
+            }
+            callback.doCallback(result, errorMessage);
+        }
 
     }
 

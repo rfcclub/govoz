@@ -80,7 +80,11 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         task.setContext(getActivity());
         if (dumpObject != null) {
             List<Forum> forums = task.processResult(dumpObject.document);
-            doCallback(forums);
+            if (forums.size() > 0) doCallback(forums);
+            else {
+                task.setShowProcessDialog(true);
+                task.execute(VozConstant.VOZ_LINK);
+            }
         } else {
             task.setShowProcessDialog(true);
             task.execute(VozConstant.VOZ_LINK);
@@ -119,7 +123,12 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     @Override
     public void doCallback(List<Forum> result, Object... extra) {
         if (result == null || result.size() == 0) {
-            Toast.makeText(getActivity(), "Cannot access to VozForum. Please try again later.", Toast.LENGTH_SHORT).show();
+            String errMsg = extra.length > 0 ? (String) extra[0]: null;
+            if (errMsg == null)
+                Toast.makeText(getActivity(), "Cannot access to VozForum. Please try again later.", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getActivity(), errMsg, Toast.LENGTH_LONG).show();
+            return;
         }
 
         mForumGroups = new ArrayList<>();
@@ -144,6 +153,12 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
 
         // Fill data to layout
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+        if (getView() == null) {
+            // error here, should quit and create fragment again
+            if (mListener != null) mListener.reload();
+            else if (getActivity() != null) ((MainNeoActivity)getActivity()).reloadCurrentFragment();
+            return;
+        }
         LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
         parent.removeAllViews();
         updateForum(parent, layoutInflater);
@@ -208,5 +223,6 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     public interface OnFragmentInteractionListener {
         void onForumClicked(String forumIndex);
         void updateNavigationPanel(boolean visible);
+        void reload();
     }
 }

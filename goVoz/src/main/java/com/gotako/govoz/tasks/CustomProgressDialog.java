@@ -53,8 +53,8 @@ public class CustomProgressDialog extends Dialog {
         aiv.setIndicator(new PacmanIndicator());
         aiv.setIndicatorColor(Color.BLACK);
         // float pixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 75, getContext().getResources().getDisplayMetrics());
-        params.width = 75;
-        params.height = 75;
+        params.width = 150;
+        params.height = 150;
         layout.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
 		layout.addView(aiv, params);
 		addContentView(layout, layoutParams);

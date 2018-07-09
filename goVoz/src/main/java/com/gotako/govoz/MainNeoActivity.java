@@ -230,6 +230,11 @@ public class MainNeoActivity extends VozFragmentActivity
         refreshActionBarIcon();
     }
 
+    @Override
+    public void reload() {
+        reloadCurrentFragment();
+    }
+
     private void goToPage(int page) {
         if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goToPage(page);
@@ -329,5 +334,16 @@ public class MainNeoActivity extends VozFragmentActivity
                 .replace(R.id.frame_container, searchFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void reloadCurrentFragment() {
+        // TODO: Seems it has error, try to go to main page
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } else {
+            Intent intent = new Intent(this, MainNeoActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
