@@ -330,7 +330,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                     webView.setVisibility(View.GONE);
                     htmlTextView.setVisibility(View.VISIBLE);
                     htmlTextView.setHtml(post.getContent(),
-                            new HtmlAssetsImageGetter(htmlTextView));
+                            new HtmlHttpImageGetter(htmlTextView));
                     htmlTextView.invalidate();
                 }
                 //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
