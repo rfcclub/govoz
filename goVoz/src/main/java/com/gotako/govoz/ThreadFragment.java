@@ -105,7 +105,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        processNavigationLink();
+        // processNavigationLink();
     }
 
     private void processNavigationLink() {
@@ -518,7 +518,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
 
     @Override
     protected void doRefresh() {
-        getThreads();
+        processNavigationLink();
     }
 
     /**

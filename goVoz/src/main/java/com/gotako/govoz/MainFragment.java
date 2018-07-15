@@ -74,7 +74,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     protected void doRefresh() {
         getVozForums();
     }
-    private int mCount = 0;
+
     private void getVozForums() {
         VozDumpObject dumpObject = (VozDumpObject) VozCache.instance().getDataFromCache(VozConstant.VOZ_LINK);
         VozMainForumDownloadTask task = new VozMainForumDownloadTask(this);
@@ -85,15 +85,12 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
             else {
                 task.setShowProcessDialog(true);
                 task.execute(VozConstant.VOZ_LINK);
-                mCount+=1;
             }
         } else {
             task.setShowProcessDialog(true);
             task.execute(VozConstant.VOZ_LINK);
-            mCount+=1;
         }
-        Log.i("MainFragment", "Just load vozforums in " + mCount + " times");
-        System.out.println("MainFragment-Just load vozforums in " + mCount + " times");
+
     }
 
     private void updateNavigationPanel() {

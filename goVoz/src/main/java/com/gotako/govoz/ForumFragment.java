@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +74,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         if (mListener != null) mListener.updateNavigationPanel(true);
     }
 
+    int mCount = 0;
     protected void processNavigationLink() {
         // last element of list should be forum link
         NavigationItem currentNavigationItem = VozCache.instance().currentNavigateItem();
@@ -95,7 +97,10 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             if (foundIndex > -1) page = Integer.parseInt(parameters[foundIndex].split("\\=")[1]);
             loadThreads(mForumId, page);
         }
+        Log.i("ForumFragment", "Just load vozforums in " + mCount + " times");
+        System.out.println("ForumFragment-Just load vozforums in " + mCount + " times");
     }
+
 
     public void loadThreads() {
         NavigationItem item = VozCache.instance().currentNavigateItem();
@@ -113,9 +118,11 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         } else {
             loadThreads(forumId, page);
         }
+
     }
 
     public void loadThreads(int forumId, int page) {
+        mCount+=1;
         VozForumDownloadTask task = new VozForumDownloadTask(this);
         int _forumId = forumId;
         if (_forumId <= 0) { // invalid forum id
@@ -329,7 +336,6 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
     public void onResume() {
         super.onResume();
         ((MainNeoActivity)getActivity()).mFragment = this;
-        processNavigationLink();
     }
 
     @Override

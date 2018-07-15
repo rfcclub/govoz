@@ -12,9 +12,12 @@ import android.widget.Toast;
 import com.gotako.govoz.ActivityCallback;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
+import com.gotako.util.Utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +90,7 @@ public abstract class AbstractDownloadTask<T> extends
             }
             System.out.println("Page load in: " + (System.currentTimeMillis() - startMillis) / 1000);
             startMillis = System.currentTimeMillis();
+            checkError(document);
             result = processResult(document);
             System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000);
             completed = true;
@@ -100,6 +104,23 @@ public abstract class AbstractDownloadTask<T> extends
         // }
 
         return result;
+    }
+
+    private void checkError(Document document) throws Exception {
+        Elements elements = document.select("table[class=tborder][cellpadding=6][cellspacing=1][border=0][align=center]");
+        if (elements != null && elements.size() > 0) {
+            Element errorElement = null;
+            for (Element element : elements) {
+                if ("vBulletin Message".equals(Utils.getFirstText(element.select("td")))) {
+                    errorElement = element;
+                    break;
+                }
+            }
+            if (errorElement != null) {
+                String errorMsg = Utils.getFirstText(errorElement.select("p"));
+                throw new Exception(errorMsg);
+            }
+        }
     }
 
     public void afterDownload(Document document, String... params) {
