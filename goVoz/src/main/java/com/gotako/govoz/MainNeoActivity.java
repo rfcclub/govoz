@@ -138,8 +138,7 @@ public class MainNeoActivity extends VozFragmentActivity
     public void onThreadClicked(Thread thread) {
         String url = VOZ_LINK + "/"
                 + thread.getThreadUrl()
-                + "&page="
-                + String.valueOf(VozCache.instance().getCurrentThreadPage());
+                + "&page=1";
         goToThreadId(thread.getId(), url);
     }
 

@@ -18,8 +18,7 @@ public class ThreadSelectDialog extends AbstractNoBorderDialog {
             return;
         }
 
-        String threadUrl = THREAD_URL_T + param[0].trim() + "&page="
-                + String.valueOf(VozCache.instance().getCurrentThreadPage());
+        String threadUrl = THREAD_URL_T + param[0].trim() + "&page=1";
 
         if(activity instanceof MainNeoActivity) {
             ((MainNeoActivity)activity).goToThreadId(threadId, threadUrl);
