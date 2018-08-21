@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
 import android.util.SparseArray;
 
+import com.google.gson.Gson;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 
@@ -229,5 +230,43 @@ public class VozCache {
 
 	public boolean hasDataInCache(String key) {
 		return memoryCache.get(key) != null;
+	}
+
+	public void savePreferecences(Context context) {
+		Gson gson = new Gson();
+		String rightThreadPinsString = gson.toJson(pinItemThreadList.toArray(new NavDrawerItem[]{}));
+		String rightForumPinsString = gson.toJson(pinItemForumList.toArray(new NavDrawerItem[]{}));
+		SharedPreferences prefs = context.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
+		prefs.edit()
+				.putString("rightThreadPins", rightThreadPinsString)
+				.putString("rightForumPins", rightForumPinsString)
+				.apply();
+
+	}
+
+	public void addThreadItem(NavDrawerItem pinThread) {
+		boolean found = false;
+		for(NavDrawerItem item : pinItemThreadList) {
+			if (item.id.equals(pinThread.id)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			pinItemThreadList.add(pinThread);
+		}
+	}
+
+	public void addForumItem(NavDrawerItem pinForum) {
+		boolean found = false;
+		for(NavDrawerItem item : pinItemForumList) {
+			if (item.id.equals(pinForum.id)) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			pinItemForumList.add(pinForum);
+		}
 	}
 }

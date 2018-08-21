@@ -180,6 +180,8 @@ public class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
 			sink.close();
 		} catch (IOException ex) {
 			Log.e("AVATAR_ERROR", ex.getMessage());
+		} finally {
+			if (response != null) response.close();
 		}
 	}
 

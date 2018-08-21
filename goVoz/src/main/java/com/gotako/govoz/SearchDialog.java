@@ -1,29 +1,12 @@
 package com.gotako.govoz;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDialog;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.gotako.govoz.AbstractNoBorderDialog;
-import com.gotako.govoz.ForumActivity;
-import com.gotako.govoz.R;
-import com.gotako.govoz.VozCache;
-
-import static com.gotako.govoz.VozConstant.FORUM_URL_F;
-import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
 
 /**
  * Created by Nam on 9/12/2015.

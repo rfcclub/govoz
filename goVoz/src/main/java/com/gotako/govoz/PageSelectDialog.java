@@ -1,118 +1,33 @@
-/**
- * 
- */
 package com.gotako.govoz;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatDialog;
-import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.gotako.util.Utils;
+import static com.gotako.govoz.VozConstant.THREAD_URL_T;
 
 /**
- * @author HA LINH
- *
+ * Created by Nam on 9/12/2015.
  */
-public class PageSelectDialog extends android.support.v7.app.AppCompatDialogFragment {
+public class PageSelectDialog extends AbstractNoBorderDialog {
 
-	protected Activity activity;
-
-	protected EditText editText;
-
-	public PageSelectDialog() {
-	}
-	
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AppCompatDialog dialog = new AppCompatDialog(getActivity(), getTheme());
-		return dialog;
-	}
-
-	@Override
-    public void setupDialog(Dialog dialog, int style) {
-        switch (style) {
-            case STYLE_NO_INPUT:
-                dialog.getWindow().addFlags(
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                // fall through...
-            case STYLE_NO_FRAME:
-            case STYLE_NO_TITLE:
-                ((AppCompatDialog) dialog).supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
+    public PageSelectDialog() {
+        super();
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+    @Override
+    public void doOkAction(String... param) {
+        int page = 0;
+        try {
+            page = Integer.parseInt(param[0]);
+        } catch(NumberFormatException ex) {
+            Toast.makeText(activity,getResources().getString(R.string.error_forum_select_id),Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-		final View view = inflater.inflate(R.layout.select_page_layout, container);
-
-	    DisplayMetrics displaymetrics = new DisplayMetrics();
-	    activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-	    int width = displaymetrics.widthPixels;
-	    
-		getDialog().getWindow().setLayout((int) (width * 0.85), 440);
-		editText = (EditText) view.findViewById(R.id.txtSearchString);
-		
-		((TextView) view.findViewById(R.id.txtTitle)).setText("Số trang tối đa: " + ((ForumActivity) activity).getLastPage());
-		
-		((Button) view.findViewById(R.id.btnGo)).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				goToPage();
-			}
-		});
-		
-		((Button) view.findViewById(R.id.btnCancel)).setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				cancel();
-			}
-		});
-		
-		return view;
-	}
-
-	public void goToPage() {
-		int page =  Utils.convertInt(editText.getText().toString(), VozCache.instance().getCurrentForumPage());
-		VozCache.instance().setCurrentForumPage(page);
-		((ForumActivity) activity).loadThreads();
-		getDialog().dismiss();
-	}
-	
-	public void cancel() {
-		getDialog().dismiss();
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-		lp.copyFrom(getDialog().getWindow().getAttributes());
-		
-	    DisplayMetrics displaymetrics = new DisplayMetrics();
-	    activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-	    int width = displaymetrics.widthPixels;
-		
-		lp.width = (int) (width * 0.65);
-		getDialog().getWindow().setAttributes(lp);
-	}
-
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
-
+        if (page > VozCache.instance().currentNavigateItem().mLastPage) {
+            page = VozCache.instance().currentNavigateItem().mLastPage;
+        }
+        if (page > 0 && page != VozCache.instance().currentNavigateItem().mCurrentPage) {
+            ((MainNeoActivity)activity).mFragment.goToPage(page);
+        }
+    }
 }

@@ -57,6 +57,7 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
                         .data("exactname", "1")
                         .execute()
                         .parse();
+
             }
 			result = processResult(document);
 			afterDownload(document, params);

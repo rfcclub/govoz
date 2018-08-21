@@ -100,7 +100,7 @@ public class PostReplyTask extends AsyncTask<String, Void, Boolean> {
 		}
 		List<Boolean> boo = new ArrayList<Boolean>();
 		boo.add(result);
-		callback.doCallback(boo, null);
+		callback.doCallback(boo);
 	}
 
 }

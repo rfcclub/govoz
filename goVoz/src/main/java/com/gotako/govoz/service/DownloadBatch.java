@@ -94,6 +94,8 @@ public class DownloadBatch {
                         // if(VozConfig.instance().imageOptimizer()) optimize(savePath);
                     } catch (Exception ex) {
                         if(ex.getMessage() != null) Log.e("AVATAR_ERROR", ex.getMessage());
+                    } finally {
+                        if (response != null) response.close();
                     }
                 }
 

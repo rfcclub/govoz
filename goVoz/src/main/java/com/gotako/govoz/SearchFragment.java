@@ -63,11 +63,6 @@ public class SearchFragment extends ForumFragment {
     }
 
     @Override
-    protected void doRefresh() {
-        loadThreads();
-    }
-
-    @Override
     public void loadThreads() {
         // last element of list should be forum link
         NavigationItem currentNavigationItem = VozCache.instance().currentNavigateItem();

@@ -70,28 +70,22 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
         txtTitle.setText(navDrawerItems.get(position).title);
         
-        imgIcon.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-                new AlertDialog.Builder(baseFragmentActivity)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(R.string.remove_shortcut)
-                        .setMessage(Utils.getString(baseFragmentActivity, R.string.really_want_to_remove_shotcut) + "?")
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                navDrawerItems.remove(position);
-                                NavDrawerListAdapter.this.notifyDataSetChanged();
-                                baseFragmentActivity.savePinForumsList();
-                                baseFragmentActivity.savePinThreadsList();
-                            }
+        imgIcon.setOnClickListener(v -> new AlertDialog.Builder(baseFragmentActivity)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(R.string.remove_shortcut)
+                .setMessage(Utils.getString(baseFragmentActivity, R.string.really_want_to_remove_shotcut) + "?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        navDrawerItems.remove(position);
+                        NavDrawerListAdapter.this.notifyDataSetChanged();
+                        baseFragmentActivity.savePinForumsList();
+                        baseFragmentActivity.savePinThreadsList();
+                    }
 
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-			}
-		});
+                })
+                .setNegativeButton(R.string.no, null)
+                .show());
         
         return convertView;
     }

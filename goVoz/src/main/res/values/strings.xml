@@ -144,4 +144,7 @@
     <string name="advance_search">TÌM KIẾM NÂNG CAO</string>
     <string name="search_title">Tìm kiếm trong forums</string>
     <string name="preloadForumAndThreadText">Load trước forum và thớt để truy cập nhanh (tốn nhiều data nếu dùng 3G/4G/LTE)</string>
+    <string name="rating">Rate Thread</string>
+    <string name="subcribe">Subcribe</string>
+    <string name="thread_closed">Thread is closed. Cannot reply.</string>
 </resources>

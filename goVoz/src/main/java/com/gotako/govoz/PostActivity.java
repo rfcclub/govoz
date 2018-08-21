@@ -71,18 +71,7 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 		setResult(1);
 		finish();
 	}
-	
-	@Override
-	public void lastBreath(Exception ex) {
-		ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
-		BugSenseHandler.sendException(ex);
-	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_insert_avatar).setIcon(Utils.getValueByTheme(R.drawable.ic_mood_white_18dp, R.drawable.ic_mood_black_18dp));
-        return true;
-	}
     public void addSmiley(View view) {
         String smiley = (String)view.getTag();
         String content = answerTextEdit.getText() + smiley;

@@ -3,8 +3,9 @@
 
     <item
         android:id="@+id/action_insert_avatar"
-        android:title="@string/insert_avatar"
+        android:icon="@drawable/ic_mood_white_18dp"
         android:orderInCategory="103"
-        app:showAsAction="always"
-        />
+        android:title="@string/insert_avatar"
+
+        app:showAsAction="always" />
 </menu>

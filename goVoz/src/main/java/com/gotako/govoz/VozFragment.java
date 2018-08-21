@@ -14,10 +14,14 @@ public class VozFragment extends Fragment {
     }
 
     protected void doRefresh() {
-
+        // empty method
     }
 
     public void forceRefresh() {
+        // empty method
+    }
 
+    public void goToPage(int page) {
+        // empty method
     }
 }

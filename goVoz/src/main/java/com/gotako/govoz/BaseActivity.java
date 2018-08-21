@@ -81,7 +81,7 @@ public class BaseActivity extends Activity {
 
 		// setting the nav drawer list adapter
 //		adapter = new NavDrawerListAdapter(getApplicationContext(),
-//				navDrawerItems);
+//				mNavDrawerItemsList);
 		mDrawerList.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 
@@ -192,29 +192,12 @@ public class BaseActivity extends Activity {
 			ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+								long id) {
 			if (position < navDrawerItems.size()) {
 				NavDrawerItem item = navDrawerItems.get(position);
-
-				if (NavDrawerItem.FORUM == item.type) {
-//					VozCache.instance().setCurrentForum((int)item.tag);
-//					VozCache.instance().setCurrentForumPage(item.page);
-					VozCache.instance().cache().clear();
-					// VozCache.instance().getLookAheadPosts().clear();
-					Intent intent = new Intent(BaseActivity.this,
-							ForumActivity.class);
-					startActivity(intent);
-				} else if (NavDrawerItem.THREAD == item.type) {
-//					VozCache.instance().setCurrentThread((int)item.tag);
-//					VozCache.instance().setCurrentThreadPage(item.page);
-					VozCache.instance().cache().clear();
-					// VozCache.instance().getLookAheadPosts().clear();
-					Intent intent = new Intent(BaseActivity.this,
-							ThreadActivity.class);
-					startActivity(intent);
-				}
 			}
 		}
+
 	}
 	
     @Override

@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_gotopage"
+        android:orderInCategory="101"
+        android:title="@string/select_page_goto_page"
+
+        />
+    <item
+        android:id="@+id/action_bookmark"
+        android:orderInCategory="102"
+        android:title="@string/bookmark"
+        />
+</menu>

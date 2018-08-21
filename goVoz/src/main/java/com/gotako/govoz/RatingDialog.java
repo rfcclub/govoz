@@ -20,7 +20,7 @@ import com.gotako.govoz.tasks.RatingThreadTask;
 /**
  * Created by Nam on 9/12/2015.
  */
-public abstract class RatingDialog extends android.support.v7.app.AppCompatDialogFragment {
+public class RatingDialog extends android.support.v7.app.AppCompatDialogFragment {
     protected Activity activity;
     protected EditText editText;
     protected String title;
@@ -66,6 +66,7 @@ public abstract class RatingDialog extends android.support.v7.app.AppCompatDialo
 
             @Override
             public void onClick(View v) {
+                dismiss();
                 doRating();
             }
         });

@@ -16,10 +16,10 @@
         />
     <item
         android:id="@+id/action_refresh"
-        android:title="@string/refresh"
+        android:icon="@drawable/reload"
         android:orderInCategory="103"
-        app:showAsAction="always"
-        />
+        android:title="@string/refresh"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_reply"
         android:title="@string/quick_reply"
@@ -29,9 +29,9 @@
         />
     <item
         android:id="@+id/action_rmenu"
-        android:title="@string/rmenu"
+        android:icon="@drawable/rmenu"
         android:orderInCategory="103"
-        app:showAsAction="always"
+        android:title="@string/rmenu"
         android:visible="true"
-        />
+        app:showAsAction="always" />
 </menu>

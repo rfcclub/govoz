@@ -24,6 +24,7 @@ import com.gotako.govoz.adapter.VozMenuListAdapter;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,22 +33,22 @@ import java.util.List;
  */
 public abstract class BaseFragmentActivity extends AppCompatActivity {
 	protected DrawerLayout mDrawerLayout;
-    protected ListView mDrawerList;
-    protected ListView mRightForumList;
-    protected ListView mRightLinkList;
+    protected ListView mDrawerListView;
+    protected ListView mRightForumListView;
+    protected ListView mRightLinkListView;
     protected ActionBarDrawerToggle mDrawerToggle;
  
     // used to store app title
     protected CharSequence mTitle;
  
     // slide menu items
-    protected LinearLayout layoutSlidePanel;
-    protected List<VozMenuItem> navDrawerItems;
-    protected List<NavDrawerItem> forumPinItems;
-    protected List<NavDrawerItem> threadPinItems;
-    protected VozMenuListAdapter leftMenuAdapter;
-    protected NavDrawerListAdapter forumPinAdapter;
-    protected NavDrawerListAdapter threadPinAdapter;
+    protected LinearLayout mLayoutSlidePanel;
+    protected List<VozMenuItem> mNavDrawerItemsList;
+    protected List<NavDrawerItem> mForumPinItemsList;
+    protected List<NavDrawerItem> mThreadPinItemsList;
+    protected VozMenuListAdapter mLeftMenuAdapter;
+    protected NavDrawerListAdapter mForumPinAdapter;
+    protected NavDrawerListAdapter mThreadPinAdapter;
     protected Toolbar mToolbar;
 
     @Override
@@ -59,24 +60,24 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
         final LinearLayout mainContent = (LinearLayout) findViewById(R.id.main_content);
         setSupportActionBar(mToolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-        mRightForumList = (ListView) findViewById(R.id.list_right_menu_forum);
-        mRightLinkList = (ListView) findViewById(R.id.list_right_menu_thread);
-        layoutSlidePanel = (LinearLayout) findViewById(R.id.layout_slidermenu);
-        createLeftMenu();
-        createRightMenu();
-        navDrawerItems = VozCache.instance().menuItemList;
-        forumPinItems = VozCache.instance().pinItemForumList;
-        threadPinItems = VozCache.instance().pinItemThreadList;
+        mDrawerListView = (ListView) findViewById(R.id.list_slidermenu);
+        mRightForumListView = (ListView) findViewById(R.id.list_right_menu_forum);
+        mRightLinkListView = (ListView) findViewById(R.id.list_right_menu_thread);
+        mLayoutSlidePanel = (LinearLayout) findViewById(R.id.layout_slidermenu);
+        createMenuList();
+        mNavDrawerItemsList = VozCache.instance().menuItemList;
+        mForumPinItemsList = VozCache.instance().pinItemForumList;
+        mThreadPinItemsList = VozCache.instance().pinItemThreadList;
         // enabling action bar app icon and behaving it as toggle button
         changeDefaultActionBar();
         // setting the nav drawer list adapter
-        leftMenuAdapter = new VozMenuListAdapter(getBaseContext(), navDrawerItems);
-        mDrawerList.setAdapter(leftMenuAdapter);
-        forumPinAdapter = new NavDrawerListAdapter(this, forumPinItems);
-        mRightForumList.setAdapter(forumPinAdapter);
-        threadPinAdapter = new NavDrawerListAdapter(this, threadPinItems);
-        mRightLinkList.setAdapter(threadPinAdapter);
+        mLeftMenuAdapter = new VozMenuListAdapter(getBaseContext(), mNavDrawerItemsList);
+        mDrawerListView.setAdapter(mLeftMenuAdapter);
+        mForumPinAdapter = new NavDrawerListAdapter(this, mForumPinItemsList);
+        mRightForumListView.setAdapter(mForumPinAdapter);
+        mThreadPinAdapter = new NavDrawerListAdapter(this, mThreadPinItemsList);
+        mRightLinkListView.setAdapter(mThreadPinAdapter);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, //nav menu toggle icon
                 R.string.app_name, // nav drawer open - description for accessibility
@@ -95,7 +96,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                float moveFactor = (mDrawerList.getWidth() * slideOffset);
+                float moveFactor = (mDrawerListView.getWidth() * slideOffset);
                 if(drawerView.getId() == R.id.layout_slidermenu) {
                     mainContent.setTranslationX(moveFactor);
                 } else {
@@ -106,32 +107,25 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 
         mDrawerToggle.setDrawerIndicatorEnabled(false);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerList.setOnItemClickListener(createItemClickListener());
-        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (VozCache.instance().mNeoNavigationList.size() > 0) {
-                    onBackPressed();
-                } else {
-                    boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
-                    if (!drawerOpen) {
-                        mDrawerLayout.openDrawer(GravityCompat.START);
-                    }
+        mDrawerListView.setOnItemClickListener(createItemClickListener());
+        mDrawerToggle.setToolbarNavigationClickListener(v -> {
+            if (VozCache.instance().mNeoNavigationList.size() > 0) {
+                onBackPressed();
+            } else {
+                boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
+                if (!drawerOpen) {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
                 }
             }
         });
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+        mDrawerLayout.post(() -> mDrawerToggle.syncState());
 
     }
 
+    protected abstract void createMenuList();
+
+
     protected abstract AdapterView.OnItemClickListener createItemClickListener();
-    protected abstract void createLeftMenu();
-    protected abstract void createRightMenu();
 
     protected void changeDefaultActionBar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -178,10 +172,10 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_refresh).setIcon(R.drawable.reload);
-        menu.findItem(R.id.action_rmenu).setIcon(R.drawable.rmenu);
+//        menu.findItem(R.id.action_refresh).setIcon(R.drawable.reload);
+//        menu.findItem(R.id.action_rmenu).setIcon(R.drawable.rmenu);
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(layoutSlidePanel);
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
         return super.onPrepareOptionsMenu(menu);
     }
  

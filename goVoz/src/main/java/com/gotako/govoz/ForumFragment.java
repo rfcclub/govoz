@@ -1,6 +1,7 @@
 package com.gotako.govoz;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,16 +10,19 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.data.ForumDumpObject;
+import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.tasks.VozForumDownloadTask;
 import com.gotako.govoz.utils.CacheUtils;
@@ -41,7 +45,7 @@ import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
  * Use the {@link ForumFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForumFragment extends VozFragment implements ActivityCallback<Thread>, PageNavigationListener {
+public class ForumFragment extends VozFragment implements ActivityCallback<Thread>, PageNavigationListener, PopupMenu.OnMenuItemClickListener {
     private OnFragmentInteractionListener mListener;
 
     private List<Forum> mForums;
@@ -97,7 +101,6 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             if (foundIndex > -1) page = Integer.parseInt(parameters[foundIndex].split("\\=")[1]);
             loadThreads(mForumId, page);
         }
-        Log.i("ForumFragment", "Just load vozforums in " + mCount + " times");
         System.out.println("ForumFragment-Just load vozforums in " + mCount + " times");
     }
 
@@ -365,11 +368,29 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         loadThreads();
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_bookmark:
+                NavDrawerItem pinForum = new NavDrawerItem(mForumName, String.valueOf(mForumId), NavDrawerItem.FORUM);
+                VozCache.instance().addForumItem(pinForum);
+                VozCache.instance().savePreferecences(getActivity());
+                Toast.makeText(getActivity(), "Shortcut is added", Toast.LENGTH_SHORT);
+                break;
+            case R.id.action_gotopage:
+                if (mListener != null) mListener.showPageSelectDialog();
+                break;
+        }
+        return true;
+    }
+
     public interface OnFragmentInteractionListener {
         void onThreadClicked(Thread thread);
 
         void updateNavigationPanel(boolean visible);
 
         void onForumClicked(String forumId);
+
+        void showPageSelectDialog();
     }
 }

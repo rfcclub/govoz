@@ -13,6 +13,7 @@ import android.util.SparseArray;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,19 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.felipecsl.gifimageview.library.GifImageView;
+import com.google.gson.Gson;
+import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.ImageDownloadService;
-import com.gotako.govoz.tasks.CustomProgressDialog;
 import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
@@ -38,9 +41,7 @@ import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
 
-import org.sufficientlysecure.htmltextview.HtmlAssetsImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
-import org.sufficientlysecure.htmltextview.HtmlResImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.UnsupportedEncodingException;
@@ -64,7 +65,7 @@ import static com.gotako.govoz.VozConstant.VOZ_SIGN;
  * Use the {@link ThreadFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ThreadFragment extends VozFragment implements ActivityCallback<Post>, View.OnLongClickListener, PageNavigationListener {
+public class ThreadFragment extends VozFragment implements ActivityCallback<Post>, View.OnLongClickListener, PageNavigationListener, PopupMenu.OnMenuItemClickListener {
 
     private OnFragmentInteractionListener mListener;
     private int mThreadId;
@@ -74,9 +75,9 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     //private TextView pageNumber;
     private LinearLayout layout;
     private SparseArray<WebView> webViewList;
-    private String threadName;
+    private String mThreadName;
     private String pValue;
-    private String replyLink;
+    private String mReplyLink;
     private List<GifImageView> gifImageViews;
     private Boolean threadIsClosed;
 
@@ -105,7 +106,6 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // processNavigationLink();
     }
 
     private void processNavigationLink() {
@@ -146,6 +146,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             VozCache.instance().currentNavigateItem().mCurrentPage = threadPage;
             currentThreadPage = threadPage;
         }
+        VozCache.instance().setCurrentThreadPage(currentThreadPage);
         String key = String.valueOf(currentThreadId) + "_" + currentThreadPage;
         Object cacheObject = VozCache.instance().getDataFromCache(key);
         boolean forceReload = VozConfig.instance().isAutoReloadForum();
@@ -154,10 +155,10 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             VozThreadDownloadTask task = new VozThreadDownloadTask(this);
             ThreadDumpObject threadDumpObject = (ThreadDumpObject) cacheObject;
             List<Post> mPosts = task.processResult(threadDumpObject.document);
-            threadName = threadDumpObject.threadName;
+            mThreadName = threadDumpObject.threadName;
             threadIsClosed = threadDumpObject.closed;
             pValue = threadDumpObject.pValue;
-            replyLink = threadDumpObject.replyLink;
+            mReplyLink = threadDumpObject.replyLink;
             int mLastPage = task.getLastPage();
             processResult(mPosts, mLastPage);
             updateNavigationPanel();
@@ -217,10 +218,10 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                         getResources().getString(R.string.err_cannot_access_forum),
                         Toast.LENGTH_SHORT).show();
         } else {
-            threadName = (String) extra[2];
+            mThreadName = (String) extra[2];
             threadIsClosed = (Boolean) extra[3];
             pValue = (String) extra[4];
-            replyLink = (String) extra[5];
+            mReplyLink = (String) extra[5];
             processResult(result, (Integer) extra[1]);
             updateNavigationPanel();
         }
@@ -248,7 +249,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             layout = (LinearLayout) getView().findViewById(R.id.linearMain);
             layout.removeAllViews();
             LinearLayout postLayout = (LinearLayout) viewInflater.inflate(R.layout.thread_post_item, null);
-            ((TextView) postLayout.findViewById(R.id.threadTitle)).setText(threadName);
+            ((TextView) postLayout.findViewById(R.id.threadTitle)).setText(mThreadName);
             layout.addView(postLayout);
             LinearLayout postsPlaceHolder = (LinearLayout) postLayout.findViewById(R.id.linearPosts);
             layout.invalidate();
@@ -521,6 +522,37 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         processNavigationLink();
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_star:
+                if (mListener != null) mListener.rateThread();
+                break;
+            case R.id.action_reply:
+                if (threadIsClosed) {
+                    Toast.makeText(getActivity(), R.string.thread_closed, Toast.LENGTH_LONG);
+                }
+                if (VozCache.instance().isLoggedIn()) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), PostActivity.class);
+                    intent.putExtra("threadName", mThreadName);
+                    intent.putExtra("replyLink", mReplyLink);
+                    getActivity().startActivity(intent);
+                }
+                break;
+            case R.id.action_bookmark:
+                NavDrawerItem pinThread = new NavDrawerItem(mThreadName, String.valueOf(mThreadId), NavDrawerItem.THREAD);
+                VozCache.instance().addThreadItem(pinThread);
+                VozCache.instance().savePreferecences(getActivity());
+                Toast.makeText(getActivity(), "Shortcut is added", Toast.LENGTH_SHORT);
+                break;
+            case R.id.action_gotopage:
+                if (mListener != null) mListener.showPageSelectDialog();
+                break;
+        }
+        return true;
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -543,5 +575,9 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         void onOutsidePictureClicked(String postLink);
 
         void updateNavigationPanel(boolean visible);
+
+        void rateThread();
+
+        void showPageSelectDialog();
     }
 }

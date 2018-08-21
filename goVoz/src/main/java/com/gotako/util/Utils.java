@@ -19,7 +19,6 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.gotako.govoz.ThreadActivity;
 import com.gotako.govoz.VozConfig;
 
 public class Utils {

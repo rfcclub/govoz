@@ -1,10 +1,27 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/reply_quote" android:orderInCategory="101" android:title="@string/reply_quote"></item>
-    <item android:id="@+id/show_image" android:enabled="false" android:title="@string/show_image"></item>
-    <item android:id="@+id/send_pm" android:title="@string/send_pm" android:orderInCategory="102" android:enabled="true"></item>
-    <item android:id="@+id/view_profile" android:orderInCategory="103" android:title="@string/view_profile" android:enabled="false"></item>
-    <item android:id="@+id/ignore" android:title="@string/ignore" android:orderInCategory="104" android:enabled="true"></item>
-    <item android:id="@+id/report" android:orderInCategory="105" android:title="@string/report" android:enabled="false"></item>
-    
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_reply"
+        android:orderInCategory="101"
+        android:title="@string/quick_reply"
+
+        />
+    <item
+        android:id="@+id/action_gotopage"
+        android:orderInCategory="103"
+        android:title="@string/select_page_goto_page"
+
+        />
+    <item
+        android:id="@+id/action_star"
+        android:orderInCategory="103"
+        android:title="@string/star"
+
+        />
+    <item
+        android:id="@+id/action_bookmark"
+        android:orderInCategory="104"
+        android:title="@string/bookmark"
+
+        />
 
 </menu>

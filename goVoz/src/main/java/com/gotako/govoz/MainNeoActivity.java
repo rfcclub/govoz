@@ -5,24 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.gotako.govoz.data.Thread;
-import com.gotako.govoz.tasks.VozForumSearchTask;
 import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
 
 import static com.gotako.govoz.VozConstant.FORUM_URL_F;
 import static com.gotako.govoz.VozConstant.FORUM_URL_ORDER;
-import static com.gotako.govoz.VozConstant.SPLIT_SIGN;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class MainNeoActivity extends VozFragmentActivity
@@ -83,13 +81,23 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     @Override
-    public void onPostClicked(String postLink) {
-
-    }
-
-    @Override
-    public void onThreadClicked(String postLink) {
-
+    protected void showMenu() {
+        if (mFragment instanceof PageNavigationListener) {
+            PopupMenu popupMenu = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                popupMenu = new PopupMenu(this, findViewById(R.id.voz_toolbar), Gravity.RIGHT);
+            } else {
+                popupMenu = new PopupMenu(this, findViewById(R.id.voz_toolbar));
+            }
+            if (mFragment instanceof ThreadFragment) {
+                popupMenu.getMenuInflater().inflate(R.menu.post, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener((ThreadFragment) mFragment);
+            } else if (mFragment instanceof ForumFragment) {
+                popupMenu.getMenuInflater().inflate(R.menu.thread_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener((ForumFragment) mFragment);
+            }
+            popupMenu.show();
+        }
     }
 
     @Override
@@ -101,6 +109,7 @@ public class MainNeoActivity extends VozFragmentActivity
         NavigationItem forumItem = new NavigationItem(forumUrl, NavigationItem.FORUM);
         VozCache.instance().mNeoNavigationList.add(forumItem);
         ForumFragment forumFragment = ForumFragment.newInstance();
+        VozCache.instance().setCanShowReplyMenu(false);
         mFragment = forumFragment;
         getSupportFragmentManager()
                 .beginTransaction()
@@ -123,15 +132,7 @@ public class MainNeoActivity extends VozFragmentActivity
                 .commit();
     }
 
-    @Override
-    public void onOutsideLinkClicked(String postLink) {
 
-    }
-
-    @Override
-    public void onOutsidePictureClicked(String postLink) {
-
-    }
 
     @Override
     public void onThreadClicked(Thread thread) {
@@ -148,6 +149,7 @@ public class MainNeoActivity extends VozFragmentActivity
 
         NavigationItem threadItem = new NavigationItem(threadUrl, NavigationItem.THREAD);
         VozCache.instance().addNavigationItem(threadItem);
+        VozCache.instance().setCanShowReplyMenu(true);
         threadItem.mCurrentPage = 1;
         ThreadFragment threadFragment = ThreadFragment.newInstance();
         mFragment = threadFragment;
@@ -170,12 +172,7 @@ public class MainNeoActivity extends VozFragmentActivity
             if (currentPage > 2) {
                 RadioButton first = (RadioButton) mInflater.inflate(R.layout.navigation_button, null);
                 first.setText("<<");
-                first.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        goFirst();
-                    }
-                });
+                first.setOnClickListener(v -> goFirst());
                 navigationGroup.addView(first);
             }
             int prevStart = currentPage - 1;
@@ -230,6 +227,8 @@ public class MainNeoActivity extends VozFragmentActivity
         refreshActionBarIcon();
     }
 
+
+
     @Override
     public void reload() {
         reloadCurrentFragment();
@@ -276,6 +275,7 @@ public class MainNeoActivity extends VozFragmentActivity
     private void reloadActivity() {
         if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             VozCache.instance().mNeoNavigationList.clear();
+            VozCache.instance().setCanShowReplyMenu(false);
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             if(mFragment instanceof InboxFragment || mFragment instanceof InboxDetailFragment) {
@@ -299,6 +299,7 @@ public class MainNeoActivity extends VozFragmentActivity
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             VozCache.instance().removeLastNavigationLink();
+            VozCache.instance().setCanShowReplyMenu(false);
             getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -319,10 +320,6 @@ public class MainNeoActivity extends VozFragmentActivity
                 .commit();
     }
 
-    @Override
-    public void onLinkClick(String link) {
-
-    }
 
     public void quickSearch(String searchString, String showPosts) {
         NavigationItem item = new NavigationItem(null, NavigationItem.SEARCH);
@@ -345,5 +342,46 @@ public class MainNeoActivity extends VozFragmentActivity
             startActivity(intent);
             finish();
         }
+    }
+
+    @Override
+    public void onOutsideLinkClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onOutsidePictureClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onPostClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onThreadClicked(String postLink) {
+
+    }
+
+    @Override
+    public void onLinkClick(String link) {
+
+    }
+
+    @Override
+    public void rateThread() {
+        FragmentManager fm = getSupportFragmentManager();
+        RatingDialog ratingDialog = new RatingDialog();
+        ratingDialog.setActivity(this);
+        ratingDialog.show(fm, "rating");
+    }
+
+    @Override
+    public void showPageSelectDialog() {
+        PageSelectDialog pageSelectDialog = new PageSelectDialog();
+        pageSelectDialog.setActivity(this);
+        pageSelectDialog.setTitle("Go to page:");
+        pageSelectDialog.show(getSupportFragmentManager(), "selectPage");
     }
 }

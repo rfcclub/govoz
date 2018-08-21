@@ -3,7 +3,6 @@
  */
 package com.gotako.govoz;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,17 +25,11 @@ import com.google.gson.Gson;
 import com.gotako.gofast.listener.BindingActionListener;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
-import com.gotako.govoz.listeners.OnForumItemClickListener;
-import com.gotako.govoz.listeners.OnThreadItemClickListener;
 import com.gotako.govoz.tasks.UserLogoutTask;
 import com.gotako.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.gotako.govoz.VozConstant.FORUM_URL_F;
-import static com.gotako.govoz.VozConstant.THREAD_URL_T;
-import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 /**
  * @author lnguyen66
@@ -57,8 +50,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 //        }
         overridePendingTransition(R.animator.right_slide_in, R.animator.left_slide_out_half);
         super.onCreate(savedInstanceState);
-        mRightForumList.setOnItemClickListener(new OnRightMenuForumItemClickListener(this));
-        mRightLinkList.setOnItemClickListener(new OnRightMenuThreadItemClickListener(this));
+        mRightForumListView.setOnItemClickListener(new OnRightMenuForumItemClickListener(this));
+        mRightLinkListView.setOnItemClickListener(new OnRightMenuThreadItemClickListener(this));
     }
 
     /*
@@ -87,6 +80,11 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     }
 
     @Override
+    protected void createMenuList() {
+        createLeftMenu();
+        createRightMenu();
+    }
+
     protected void createLeftMenu() {
         if (VozCache.instance().menuItemList == null) {
             VozCache.instance().menuItemList = new ArrayList<VozMenuItem>();
@@ -108,7 +106,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     }
 
-    @Override
     protected void createRightMenu() {
         Gson gson = new Gson();
         SharedPreferences prefs = getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
@@ -192,12 +189,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     protected void setListenerForMenuItems(Menu menu) {
         MenuItem refresh = menu.findItem(R.id.action_refresh);
         refresh.setOnMenuItemClickListener(this);
-        MenuItem reply = menu.findItem(R.id.action_reply);
-        reply.setOnMenuItemClickListener(this);
-        MenuItem bookmark = menu.findItem(R.id.action_bookmark);
-        bookmark.setOnMenuItemClickListener(this);
-        MenuItem star = menu.findItem(R.id.action_star);
-        star.setOnMenuItemClickListener(this);
+        MenuItem rMenu = menu.findItem(R.id.action_rmenu);
+        rMenu.setOnMenuItemClickListener(this);
     }
 
     @Override
@@ -206,14 +199,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
             case R.id.action_refresh:
                 forceRefresh();
             break;
-            case R.id.action_reply:
-                doRep();
-                break;
-            case R.id.action_bookmark:
-                doBookmark();
-                break;
-            case R.id.action_star:
-                doRating();
+            case R.id.action_rmenu:
+                showMenu();
                 break;
             default: // last option
 
@@ -221,16 +208,12 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         return true;
     }
 
+    protected void showMenu() {
+        // do nothing
+    }
+
     protected void forceRefresh() {
-
-    }
-
-    public void doRating() {
-
-    }
-
-    public void doBookmark() {
-
+        // do nothing
     }
 
     private void doLoginWithPreset() {
@@ -268,7 +251,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     }
 
     public void doRep() {
-
+        // do nothing. This method will be overriden by subclasses
     }
 
     @Override
@@ -313,7 +296,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     private void refreshLeftMenu() {
         VozCache.instance().menuItemList.clear();
         createLeftMenu();
-        leftMenuAdapter.notifyDataSetChanged();
+        mLeftMenuAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -345,8 +328,8 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             FragmentManager fm = VozFragmentActivity.this.getSupportFragmentManager();
-            if (position < navDrawerItems.size()) {
-                VozMenuItem item = navDrawerItems.get(position);
+            if (position < mNavDrawerItemsList.size()) {
+                VozMenuItem item = mNavDrawerItemsList.get(position);
                 switch (item.type) {
                     case 0: // home
                         VozCache.instance().mNeoNavigationList.clear();

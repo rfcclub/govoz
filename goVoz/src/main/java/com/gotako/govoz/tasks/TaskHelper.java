@@ -33,21 +33,11 @@ public class TaskHelper {
     public static List<Forum> parseForum(Document document) {
         List<Forum> forums = new ArrayList<Forum>();
 
-        Elements tbodiesAll = document.select("tbody");
-        Element eleMain = null;
-        for (int i = 0; i < tbodiesAll.size(); i++) {
-            Element element = tbodiesAll.get(i);
-            Element eleCheck = Utils.getFirstElement(element.select("a[href^=forumdisplay.php?f=]"));
-            if (eleCheck != null && element.parent().nodeName().equals("table")) {
-                eleMain = element;
-                break;
-            }
-        }
-        if (eleMain == null) return null;
-
-        Elements tbodies = eleMain.select("tbody");
+        Elements tbodies = document.select("tbody");
         for (int i = 0; i < tbodies.size(); i++) {
             Element tbody = tbodies.get(i);
+            if (!tbody.hasAttr("id") && Utils.getFirstElement(tbody.select("td[class=tcat]")) == null)
+                continue;
             if (tbody.hasAttr("id")) { // forum
                 // get forum id
                 Element checkLink = Utils.getFirstElement(tbody.select("a[href^=forumdisplay.php?f=]"));

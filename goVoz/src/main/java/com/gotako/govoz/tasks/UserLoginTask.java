@@ -109,7 +109,7 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 		} else {
 			list.add(false);			
 		}
-		callback.doCallback(list, null);
+		callback.doCallback(list);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

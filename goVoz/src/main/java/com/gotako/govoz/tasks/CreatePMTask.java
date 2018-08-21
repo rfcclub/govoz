@@ -102,6 +102,6 @@ public class CreatePMTask extends AsyncTask<String, Void, Boolean> {
         }
         List<Boolean> boo = new ArrayList<Boolean>();
         boo.add(result);
-        mCallback.doCallback(boo, null);
+        mCallback.doCallback(boo);
     }
 }
