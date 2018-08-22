@@ -154,7 +154,8 @@ public class TaskHelper {
         // Create all-trusting host name verifier
         HostnameVerifier allHostsValid = new HostnameVerifier() {
             public boolean verify(String hostname, SSLSession session) {
-                return true;
+                if (hostname.indexOf("voz") >= 0) return true;
+                return false;
             }
         };
 
