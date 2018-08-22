@@ -6,9 +6,9 @@ package com.gotako.govoz;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
-import android.util.SparseArray;
 
 import com.google.gson.Gson;
+import com.gotako.govoz.data.CookieObject;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.VozMenuItem;
 
@@ -29,38 +29,40 @@ public class VozCache {
     public static final String GUEST = "guest";
 	public static final String ANONYMOUS = "Anonymous";
 
-    private LruCache memoryCache;
+    private LruCache mMemoryCache;
 	
 	private static VozCache vozCache = null;
-	private int currentForumId;
-	private int currentForumPage;
-	private int currentThreadId;
-	private int lastPage = 1;
-	private int currentThreadPage;
-	private Map<String,String> cookies;
-	private String securityToken = GUEST;
-	private String userId ="";
-	private boolean canShowReplyMenu;
-	private int currentParentForumId = -1;
-	private int width;
-	private int height;
+	private int mCurrentForumId;
+	private int mCurrentForumPage;
+	private int mCurrentThreadId;
+	private int mLastPage = 1;
+	private int mCurrentThreadPage;
+	private Map<String,String> mCookies;
+	private String mSecurityToken = GUEST;
+	private String mUserId ="";
+	private boolean mCanShowReplyMenu;
+	private int mCurrentParentForumId = -1;
+	private int mWidth;
+	private int mHeight;
 	public List<NavDrawerItem> pinItemThreadList;
 	public List<NavDrawerItem> pinItemForumList;
 	public List<VozMenuItem> menuItemList;
-	private Map<String, Object> forumCache = null;
+	private Map<String, Object> mForumCache = null;
+	public Map<String, CookieObject> mUserCookies;
 	public List<String> navigationList;
 	public List<NavigationItem> mNeoNavigationList;
 	public long milliSeconds;
 
 	private VozCache() {
-		cookies = null;
+		mCookies = null;
 		final int cacheSize = 1024 * 1024 * 20;
-        memoryCache = new LruCache(cacheSize);
-        forumCache = new HashMap<>();
+        mMemoryCache = new LruCache(cacheSize);
+        mForumCache = new HashMap<>();
 		pinItemThreadList = new ArrayList<>();
 		pinItemForumList = new ArrayList<>();
         navigationList = new ArrayList<>();
 		mNeoNavigationList = new ArrayList<>();
+		mUserCookies = new HashMap<>();
 	}
 
 	public static VozCache instance() {
@@ -71,10 +73,10 @@ public class VozCache {
 	}
 
 	public LruCache getDumpCache() {
-		return memoryCache;
+		return mMemoryCache;
 	}
 	public boolean isLoggedIn() {
-		return cookies != null;
+		return mCookies != null;
 	}
     public boolean isSavedPreference(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
@@ -82,11 +84,11 @@ public class VozCache {
     }
 
 	public Object getDataFromCache(String key) {
-		return memoryCache.get(key);
+		return mMemoryCache.get(key);
 	}
 	
 	public void putDataToCache(String key, Object value) {
-		memoryCache.put(key, value);
+		mMemoryCache.put(key, value);
 	}
 	
 	public VozCache getVozCache() {
@@ -98,111 +100,111 @@ public class VozCache {
 	}
 
 	public int getCurrentForum() {
-		return currentForumId;
+		return mCurrentForumId;
 	}
 
 	public void setCurrentForum(int currentForum) {
-		this.currentForumId = currentForum;
+		this.mCurrentForumId = currentForum;
 	}
 
 	public int getCurrentForumPage() {
-		return currentForumPage;
+		return mCurrentForumPage;
 	}
 
 	public void setCurrentForumPage(int currentForumPage) {
-		this.currentForumPage = currentForumPage;
+		this.mCurrentForumPage = currentForumPage;
 	}
 
 	public int getCurrentThread() {
-		return currentThreadId;
+		return mCurrentThreadId;
 	}
 
 	public void setCurrentThread(int currentThread) {
-		this.currentThreadId = currentThread;
+		this.mCurrentThreadId = currentThread;
 	}
 
 	public int getCurrentThreadPage() {
-		return currentThreadPage;
+		return mCurrentThreadPage;
 	}
 
 	public void setCurrentThreadPage(int currentThreadPage) {
-		this.currentThreadPage = currentThreadPage;
+		this.mCurrentThreadPage = currentThreadPage;
 	}
 
 	public void reset() {
-		currentThreadId = -1;
-		currentThreadPage = 0;
-		currentForumPage = 0;
-		currentForumId = -1;
+		mCurrentThreadId = -1;
+		mCurrentThreadPage = 0;
+		mCurrentForumPage = 0;
+		mCurrentForumId = -1;
 	}
 
 	public Map<String, String> getCookies() {
-		return cookies;
+		return mCookies;
 	}
 
 	public void setCookies(Map<String, String> cookies) {
-		this.cookies = cookies;
+		this.mCookies = cookies;
 	}
 
 	public String getSecurityToken() {
-		return securityToken;
+		return mSecurityToken;
 	}
 
 	public void setSecurityToken(String securityToken) {
-		this.securityToken = securityToken;
+		this.mSecurityToken = securityToken;
 	}
 
 	public String getUserId() {		
-		return userId;
+		return mUserId;
 	}
 
 	public void setUserId(String userId) {
-		this.userId = userId;
+		this.mUserId = userId;
 	}
 
 	public boolean canShowReplyMenu() {
-		return canShowReplyMenu;
+		return mCanShowReplyMenu;
 	}
 
 	public void setCanShowReplyMenu(boolean canShowReplyMenu) {
-		this.canShowReplyMenu = canShowReplyMenu;
+		this.mCanShowReplyMenu = canShowReplyMenu;
 	}
 
 	public int getCurrentParentForum() {
-		return currentParentForumId;
+		return mCurrentParentForumId;
 	}
 
 	public void setCurrentParentForum(int currentParentForum) {
-		this.currentParentForumId = currentParentForum;
+		this.mCurrentParentForumId = currentParentForum;
 	}
 
 	public int getWidth() {
-		return width;
+		return mWidth;
 	}
 
 	public void setWidth(int width) {
-		this.width = width;
+		this.mWidth = width;
 	}
 
 	public int getHeight() {
-		return height;
+		return mHeight;
 	}
 
 	public void setHeight(int height) {
-		this.height = height;
+		this.mHeight = height;
 	}
 
 	public int getLastPage() {
-		return lastPage;
+		return mLastPage;
 	}
 
 	public void setLastPage(int lastPage) {
-		this.lastPage = lastPage;
+		this.mLastPage = lastPage;
 	}
 
 
 	public Map<String, Object> cache() {
-		return forumCache;
+		return mForumCache;
 	}
 
 
@@ -225,11 +227,11 @@ public class VozCache {
 	}
 
 	public void clearDumpCache(String key) {
-		memoryCache.remove(key);
+		mMemoryCache.remove(key);
 	}
 
 	public boolean hasDataInCache(String key) {
-		return memoryCache.get(key) != null;
+		return mMemoryCache.get(key) != null;
 	}
 
 	public void savePreferecences(Context context) {
@@ -268,5 +270,9 @@ public class VozCache {
 		if (!found) {
 			pinItemForumList.add(pinForum);
 		}
+	}
+
+	public void clearCache() {
+		mMemoryCache.evictAll();
 	}
 }

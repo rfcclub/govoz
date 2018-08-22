@@ -384,8 +384,10 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             if (listView == null) {
                 listView = (ScrollView) getView().findViewById(R.id.scrollviewMain);
             }
-            listView.fullScroll(ScrollView.FOCUS_UP);
             listView.invalidate();
+            listView.postDelayed(()-> {
+                listView.fullScroll(View.FOCUS_UP);
+            }, 100);
         });
     }
 

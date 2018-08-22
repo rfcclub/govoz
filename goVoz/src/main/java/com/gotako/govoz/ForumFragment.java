@@ -205,8 +205,12 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             updateThread(parent, layoutInflater);
             parent.invalidate();
             updateStatus();
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scrollviewMain);
-            if (scrollView != null) scrollView.fullScroll(ScrollView.FOCUS_UP);
+            ScrollView scrollView = getView().findViewById(R.id.scrollviewMain);
+            if (scrollView != null) {
+                scrollView.postDelayed(()-> {
+                    scrollView.fullScroll(View.FOCUS_UP);
+                }, 100);
+            }
         });
     }
 

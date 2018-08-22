@@ -35,7 +35,13 @@
             android:label="@string/title_activity_post"></activity>
 
         <service android:name=".service.CachePostService"></service>
-
+        <service
+            android:name=".service.VozVpnService"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"></activity>

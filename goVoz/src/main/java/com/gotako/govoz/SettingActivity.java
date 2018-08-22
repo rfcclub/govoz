@@ -23,7 +23,7 @@ public class SettingActivity extends Activity {
 	private CheckBox hardwareAccelerated;
 	private CheckBox useBackgroundService;
 	private CheckBox isPreloadForumsAndThreads;
-
+	private CheckBox useDnsOverVpn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		VozConfig.instance().load(this);
@@ -38,12 +38,12 @@ public class SettingActivity extends Activity {
 		config = VozConfig.instance();
 		config.load(this);
 
-        loadImageByDemand = (CheckBox)findViewById(R.id.loadImageByDemand);
-		autoReloadForum = (CheckBox)findViewById(R.id.autoReloadForum);
-		supportLongAvatar = (CheckBox)findViewById(R.id.supportLongAvatar);
-		chkShowSign = (CheckBox)findViewById(R.id.chkShowSign);
-		fontSize = (EditText)findViewById(R.id.fontSize);
-
+        loadImageByDemand = findViewById(R.id.loadImageByDemand);
+		autoReloadForum = findViewById(R.id.autoReloadForum);
+		supportLongAvatar = findViewById(R.id.supportLongAvatar);
+		chkShowSign = findViewById(R.id.chkShowSign);
+		fontSize = findViewById(R.id.fontSize);
+		useDnsOverVpn = findViewById(R.id.usingVpn);
 		fontSize.setText(String.valueOf(config.getFontSize()));
 		loadImageByDemand.setChecked(config.isLoadImageByDemand());
 		autoReloadForum.setChecked(config.isAutoReloadForum());
@@ -59,8 +59,8 @@ public class SettingActivity extends Activity {
             darkThemeRadio.setChecked(false);
             lightThemeRadio.setChecked(true);
         }
-		currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());		
-		currentCheckedRadio.setChecked(true);
+		//currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());
+		//currentCheckedRadio.setChecked(true);
 
 		hardwareAccelerated = (CheckBox)findViewById(R.id.hardwareAccelerated);
 		hardwareAccelerated.setChecked(config.isHardwareAccelerated());
@@ -68,6 +68,7 @@ public class SettingActivity extends Activity {
 		useBackgroundService.setChecked(config.isUseBackgroundService());
 		isPreloadForumsAndThreads = (CheckBox) findViewById(R.id.preloadThings);
 		isPreloadForumsAndThreads.setChecked(config.isPreloadForumsAndThreads());
+		useDnsOverVpn.setChecked(config.isUsingDnsOverVpn());
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
@@ -147,11 +148,12 @@ public class SettingActivity extends Activity {
 		config.setFontSize(Integer.parseInt(fontSize.getText().toString()));
 		config.setAutoReloadForum(autoReloadForum.isChecked());		
 		config.setSupportLongAvatar(supportLongAvatar.isChecked());
-		config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
+		//config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));
 		config.setShowSign(chkShowSign.isChecked());
 		config.setHardwareAccelerated(hardwareAccelerated.isChecked());
 		config.setUseBackgroundService(useBackgroundService.isChecked());
 		config.setPreloadForumsAndThreads(isPreloadForumsAndThreads.isChecked());
+		config.setUseBackgroundService(useDnsOverVpn.isChecked());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {

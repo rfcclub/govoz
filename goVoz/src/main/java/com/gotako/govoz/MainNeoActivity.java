@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.VpnService;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import android.widget.PopupMenu;
 import android.widget.RadioButton;
 
 import com.gotako.govoz.data.Thread;
+import com.gotako.govoz.service.VozVpnService;
 import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
@@ -32,12 +34,35 @@ public class MainNeoActivity extends VozFragmentActivity
         InboxDetailFragment.OnFragmentInteractionListener {
 
     protected VozFragment mFragment;
-
+    private static final int VPN_REQUEST_CODE = 0x0F;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (VozConfig.instance().isUsingDnsOverVpn()) {
+            startVpn();
+        }
         // setContentView(R.layout.activity_main_neo);
         processToMainForum(savedInstanceState);
+    }
+
+    private void startVpn() {
+        Intent intent = VpnService.prepare(this);
+        if (intent != null)
+        {
+            startActivityForResult(intent, VPN_REQUEST_CODE);
+        }
+        else
+        {
+            onActivityResult(VPN_REQUEST_CODE, RESULT_OK, null);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == VPN_REQUEST_CODE) {
+            startService(new Intent(this, VozVpnService.class).setAction(VozVpnService.ACTION_CONNECT));
+        }
     }
 
     @Override
@@ -78,6 +103,7 @@ public class MainNeoActivity extends VozFragmentActivity
                     .add(R.id.frame_container, mainFragment)
                     .commit();
         }
+
     }
 
     @Override
@@ -382,5 +408,11 @@ public class MainNeoActivity extends VozFragmentActivity
         pageSelectDialog.setActivity(this);
         pageSelectDialog.setTitle("Go to page:");
         pageSelectDialog.show(getSupportFragmentManager(), "selectPage");
+    }
+
+    @Override
+    public void lastBreath(Exception ex) {
+        super.lastBreath(ex);
+        VozCache.instance().clearCache();
     }
 }

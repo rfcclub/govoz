@@ -147,4 +147,5 @@
     <string name="rating">Rate Thread</string>
     <string name="subcribe">Subcribe</string>
     <string name="thread_closed">Thread is closed. Cannot reply.</string>
+    <string name="usingVpnChangeDNS">Đổi DNS sử dụng VPN nội bộ</string>
 </resources>

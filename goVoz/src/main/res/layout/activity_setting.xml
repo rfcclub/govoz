@@ -142,6 +142,7 @@
         android:layout_alignLeft="@+id/supportLongAvatar"
         android:layout_below="@+id/chkShowSign"
         android:text="Hiệu ứng chuyển trang"
+        android:visibility="invisible"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="14sp" />
 
@@ -171,6 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView5"
         android:layout_below="@+id/textView5"
+
         android:columnCount="7"
         android:rowCount="2" >
 
@@ -181,6 +183,7 @@
             android:layout_column="0"
             android:layout_gravity="left|top"
             android:layout_marginBottom="2dp"
+            android:visibility="gone"
             android:layout_row="0"
             android:src="@drawable/load159" />
 
@@ -193,6 +196,7 @@
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
+            android:visibility="gone"
             android:src="@drawable/load257" />
 
         <ImageView
@@ -203,6 +207,7 @@
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
+            android:visibility="gone"
             android:src="@drawable/load278" />
 
         <ImageView
@@ -213,6 +218,7 @@
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
+            android:visibility="gone"
             android:src="@drawable/load35" />
 
         <ImageView
@@ -223,6 +229,7 @@
             android:layout_gravity="left"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
+            android:visibility="gone"
             android:src="@drawable/loadday1" />
 
         <ImageView
@@ -230,6 +237,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_column="5"
+            android:visibility="gone"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="2dp"
             android:src="@drawable/load715" />
@@ -241,6 +249,7 @@
             android1:layout_column="1"
             android1:layout_gravity="center"
             android1:layout_row="1"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
         <RadioButton
@@ -251,6 +260,7 @@
             android1:layout_gravity="center"
             android1:layout_row="1"
             android1:checked="false"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
         <RadioButton
@@ -260,6 +270,7 @@
             android1:layout_column="3"
             android1:layout_gravity="center"
             android1:layout_row="1"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
         <RadioButton
@@ -269,6 +280,7 @@
             android1:layout_column="4"
             android1:layout_gravity="center"
             android1:layout_row="1"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
         <RadioButton
@@ -278,6 +290,7 @@
             android1:layout_column="5"
             android1:layout_gravity="center"
             android1:layout_row="1"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
         <RadioButton
@@ -287,6 +300,7 @@
             android1:layout_column="0"
             android1:layout_gravity="center"
             android1:layout_row="1"
+            android:visibility="gone"
             android1:onClick="animationChoosing" />
 
     </GridLayout>
@@ -321,5 +335,12 @@
         android:layout_alignStart="@+id/confirmIgnore"
         android:layout_below="@+id/experimental"
         android:text="@string/preloadForumAndThreadText" />
+    <CheckBox
+        android:id="@+id/usingVpn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/confirmIgnore"
+        android:layout_below="@+id/preloadThings"
+        android:text="@string/usingVpnChangeDNS" />
 
 </RelativeLayout>

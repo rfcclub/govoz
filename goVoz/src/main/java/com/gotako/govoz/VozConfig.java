@@ -57,6 +57,10 @@ public class VozConfig {
     private boolean useBackgroundService = false;
 
     private boolean preloadForumsAndThreads = true;
+
+
+
+    private boolean usingDnsOverVpn;
     /**
      * Default constructor
      */
@@ -107,6 +111,9 @@ public class VozConfig {
         this.preloadForumsAndThreads = preloadForumsAndThreads;
     }
 
+    public void setUsingDnsOverVpn(boolean usingDnsOverVpn) {
+        this.usingDnsOverVpn = usingDnsOverVpn;
+    }
     public void save(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -120,6 +127,7 @@ public class VozConfig {
         editor.putBoolean("hardwareAccelerated", hardwareAccelerated);
         editor.putBoolean("useBackgroundService",useBackgroundService);
         editor.putBoolean("preloadForumsAndThreads", preloadForumsAndThreads);
+        editor.putBoolean("usingDnsOverVpn", usingDnsOverVpn);
         editor.commit();
     }
 
@@ -135,6 +143,7 @@ public class VozConfig {
         hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", false);
         useBackgroundService = prefs.getBoolean("useBackgroundService", false);
         preloadForumsAndThreads = prefs.getBoolean("preloadForumsAndThreads", false);
+        usingDnsOverVpn = prefs.getBoolean("usingDnsOverVpn", true);
     }
 
     public int getLoadingDrawable() {
@@ -186,5 +195,11 @@ public class VozConfig {
     public boolean isPreloadForumsAndThreads() {
         return preloadForumsAndThreads;
     }
+
+    public boolean isUsingDnsOverVpn() {
+        return usingDnsOverVpn;
+    }
+
+
 
 }
