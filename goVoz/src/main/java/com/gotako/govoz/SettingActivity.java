@@ -153,7 +153,7 @@ public class SettingActivity extends Activity {
 		config.setHardwareAccelerated(hardwareAccelerated.isChecked());
 		config.setUseBackgroundService(useBackgroundService.isChecked());
 		config.setPreloadForumsAndThreads(isPreloadForumsAndThreads.isChecked());
-		config.setUseBackgroundService(useDnsOverVpn.isChecked());
+		config.setUsingDnsOverVpn(useDnsOverVpn.isChecked());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {

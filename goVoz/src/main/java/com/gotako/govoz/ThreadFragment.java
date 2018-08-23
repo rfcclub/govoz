@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.felipecsl.gifimageview.library.GifImageView;
 import com.google.gson.Gson;
+import com.gotako.GlideApp;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.ThreadDumpObject;
@@ -40,7 +41,7 @@ import com.gotako.govoz.tasks.VozThreadDownloadTask;
 import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
-
+import com.bumptech.glide.*;
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -337,22 +338,27 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
                 GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
                 if (post.getAvatar() != null) {
-                    UrlDrawable drawable = new UrlDrawable();
-                    drawable.setWidth(75);
-                    drawable.setHeight(75);
-                    drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
-                    avatarView.setImageDrawable(drawable);
-                    avatarView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    DownloadImageTask task = new DownloadImageTask(drawable,
-                            avatarView, getActivity());
-                    task.execute(post.getAvatar());
+//                    UrlDrawable drawable = new UrlDrawable();
+//                    drawable.setWidth(75);
+//                    drawable.setHeight(75);
+//                    drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
+//                    avatarView.setImageDrawable(drawable);
+//                    avatarView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                    DownloadImageTask task = new DownloadImageTask(drawable,
+//                            avatarView, getActivity());
+//                    task.execute(post.getAvatar());
+                    GlideApp
+                            .with(this)
+                            .load(VOZ_LINK + "/" + post.getAvatar())
+                            .centerCrop()
+                            .placeholder(R.drawable.user_icon)
+                            .into(avatarView);
                 }
                 avatarView.setClickable(false);
                 avatarView.setLongClickable(true);
                 avatarView.setFocusable(false);
                 avatarView.setFocusableInTouchMode(false);
                 avatarView.setOnLongClickListener(this);
-                avatarView.setTag(i);
                 gifImageViews.add(avatarView);
                 // post date
                 TextView postDate = (TextView) view.findViewById(R.id.postDate);

@@ -5,6 +5,7 @@ import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.utils.DocumentUtil;
 import com.gotako.util.Utils;
 
+import org.apache.http.conn.ssl.BrowserCompatHostnameVerifierHC4;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -158,7 +159,7 @@ public class TaskHelper {
                 return false;
             }
         };
-
+        // BrowserCompatHostnameVerifierHC4 bchv = new BrowserCompatHostnameVerifierHC4();
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     }
