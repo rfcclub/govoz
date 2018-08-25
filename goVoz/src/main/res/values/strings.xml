@@ -150,4 +150,7 @@
     <string name="usingVpnChangeDNS">Đổi DNS sử dụng VPN nội bộ</string>
     <string name="one_hundred_percent">100%</string>
     <string name="page_transition_effect_text">Hiệu ứng chuyển trang</string>
+    <string name="post_action_quote">Quote</string>
+    <string name="post_action_report">Report</string>
+    <string name="post_action_copy">Copy</string>
 </resources>

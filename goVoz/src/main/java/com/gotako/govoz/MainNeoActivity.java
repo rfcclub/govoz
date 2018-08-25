@@ -266,6 +266,12 @@ public class MainNeoActivity extends VozFragmentActivity
         finish();
     }
 
+    @Override
+    public void notifyPinItemsChanged() {
+        mForumPinAdapter.notifyDataSetChanged();
+        mThreadPinAdapter.notifyDataSetChanged();
+    }
+
     private void goToPage(int page) {
         if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goToPage(page);

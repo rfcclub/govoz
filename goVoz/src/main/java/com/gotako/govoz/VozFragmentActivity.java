@@ -108,7 +108,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     protected void createRightMenu() {
         Gson gson = new Gson();
-        SharedPreferences prefs = getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getBaseContext().getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
         String jsonForumString = null;
         jsonForumString = prefs.getString("rightForumPins", null);
         List<NavDrawerItem> pinItemForumList = VozCache.instance().pinItemForumList;
@@ -148,7 +148,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     public void savePinForumsList() {
-        SharedPreferences prefs = this.getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getBaseContext().getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
         NavDrawerItem[] forumsList = VozCache.instance().pinItemForumList.toArray(new NavDrawerItem[]{});
         Gson gson = new Gson();
         String jsonString = gson.toJson(forumsList);
@@ -160,7 +160,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     public void savePinThreadsList() {
-        SharedPreferences prefs = this.getBaseContext().getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getBaseContext().getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
         NavDrawerItem[] forumsList = VozCache.instance().pinItemThreadList.toArray(new NavDrawerItem[]{});
         Gson gson = new Gson();
         String jsonString = gson.toJson(forumsList);

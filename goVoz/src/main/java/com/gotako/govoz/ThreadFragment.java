@@ -1,6 +1,5 @@
 package com.gotako.govoz;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ScrollView;
@@ -27,21 +26,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.felipecsl.gifimageview.library.GifImageView;
-import com.google.gson.Gson;
 import com.gotako.GlideApp;
 import com.gotako.govoz.data.NavDrawerItem;
 import com.gotako.govoz.data.Post;
 import com.gotako.govoz.data.ThreadDumpObject;
-import com.gotako.govoz.data.UrlDrawable;
 import com.gotako.govoz.data.WebViewClickHolder;
 import com.gotako.govoz.service.ImageDownloadService;
-import com.gotako.govoz.tasks.DownloadImageTask;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.govoz.tasks.VozThreadDownloadTask;
 import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
-import com.bumptech.glide.*;
+
 import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -262,8 +258,14 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             for (int i = 0; i < mPosts.size(); i++) {
                 View view = viewInflater.inflate(R.layout.neo_post_item, null);
                 Post post = mPosts.get(i);
-                final WebView webView = (WebView) view.findViewById(R.id.content);
-                final HtmlTextView htmlTextView = (HtmlTextView) view.findViewById(R.id.textContent);
+                final WebView webView = view.findViewById(R.id.content);
+                final HtmlTextView htmlTextView = view.findViewById(R.id.textContent);
+                if (Utils.isNotEmpty(post.getSubTitle())) {
+                    TextView subTitle = view.findViewById(R.id.subTitle);
+                    subTitle.setText(post.getSubTitle());
+                    subTitle.setVisibility(View.VISIBLE);
+                }
+                ImageButton collapseButton = view.findViewById(R.id.post_collapse_button);
                 if (post.isComplexStructure()) {
                     webView.getSettings().setJavaScriptEnabled(true);
                     webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -283,7 +285,6 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                     webView.setOnLongClickListener(this);
                     webView.getSettings().setDefaultFontSize(VozConfig.instance().getFontSize());
                     webView.setTag(i); // position
-                    // webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
                     String utfContent = null;
                     try {
                         utfContent = new String(post.getContent().getBytes("UTF-8"))
@@ -333,14 +334,20 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                     webView.loadDataWithBaseURL(VOZ_LINK + "/", shouldLoadContent, "text/html", "utf-8", null);
                     webView.invalidate();
                     webViewList.append(i, webView);
+                    collapseButton.setOnClickListener((v)-> {
+                        collapseView(webView, collapseButton);
+                    });
                 } else {
                     webView.setVisibility(View.GONE);
                     htmlTextView.setVisibility(View.VISIBLE);
                     htmlTextView.setHtml(post.getContent(),
                             new HtmlHttpImageGetter(htmlTextView));
                     htmlTextView.invalidate();
+                    collapseButton.setOnClickListener((v)-> {
+                        collapseView(htmlTextView, collapseButton);
+                    });
                 }
-                //ImageView imageView = (ImageView) view.findViewById(R.id.avatar);
+                collapseButton.setTag(false);
                 GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
                 if (post.getAvatar() != null) {
 //                    UrlDrawable drawable = new UrlDrawable();
@@ -400,6 +407,19 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 listView.fullScroll(View.FOCUS_UP);
             }, 100);
         });
+    }
+
+    private void collapseView(View targetView, ImageButton collapseButton) {
+        boolean isCollapse = collapseButton.getTag() != null ? (Boolean) collapseButton.getTag(): false;
+        if(isCollapse) {
+            collapseButton.setTag(false);
+            targetView.setVisibility(View.VISIBLE);
+            collapseButton.setImageResource(R.drawable.icons8_chevron_down_24);
+        } else {
+            collapseButton.setTag(true);
+            targetView.setVisibility(View.GONE);
+            collapseButton.setImageResource(R.drawable.icons8_chevron_up_24);
+        }
     }
 
     private void setListenerToWebView(WebView webView) {
@@ -553,7 +573,8 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 NavDrawerItem pinThread = new NavDrawerItem(mThreadName, String.valueOf(mThreadId), NavDrawerItem.THREAD);
                 VozCache.instance().addThreadItem(pinThread);
                 VozCache.instance().savePreferecences(getActivity());
-                Toast.makeText(getActivity(), "Shortcut is added", Toast.LENGTH_SHORT);
+                if(mListener != null) mListener.notifyPinItemsChanged();
+                Toast.makeText(getActivity(), "Shortcut is added", Toast.LENGTH_LONG);
                 break;
             case R.id.action_gotopage:
                 if (mListener != null) mListener.showPageSelectDialog();
@@ -590,5 +611,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         void showPageSelectDialog();
 
         void onSessionExpired();
+
+        void notifyPinItemsChanged();
     }
 }
