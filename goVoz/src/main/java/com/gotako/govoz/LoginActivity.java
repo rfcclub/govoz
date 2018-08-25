@@ -1,7 +1,5 @@
 package com.gotako.govoz;
 
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -21,10 +19,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.govoz.tasks.UserLoginTask;
 import com.gotako.util.Utils;
+
+import java.util.List;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -190,8 +189,9 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 	}
 
 	@Override
-	public void doCallback(List<Boolean> result, Object... extra) {
+	public void doCallback(CallbackResult<Boolean> callbackResult) {
 		mAuthTask = null;
+		List<Boolean> result = callbackResult.getResult();
 		showProgress(false);
 		if(result!=null && result.get(0) == true) {
 			//save username password to shared preference
@@ -201,10 +201,10 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 			editor.putString("PASSWORD", mPassword);
 			editor.commit();
 			Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+			Intent data = new Intent();
+			data.putExtra("USERNAME", mUsername);
+			setResult(VozConstant.LOGIN_OK, data);
 			finish();
-			Intent intent = new Intent(this,MainNeoActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivity(intent);			
 		} else {
 			mPasswordView
 			.setError(getString(R.string.error_incorrect_password));
@@ -215,6 +215,6 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 	@Override
 	public void lastBreath(Exception ex) {
 		ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
-		BugSenseHandler.sendException(ex);
+		// BugSenseHandler.sendException(ex);
 	}
 }

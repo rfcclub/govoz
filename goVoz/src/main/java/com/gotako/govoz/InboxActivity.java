@@ -78,8 +78,8 @@ public class InboxActivity extends VozFragmentActivity implements
     }
 
     @Override
-    public void doCallback(List<PrivateMessage> result, Object... extra) {
-        pmList = result;
+    public void doCallback(CallbackResult<PrivateMessage> callbackResult) {
+        pmList = callbackResult.getResult();
         GoFastEngine.notify(this, "pmList");
     }
 

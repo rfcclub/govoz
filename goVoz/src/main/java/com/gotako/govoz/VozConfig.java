@@ -135,14 +135,14 @@ public class VozConfig {
         SharedPreferences prefs = context.getSharedPreferences("VOZCONFIG", Context.MODE_PRIVATE);
         fontSize = prefs.getInt("fontSize", 14);
         loadImageByDemand = prefs.getBoolean("loadImageByDemand", false);
-        autoReloadForum = prefs.getBoolean("autoReloadForum", true);
+        autoReloadForum = prefs.getBoolean("autoReloadForum", false);
         supportLongAvatar = prefs.getBoolean("supportLongAvatar", true);
         darkTheme = prefs.getBoolean("darkTheme", false);
         loadingDrawable = prefs.getInt("loadingDrawable", R.drawable.load278);
         showSign = prefs.getBoolean("showSign", true);
-        hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", false);
+        hardwareAccelerated = prefs.getBoolean("hardwareAccelerated", true);
         useBackgroundService = prefs.getBoolean("useBackgroundService", false);
-        preloadForumsAndThreads = prefs.getBoolean("preloadForumsAndThreads", false);
+        preloadForumsAndThreads = prefs.getBoolean("preloadForumsAndThreads", true);
         usingDnsOverVpn = prefs.getBoolean("usingDnsOverVpn", true);
     }
 

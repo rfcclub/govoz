@@ -111,8 +111,9 @@ public class InboxDetailFragment extends VozFragment implements
     }
 
     @Override
-    public void doCallback(List<PrivateMessageContent> result, Object... extra) {
-        pmContentList = result;
+    public void doCallback(CallbackResult<PrivateMessageContent> callbackResult) {
+        pmContentList = callbackResult.getResult();
+        Object[] extra = callbackResult.getExtra();
         pmReplyLink = (String)extra[0];
         pmRecipient = (String)extra[1];
         pmQuote = (String)extra[2];
@@ -120,7 +121,7 @@ public class InboxDetailFragment extends VozFragment implements
         loggedInUser = (String) extra[4];
 
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
+        LinearLayout parent = getView().findViewById(R.id.linearMain);
         parent.removeAllViews();
 
         LinearLayout pmLayout = (LinearLayout) layoutInflater.inflate(R.layout.pm_detail_item, null);

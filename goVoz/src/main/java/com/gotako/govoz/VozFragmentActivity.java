@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.google.gson.Gson;
 import com.gotako.gofast.listener.BindingActionListener;
@@ -36,12 +35,13 @@ import java.util.List;
  */
 public class VozFragmentActivity extends BaseFragmentActivity implements
         OnMenuItemClickListener, BindingActionListener, ExceptionCallback, LogoutCallback {
+    public static final int LOGIN_ACTION = 1;
     protected boolean threadIsClosed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        BugSenseHandler.initAndStartSession(this, "2330a14e");
-        BugSenseHandler.setLogging(1000, "*:W");
+//        BugSenseHandler.initAndStartSession(this, "2330a14e");
+//        BugSenseHandler.setLogging(1000, "*:W");
         VozConfig.instance().load(this);
 //        if (VozConfig.instance().isDarkTheme()) {
             setTheme(R.style.AppTheme);
@@ -243,7 +243,16 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     private void doLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        // startActivity(intent);
+        startActivityForResult(intent, LOGIN_ACTION);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LOGIN_ACTION && resultCode == VozConstant.LOGIN_OK) {
+            doAfterAutoLogin();
+        }
     }
 
     public void refresh() {
@@ -257,7 +266,7 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
     @Override
     public void lastBreath(Exception ex) {
         ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
-        BugSenseHandler.sendException(ex);
+        // BugSenseHandler.sendException(ex);
     }
 
     @Override

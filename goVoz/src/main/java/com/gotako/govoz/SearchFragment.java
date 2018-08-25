@@ -76,7 +76,11 @@ public class SearchFragment extends ForumFragment {
             SearchDumpObject searchDumpObject = (SearchDumpObject) VozCache.instance().getDataFromCache(key);
             if (!forceReload && searchDumpObject != null) {
                 List<Thread> threads = searchTask.processResult(searchDumpObject.document);
-                doCallback(threads, null, searchDumpObject.lastPage, searchTask.getForumName());
+                CallbackResult<Thread> callbackResult = new CallbackResult.Builder<Thread>()
+                        .setResult(threads)
+                        .setExtra(null, searchDumpObject.lastPage, searchTask.getForumName())
+                        .build();
+                doCallback(callbackResult);
             } else {
                 if (mSearchString != null && mShowPosts != null) {
                     searchTask.setShowProcessDialog(true);

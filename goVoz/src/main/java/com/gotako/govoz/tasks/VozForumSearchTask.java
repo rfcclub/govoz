@@ -3,6 +3,7 @@ package com.gotako.govoz.tasks;
 import android.util.Log;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConstant;
 import com.gotako.govoz.data.Forum;
@@ -159,7 +160,13 @@ public class VozForumSearchTask extends AbstractDownloadTask<Thread> {
 		doOnPostExecute(result);
 		// do call back
 		if (callback != null) {
-			callback.doCallback(result, subforums, lastPage, forumName);
+			CallbackResult<Thread> cr = new CallbackResult.Builder<Thread>()
+					.setResult(result)
+					.setExtra(subforums, lastPage, forumName)
+					.setError(hasError)
+					.setSessionExpire(sessionExpired)
+					.build();
+			callback.doCallback(cr);
 		}
 	}
 

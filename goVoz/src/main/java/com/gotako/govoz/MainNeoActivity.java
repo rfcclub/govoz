@@ -259,6 +259,13 @@ public class MainNeoActivity extends VozFragmentActivity
         reloadCurrentFragment();
     }
 
+    @Override
+    public void onSessionExpired() {
+        Intent intent = new Intent(getApplicationContext(), MainNeoActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void goToPage(int page) {
         if (mFragment instanceof PageNavigationListener) {
             ((PageNavigationListener) mFragment).goToPage(page);

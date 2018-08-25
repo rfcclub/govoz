@@ -1,21 +1,11 @@
 package com.gotako.govoz;
 
-import java.io.IOException;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.widget.Toast;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.listener.BindingActionListener;
 import com.gotako.govoz.tasks.UserLogoutTask;
@@ -146,7 +136,7 @@ public class VozActivity extends BaseActivity implements OnMenuItemClickListener
 	public void lastBreath(Exception ex) {
 		ex.printStackTrace(); // in case you want to see the stacktrace in your
 								// log cat output
-		BugSenseHandler.sendException(ex);
+		// BugSenseHandler.sendException(ex);
 	}
 
 	@Override

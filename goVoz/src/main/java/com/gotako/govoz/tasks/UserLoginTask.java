@@ -15,8 +15,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.VozCache;
 import com.gotako.util.Utils;
 
@@ -34,7 +36,8 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 
 	@Override
 	protected Boolean doInBackground(String... params) {		
-		boolean hasLogged = false;		
+		boolean hasLogged = false;
+		Document document = null;
 		try {
 			TaskHelper.disableSSLCertCheck();
 			// String url = VOZ_LINK +"/vbdev/login_api.php";
@@ -42,27 +45,6 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 			Connection conn = Jsoup.connect(url);
 			conn = buildRequest(conn, params, "", "");
 			Response response = conn.method(Method.POST).execute();
-//			Document document = response.parse();
-//			org.json.JSONObject first = new JSONObject(document.text());
-//			if (!first.getJSONObject("userinfo").getString("username")
-//					.equals(params[0])) {
-//				String captcha = first.getString("captcha");
-//				conn = buildRequest(conn, params, captcha, "");
-//				response = conn.method(Method.POST).execute();
-//				document = response.parse();
-//				JSONObject second = new JSONObject(document.text());
-//				String salt = second.getString("salt");
-//				conn = buildRequest(conn, params, captcha, salt);
-//				response = conn.method(Method.POST).execute();
-//				document = response.parse();
-//				JSONObject third = new JSONObject(document.text());
-//				if (third.getJSONObject("userinfo").getString("username")
-//						.equals(params[0])) {
-//					hasLogged = true;
-//				}
-//			} else { // logged in and do not need to fill captcha
-//				hasLogged = true;
-//			}
             if (response.statusCode() == 200) {
                 hasLogged = true;
             }
@@ -70,9 +52,14 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 				VozCache.instance().setUserId(params[0]);
 				VozCache.instance().setCookies(conn.response().cookies());
 				VozCache.instance().milliSeconds = System.currentTimeMillis();
+				document = response.parse();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (document != null) {
+				Log.i("LOGIN", "LoginOK");
+			}
 		}
 
 		return hasLogged;
@@ -109,7 +96,7 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 		} else {
 			list.add(false);			
 		}
-		callback.doCallback(list);
+		callback.doCallback(new CallbackResult.Builder<Boolean>().setResult(list).build());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -119,7 +106,10 @@ public class UserLoginTask extends AsyncTask<String, String, Boolean> {
 		list.add(false);		
 		if (callback != null) {
 			list.add(true);
-			callback.doCallback(list, true);
+			callback.doCallback(new CallbackResult.Builder<Boolean>()
+					.setResult(list)
+					.isCancelled()
+					.build());
 		}
 		// mAuthTask = null;
 		// showProgress(false);

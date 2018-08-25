@@ -1,9 +1,6 @@
 package com.gotako.govoz;
 
-import java.util.List;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,12 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.annotation.BindingField;
 import com.gotako.govoz.tasks.PostReplyTask;
 import com.gotako.util.Utils;
+
+import java.util.List;
 
 public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
 
@@ -67,7 +65,7 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 	}
 
 	@Override
-	public void doCallback(List<Boolean> result, Object... extra) {
+	public void doCallback(CallbackResult<Boolean> callbackResult) {
 		setResult(1);
 		finish();
 	}

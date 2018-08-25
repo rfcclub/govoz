@@ -117,7 +117,11 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             task.setForumId(String.valueOf(forumId));
             ForumDumpObject forumDumpObject = (ForumDumpObject) cacheObject;
             List<Thread> threads = task.processResult(forumDumpObject.document);
-            doCallback(threads, task.getSubforums(), forumDumpObject.lastPage, forumDumpObject.forumName);
+            CallbackResult callbackResult = new CallbackResult.Builder<Thread>()
+                    .setResult(threads)
+                    .setExtra(task.getSubforums(), forumDumpObject.lastPage, forumDumpObject.forumName)
+                    .build();
+            doCallback(callbackResult);
         } else {
             loadThreads(forumId, page);
         }
@@ -180,7 +184,12 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
     }
 
     @Override
-    public void doCallback(List<Thread> result, Object... extra) {
+    public void doCallback(CallbackResult<Thread> callbackResult) {
+        if (callbackResult.isSessionExpired()) {
+            if (mListener != null) mListener.onSessionExpired();
+        }
+        Object[] extra = callbackResult.getExtra();
+        List<Thread> result = callbackResult.getResult();
         mForums = (List<Forum>) extra[0];
         if (result == null || result.size() == 0) {
             if(mForums == null || mForums.size() == 0) {
@@ -396,5 +405,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         void onForumClicked(String forumId);
 
         void showPageSelectDialog();
+
+        void onSessionExpired();
     }
 }

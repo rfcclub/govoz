@@ -1,6 +1,7 @@
 package com.gotako.govoz.tasks;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.data.*;
 import com.gotako.util.Utils;
 
@@ -15,9 +16,9 @@ import java.util.List;
  * Created by ntu on 10/20/2015.
  */
 public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageContent> {
-    String pmReplyLink;
-    String pmRecipient;
-    String pmQuote;
+    private String pmReplyLink;
+    private String pmRecipient;
+    private String pmQuote;
     private String securityToken;
     private String loggedInUser;
 
@@ -114,7 +115,12 @@ public class PMContentDownloadTask extends AbstractDownloadTask<PrivateMessageCo
         doOnPostExecute(result);
         // do call back
         if (callback != null) {
-            callback.doCallback(result, pmReplyLink, pmRecipient, pmQuote, securityToken, loggedInUser);
+            CallbackResult<PrivateMessageContent> callbackResult =
+                    new CallbackResult.Builder<PrivateMessageContent>()
+                    .setResult(result)
+                    .setExtra(pmReplyLink, pmRecipient, pmQuote, securityToken, loggedInUser)
+                    .build();
+            callback.doCallback(callbackResult);
         }
     }
 }

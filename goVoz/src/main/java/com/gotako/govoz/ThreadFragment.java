@@ -207,7 +207,12 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     }
 
     @Override
-    public void doCallback(List<Post> result, Object... extra) {
+    public void doCallback(CallbackResult<Post> callbackResult) {
+        if (callbackResult.isSessionExpired()) {
+            if (mListener != null) mListener.onSessionExpired();
+        }
+        List<Post> result = callbackResult.getResult();
+        Object[] extra = callbackResult.getExtra();
         if (result == null || result.size() == 0) {
             String errorMessage = (String) extra[0];
             if (errorMessage != null)
@@ -431,18 +436,14 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
 
         });
 
-        WebView.OnTouchListener gestureListener = new WebView.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                holder.setWebView((WebView) v);
-                WebView.HitTestResult result = holder.getWebView().getHitTestResult();
-                if (result != null) {
-                    holder.setLink(result.getExtra());
-                    holder.setType(result.getType());
-                }
-                return gestureDetector.onTouchEvent(event);
+        WebView.OnTouchListener gestureListener = (v, event) -> {
+            holder.setWebView((WebView) v);
+            WebView.HitTestResult result = holder.getWebView().getHitTestResult();
+            if (result != null) {
+                holder.setLink(result.getExtra());
+                holder.setType(result.getType());
             }
+            return gestureDetector.onTouchEvent(event);
         };
         webView.setOnTouchListener(gestureListener);
 
@@ -587,5 +588,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
         void rateThread();
 
         void showPageSelectDialog();
+
+        void onSessionExpired();
     }
 }

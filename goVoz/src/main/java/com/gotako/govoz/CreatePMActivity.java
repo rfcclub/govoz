@@ -68,7 +68,7 @@ public class CreatePMActivity extends VozFragmentActivity implements ActivityCal
     }
 
     @Override
-    public void doCallback(List<Boolean> result, Object... extra) {
+    public void doCallback(CallbackResult<Boolean> callbackResult) {
         if(doReply) setResult(2);
         else setResult(1);
         finish();

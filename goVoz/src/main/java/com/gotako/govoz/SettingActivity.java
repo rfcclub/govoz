@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 
 import com.gotako.util.Utils;
 
@@ -16,7 +17,6 @@ public class SettingActivity extends Activity {
 	private CheckBox loadImageByDemand;
 	private CheckBox autoReloadForum;
 	private CheckBox supportLongAvatar;
-	private EditText fontSize;
 	private VozConfig config;
 	private RadioButton currentCheckedRadio,darkThemeRadio,lightThemeRadio;
 	private CheckBox chkShowSign;
@@ -24,6 +24,7 @@ public class SettingActivity extends Activity {
 	private CheckBox useBackgroundService;
 	private CheckBox isPreloadForumsAndThreads;
 	private CheckBox useDnsOverVpn;
+	private SeekBar fontSize;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		VozConfig.instance().load(this);
@@ -42,13 +43,14 @@ public class SettingActivity extends Activity {
 		autoReloadForum = findViewById(R.id.autoReloadForum);
 		supportLongAvatar = findViewById(R.id.supportLongAvatar);
 		chkShowSign = findViewById(R.id.chkShowSign);
-		fontSize = findViewById(R.id.fontSize);
 		useDnsOverVpn = findViewById(R.id.usingVpn);
-		fontSize.setText(String.valueOf(config.getFontSize()));
+		fontSize = findViewById(R.id.fontSize);
+		fontSize.setProgress(config.getFontSize());
 		loadImageByDemand.setChecked(config.isLoadImageByDemand());
 		autoReloadForum.setChecked(config.isAutoReloadForum());
 		supportLongAvatar.setChecked(config.isSupportLongAvatar());
 		chkShowSign.setChecked(config.isShowSign());
+
 
 		darkThemeRadio = (RadioButton)findViewById(R.id.darkThemeRadio);
         lightThemeRadio = (RadioButton)findViewById(R.id.lightThemeRadio);
@@ -145,7 +147,7 @@ public class SettingActivity extends Activity {
 	
 	public void saveConfig(View view) {
 		config.setLoadImageByDemand(loadImageByDemand.isChecked());
-		config.setFontSize(Integer.parseInt(fontSize.getText().toString()));
+		config.setFontSize(fontSize.getProgress());
 		config.setAutoReloadForum(autoReloadForum.isChecked());		
 		config.setSupportLongAvatar(supportLongAvatar.isChecked());
 		//config.setLoadingDrawable(parseDrawableFromRadio(currentCheckedRadio.getId()));

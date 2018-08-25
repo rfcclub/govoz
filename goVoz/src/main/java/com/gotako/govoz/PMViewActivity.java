@@ -86,7 +86,9 @@ public class PMViewActivity extends VozFragmentActivity implements
     }
 
     @Override
-    public void doCallback(List<PrivateMessageContent> result, Object... extra) {
+    public void doCallback(CallbackResult<PrivateMessageContent> callbackResult) {
+        List<PrivateMessageContent> result = callbackResult.getResult();
+        Object[] extra = callbackResult.getExtra();
         pmContentList = result;
         pmReplyLink = (String)extra[0];
         pmRecipient = (String)extra[1];

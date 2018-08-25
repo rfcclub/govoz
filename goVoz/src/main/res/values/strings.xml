@@ -148,4 +148,6 @@
     <string name="subcribe">Subcribe</string>
     <string name="thread_closed">Thread is closed. Cannot reply.</string>
     <string name="usingVpnChangeDNS">Đổi DNS sử dụng VPN nội bộ</string>
+    <string name="one_hundred_percent">100%</string>
+    <string name="page_transition_effect_text">Hiệu ứng chuyển trang</string>
 </resources>

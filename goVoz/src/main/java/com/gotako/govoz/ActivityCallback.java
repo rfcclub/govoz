@@ -3,8 +3,6 @@
  */
 package com.gotako.govoz;
 
-import java.util.List;
-
 /**
  * Provide an interface for call back activity
  * 
@@ -12,5 +10,5 @@ import java.util.List;
  * 
  */
 public interface ActivityCallback<T> {
-	void doCallback(List<T> result,Object... extra);		
+	void doCallback(CallbackResult<T> result);
 }

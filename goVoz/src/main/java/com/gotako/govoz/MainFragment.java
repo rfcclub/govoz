@@ -81,7 +81,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         task.setContext(getActivity());
         if (dumpObject != null) {
             List<Forum> forums = task.processResult(dumpObject.document);
-            if (forums.size() > 0) doCallback(forums);
+            if (forums.size() > 0) doCallback(new CallbackResult.Builder<Forum>().setResult(forums).build());
             else {
                 task.setShowProcessDialog(true);
                 task.execute(VozConstant.VOZ_LINK);
@@ -123,7 +123,12 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     }
 
     @Override
-    public void doCallback(List<Forum> result, Object... extra) {
+    public void doCallback(CallbackResult<Forum> callbackResult) {
+        if (callbackResult.isSessionExpired()) {
+            if (mListener != null) mListener.onSessionExpired();
+        }
+        List<Forum> result = callbackResult.getResult();
+        Object[] extra = callbackResult.getExtra();
         if (result == null || result.size() == 0) {
             String errMsg = extra.length > 0 ? (String) extra[0]: null;
             if (errMsg == null)
@@ -173,7 +178,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         for(Forum forumGroup : mForumGroups) {
             LinearLayout forumGroupLayout = (LinearLayout) layoutInflater.inflate(R.layout.main_forum_item, null);
             ((TextView) forumGroupLayout.findViewById(R.id.textMainForum)).setText(forumGroup.getForumGroupName());
-            LinearLayout forumsPlaceholder = (LinearLayout) forumGroupLayout.findViewById(R.id.linearSubForum);
+            LinearLayout forumsPlaceholder = forumGroupLayout.findViewById(R.id.linearSubForum);
             forumsPlaceholder.removeAllViews();
             List<Forum> forums = mForums.get(index);
             for (Forum forum : forums) {
@@ -226,5 +231,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
         void onForumClicked(String forumIndex);
         void updateNavigationPanel(boolean visible);
         void reload();
+
+        void onSessionExpired();
     }
 }

@@ -73,8 +73,8 @@ public class InboxFragment extends VozFragment implements
 
 
     @Override
-    public void doCallback(List<PrivateMessage> result, Object... extra) {
-        mPMList = result;
+    public void doCallback(CallbackResult<PrivateMessage> callbackResult) {
+        mPMList = callbackResult.getResult();
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         LinearLayout parent = (LinearLayout) getView().findViewById(R.id.linearMain);
         parent.removeAllViews();

@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.AutoLoginBackgroundService;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 import com.gotako.util.Utils;
@@ -25,6 +27,7 @@ import java.util.List;
 public abstract class AbstractDownloadTask<T> extends
         AsyncTask<String, Integer, List<T>> {
 
+    private static final String TOKEN_EXPIRED = "Your submission could not be processed because the token has expired.";
     protected ActivityCallback<T> callback;
     protected AlertDialog myAlertDialog;
     protected Context mContext;
@@ -36,6 +39,7 @@ public abstract class AbstractDownloadTask<T> extends
     protected boolean mNoInternetConnection;
     protected boolean hasError = false;
     protected Exception exception = null;
+    protected boolean sessionExpired;
 
     public AbstractDownloadTask(ActivityCallback<T> callback) {
         this.callback = callback;
@@ -134,6 +138,9 @@ public abstract class AbstractDownloadTask<T> extends
      */
     protected void processError(Exception e) {
         try {
+            if (sessionExpired(e)) {
+                sessionExpired = true;
+            }
             if (progressDialog != null) {
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -141,6 +148,14 @@ public abstract class AbstractDownloadTask<T> extends
         } finally {
             hasError = true;
             exception = e;
+        }
+    }
+
+    private boolean sessionExpired(Exception e) {
+        if (e.getMessage() != null && e.getMessage().startsWith(TOKEN_EXPIRED)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -165,7 +180,11 @@ public abstract class AbstractDownloadTask<T> extends
             if (hasError && exception != null) {
                 errorMessage = exception.getMessage();
             }
-            callback.doCallback(result, errorMessage);
+            CallbackResult<T> callbackResult = new CallbackResult.Builder<T>()
+            .setResult(result)
+            .setSessionExpire(sessionExpired)
+            .setError(errorMessage != null).build();
+            callback.doCallback(callbackResult);
         }
 
     }

@@ -1,9 +1,11 @@
 package com.gotako.govoz.tasks;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConfig;
 import com.gotako.govoz.data.Post;
+import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.data.ThreadDumpObject;
 import com.gotako.govoz.service.DownloadBatch;
 import com.gotako.govoz.service.ImageDownloadService;
@@ -235,13 +237,13 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                 image.wrap("<div style='display: inline-block'></div>");
                 if(VozConfig.instance().isUseBackgroundService()) {
                     if (image.attr("src").startsWith("http")) {
-                        batch.add(image.attr("src"));
+						batch.add(image.attr("src"));
                         String newLink = "file://" + convertToLocalLink(image.attr("src"));
                         image.attr("src", newLink);
                     }
                 }
                 if (post!=null && !post.isComplexStructure()) post.setComplexStructure(true);
-            } else {
+            } else { // if smilies so use local-stored smilies.
                 String srcLink = image.attr("src").toLowerCase();
                 if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
                 else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
@@ -348,10 +350,17 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 		doOnPostExecute(result);
 		// do call back
 		if (errorMessage == null && exception != null) {
+			hasError = true;
 			errorMessage = exception.getMessage();
 		}
 		if (callback != null) {
-			callback.doCallback(result, errorMessage, lastPage, threadName, closed, pValue, replyLink);
+			CallbackResult<Post> cr = new CallbackResult.Builder<Post>()
+					.setResult(result)
+					.setExtra(errorMessage, lastPage, threadName, closed, pValue, replyLink)
+					.setError(hasError)
+					.setSessionExpire(sessionExpired)
+					.build();
+			callback.doCallback(cr);
 		}
 	}
 	

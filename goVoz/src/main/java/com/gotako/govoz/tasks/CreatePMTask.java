@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.R;
 import com.gotako.govoz.VozCache;
 import com.gotako.govoz.VozConstant;
@@ -102,6 +103,6 @@ public class CreatePMTask extends AsyncTask<String, Void, Boolean> {
         }
         List<Boolean> boo = new ArrayList<Boolean>();
         boo.add(result);
-        mCallback.doCallback(boo);
+        mCallback.doCallback(new CallbackResult.Builder().setResult(boo).build());
     }
 }

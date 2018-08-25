@@ -16,6 +16,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.gotako.govoz.ActivityCallback;
+import com.gotako.govoz.CallbackResult;
 import com.gotako.govoz.R;
 import com.gotako.govoz.VozCache;
 
@@ -100,7 +101,7 @@ public class PostReplyTask extends AsyncTask<String, Void, Boolean> {
 		}
 		List<Boolean> boo = new ArrayList<Boolean>();
 		boo.add(result);
-		callback.doCallback(boo);
+		callback.doCallback(new CallbackResult.Builder().setResult(boo).build());
 	}
 
 }
