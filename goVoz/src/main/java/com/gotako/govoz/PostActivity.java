@@ -1,9 +1,11 @@
 package com.gotako.govoz;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
 
+	private static final int SMILEY_REQUEST = 1;
 	@BindingField(id = R.id.titleText, twoWay = true)
 	String titleText = "";
 	@BindingField(id = R.id.answerText, twoWay = true)
@@ -55,7 +58,33 @@ public class PostActivity extends VozFragmentActivity implements ActivityCallbac
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.post_menu, menu);
+		MenuItem insertAvatar = menu.findItem(R.id.action_insert_avatar);
+		insertAvatar.setOnMenuItemClickListener(this);
 		return true;
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.action_insert_avatar:
+				Intent intent = new Intent(this, VozSmiliesActivity.class);
+				startActivityForResult(intent, SMILEY_REQUEST);
+				break;
+			default: // last option
+
+		}
+		return true;
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == SMILEY_REQUEST && resultCode == VozConstant.GET_SMILEY_OK) {
+			String code = data.getStringExtra("code");
+			String content = answerTextEdit.getText() + code;
+			answerTextEdit.setText(content);
+			answerTextEdit.setSelection(answerTextEdit.getText().length());
+		}
 	}
 
 	public void post(View view) {

@@ -23,45 +23,48 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible"></activity>
+            android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
             android:name=".PostActivity"
-            android:label="@string/title_activity_post"></activity>
+            android:label="@string/title_activity_post" />
 
-        <service android:name=".service.CachePostService"></service>
+        <service android:name=".service.CachePostService" />
         <service
             android:name=".service.VozVpnService"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
-                <action android:name="android.net.VpnService"/>
+                <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".SettingActivity"
-            android:label="@string/title_activity_setting"></activity>
+            android:label="@string/title_activity_setting" />
         <activity
             android:name=".ShowImageActivity"
-            android:label="@string/title_activity_show_image"></activity>
+            android:label="@string/title_activity_show_image" />
         <activity
             android:name=".PMViewActivity"
             android:label="@string/title_activity_pmview" />
         <activity
             android:name=".InboxActivity"
-            android:label="@string/title_activity_inbox"></activity>
+            android:label="@string/title_activity_inbox" />
         <activity
             android:name=".CreatePMActivity"
             android:label="@string/title_activity_create_pm"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".BrowserActivity"
             android:label="@string/title_activity_browser"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".VozSmiliesActivity"></activity>
     </application>
 
 </manifest>

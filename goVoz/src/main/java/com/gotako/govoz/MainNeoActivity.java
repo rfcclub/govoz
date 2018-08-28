@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 
 import com.gotako.govoz.data.Thread;
 import com.gotako.govoz.service.VozVpnService;
+import com.gotako.govoz.tasks.GetSmiliesTask;
 import com.gotako.util.Utils;
 
 import info.hoang8f.android.segment.SegmentedGroup;
@@ -38,6 +39,8 @@ public class MainNeoActivity extends VozFragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GetSmiliesTask smiliesTask = new GetSmiliesTask(this, null);
+        smiliesTask.execute("https://forums.voz.vn/misc.php?do=getsmilies&editorid=vB_Editor_001");
         if (VozConfig.instance().isUsingDnsOverVpn()) {
             startVpn();
         }

@@ -37,10 +37,7 @@ import com.gotako.govoz.tasks.VozThreadDownloadTask;
 import com.gotako.govoz.utils.CacheUtils;
 import com.gotako.govoz.utils.DefaultVozWebClient;
 import com.gotako.util.Utils;
-
-import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
-import org.sufficientlysecure.htmltextview.HtmlTextView;
-
+import org.sufficientlysecure.htmltextview.*;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -340,25 +337,19 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 } else {
                     webView.setVisibility(View.GONE);
                     htmlTextView.setVisibility(View.VISIBLE);
-                    htmlTextView.setHtml(post.getContent(),
-                            new HtmlHttpImageGetter(htmlTextView));
-                    htmlTextView.invalidate();
+                    /*htmlTextView.setHtml(post.getContent(),
+                            new VozSmiliesImageGetter(getActivity(), htmlTextView));*/
+                    HtmlHttpImageGetter getter = new HtmlHttpImageGetter(htmlTextView);
+                    getter.setContext(getActivity());
+                    htmlTextView.setHtml(post.getContent(), getter);
                     collapseButton.setOnClickListener((v)-> {
                         collapseView(htmlTextView, collapseButton);
                     });
+                    htmlTextView.invalidate();
                 }
                 collapseButton.setTag(false);
                 GifImageView avatarView = (GifImageView) view.findViewById(R.id.avatar);
                 if (post.getAvatar() != null) {
-//                    UrlDrawable drawable = new UrlDrawable();
-//                    drawable.setWidth(75);
-//                    drawable.setHeight(75);
-//                    drawable.setDrawable(getResources().getDrawable(R.drawable.user_icon));
-//                    avatarView.setImageDrawable(drawable);
-//                    avatarView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                    DownloadImageTask task = new DownloadImageTask(drawable,
-//                            avatarView, getActivity());
-//                    task.execute(post.getAvatar());
                     GlideApp
                             .with(this)
                             .load(VOZ_LINK + "/" + post.getAvatar())
@@ -405,6 +396,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             listView.invalidate();
             listView.postDelayed(()-> {
                 listView.fullScroll(View.FOCUS_UP);
+                listView.invalidate();
             }, 100);
         });
     }

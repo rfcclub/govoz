@@ -132,7 +132,7 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                     Elements quotes = first.select("div[style^=margin:20px;]");
                     if(quotes!= null && quotes.size()>0) {
                         for(Element quote:quotes){
-                            post.setComplexStructure(true);
+                            if (!post.isComplexStructure()) post.setComplexStructure(true);
                             quote.attr("style", "width:99%;background-color: #F2F2F2");
                             Element tableQuote = Utils.getFirstElement(quote.select("table[cellpadding=6][class*=voz-bbcode-quote]"));
                             processQuote(tableQuote, quote);
@@ -248,7 +248,11 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
                 if (srcLink.endsWith("smilies/cool.gif")) srcLink = "cool1.gif";
                 else if (srcLink.endsWith("smilies/emos/shit.gif")) srcLink = "shit1.gif";
                 else srcLink = srcLink.substring(srcLink.lastIndexOf("/")+ 1);
-                image.attr("src", "file:///android_asset/" + srcLink);
+//                if (post.isComplexStructure()) {
+					image.attr("src", "file:///android_asset/" + srcLink);
+//				} else {
+//					image.attr("src", srcLink);
+//				}
             }
         }
     }
@@ -288,24 +292,14 @@ public class VozThreadDownloadTask extends AbstractDownloadTask<Post> {
 
 
 	private void checkThreadCloseStatus(Document document) {
-		try {
-			Element table = document
-					.select("table[cellpadding=0][cellspacing=0][border=0][width=100%][style=margin-bottom:3px;padding:0px 10px 0px 0px]")
-					.first();
-			Element closeImage = Utils
-					.getFirstElement(table
-							.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]"));
-			closed = closeImage != null;
-			/*
-			 * String src = closeImage.attr("src"); src =
-			 * closeImage.attr("alt");
-			 */
-			// till here, which mean closeImage is not null and thread is closed
-			// VozCache.instance().getCurrentThread().setClosed(true);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			closed = false;
-		}
+		Elements tables = document
+				.select("table[cellpadding=0][cellspacing=0][border=0][width=100%][style=margin-bottom:3px;padding:0px 10px 0px 0px]");
+		if (tables.isEmpty()) return;
+		Element table = tables.first();
+		Element closeImage = Utils
+				.getFirstElement(table
+						.select("img[src=images/buttons/threadclosed.gif][alt=Closed Thread]"));
+		closed = closeImage != null;
 	}
 
 	private void parseDetailsTo(Post post, Elements divInfos) {
