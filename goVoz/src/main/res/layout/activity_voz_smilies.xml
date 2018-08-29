@@ -33,7 +33,7 @@
         android:id="@+id/emoticonGrid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="6"
+        android:numColumns="4"
         android:verticalSpacing="2dp"
         android:horizontalSpacing="2dp"
         android:stretchMode="columnWidth"

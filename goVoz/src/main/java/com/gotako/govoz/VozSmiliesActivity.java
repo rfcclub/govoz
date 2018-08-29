@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -22,6 +24,9 @@ import com.google.gson.Gson;
 import com.gotako.GlideApp;
 import com.gotako.govoz.data.Emoticon;
 import com.gotako.govoz.data.EmoticonSetObject;
+import com.gotako.govoz.data.ImgurImage;
+import com.gotako.govoz.service.ImgurModule;
+import com.gotako.govoz.tasks.ImgurDownloadTask;
 import com.gotako.util.Utils;
 
 import java.io.IOException;
@@ -30,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VozSmiliesActivity extends AppCompatActivity {
+public class VozSmiliesActivity extends AppCompatActivity implements ActivityCallback<ImgurImage> {
 
     Spinner emoticonList;
     GridView emoticonGrid;
@@ -54,8 +59,16 @@ public class VozSmiliesActivity extends AppCompatActivity {
         createEmoticonList();
         loadEmoticons(0);
         loadDefaultSmilies();
-        emoticonList.setOnItemClickListener((parent, view, position, id) -> {
-            loadEmoticons(position);
+        emoticonList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadEmoticons(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
     }
 
@@ -68,7 +81,9 @@ public class VozSmiliesActivity extends AppCompatActivity {
     }
 
     private void loadImgurAlbum(String location) {
-        
+        ImgurDownloadTask task = new ImgurDownloadTask(this);
+        task.execute(location);
+
     }
 
     private void loadDefaultSmilies() {
@@ -126,6 +141,19 @@ public class VozSmiliesActivity extends AppCompatActivity {
             }});
         }
         spinnerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void doCallback(CallbackResult<ImgurImage> result) {
+        List<ImgurImage> imgurImages = result.getResult();
+        emoticons.clear();
+        for(ImgurImage imgurImage : imgurImages) {
+            emoticons.add(new Emoticon(){{
+                code = "[IMG]" + imgurImage.link + "[/IMG]";
+                url = imgurImage.link;
+            }});
+        }
+        gridAdapter.notifyDataSetChanged();
     }
 
     class EmoticonGridAdapter extends BaseAdapter implements SpinnerAdapter {
