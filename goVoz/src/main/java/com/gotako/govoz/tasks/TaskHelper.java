@@ -1,6 +1,9 @@
 package com.gotako.govoz.tasks;
 
+import android.widget.Spinner;
+
 import com.gotako.govoz.VozCache;
+import com.gotako.govoz.data.EmoticonSetObject;
 import com.gotako.govoz.data.Forum;
 import com.gotako.govoz.utils.DocumentUtil;
 import com.gotako.util.Utils;
@@ -162,5 +165,30 @@ public class TaskHelper {
         // BrowserCompatHostnameVerifierHC4 bchv = new BrowserCompatHostnameVerifierHC4();
         // Install the all-trusting host verifier
         HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    }
+
+    public static List<EmoticonSetObject> createDefaultEmoticonSetList() {
+        List<EmoticonSetObject> emoticonSetList = new ArrayList<>();
+        emoticonSetList.add(new EmoticonSetObject() {{
+            name = "VozForums emoticons";
+            location = "assets";
+        }});
+        emoticonSetList.add(new EmoticonSetObject() {{
+            name = "Mèo mập";
+            location = "https://imgur.com/a/eRCCtp1";
+        }});
+        emoticonSetList.add(new EmoticonSetObject() {{
+            name = "Ếch xanh (Pepe)";
+            location = "https://imgur.com/a/PyAepyl";
+        }});
+        emoticonSetList.add(new EmoticonSetObject() {{
+            name = "Ếch lai ong Pebee = (Pepe + Quobee)";
+            location = "https://imgur.com/a/0LEvazq";
+        }});
+        emoticonSetList.add(new EmoticonSetObject() {{
+            name = "Voz Hồi giáo";
+            location = "https://imgur.com/a/y0xX2";
+        }});
+        return emoticonSetList;
     }
 }

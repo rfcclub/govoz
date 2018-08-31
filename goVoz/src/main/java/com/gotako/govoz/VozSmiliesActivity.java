@@ -27,6 +27,7 @@ import com.gotako.govoz.data.EmoticonSetObject;
 import com.gotako.govoz.data.ImgurImage;
 import com.gotako.govoz.service.ImgurModule;
 import com.gotako.govoz.tasks.ImgurDownloadTask;
+import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.util.Utils;
 
 import java.io.IOException;
@@ -50,13 +51,13 @@ public class VozSmiliesActivity extends AppCompatActivity implements ActivityCal
         setContentView(R.layout.activity_voz_smilies);
         emoticonList = findViewById(R.id.emoticonList);
         emoticonGrid = findViewById(R.id.emoticonGrid);
-        emoticonSetList = new ArrayList<>();
+        emoticonSetList = VozConfig.getEmoticonSet();
         emoticons = new ArrayList<>();
         spinnerAdapter = new EmoticonSpinnerAdapter(this, emoticonSetList);
+        spinnerAdapter.notifyDataSetChanged();
         emoticonList.setAdapter(spinnerAdapter);
         gridAdapter = new EmoticonGridAdapter(this, emoticons);
         emoticonGrid.setAdapter(gridAdapter);
-        createEmoticonList();
         loadEmoticons(0);
         loadDefaultSmilies();
         emoticonList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -119,30 +120,6 @@ public class VozSmiliesActivity extends AppCompatActivity implements ActivityCal
         }
     }
 
-    private void createEmoticonList() {
-        SharedPreferences prefs = this.getBaseContext().getSharedPreferences(VozConstant.VOZINFO, Context.MODE_PRIVATE);
-        String jsonString = prefs.getString("emoticonSets", null);
-        if (Utils.isEmpty(jsonString)) {
-            emoticonSetList.add(new EmoticonSetObject() {{
-                name = "VozForums emoticons";
-                location = "assets";
-            }});
-            emoticonSetList.add(new EmoticonSetObject() {{
-                name = "Ếch xanh (Pepe)";
-                location = "https://imgur.com/a/PyAepyl";
-            }});
-            emoticonSetList.add(new EmoticonSetObject() {{
-                name = "Ếch lai ong Pebee = (Pepe + Quobee)";
-                location = "https://imgur.com/a/0LEvazq";
-            }});
-            emoticonSetList.add(new EmoticonSetObject() {{
-                name = "Voz Hồi giáo";
-                location = "https://imgur.com/a/y0xX2";
-            }});
-        }
-        spinnerAdapter.notifyDataSetChanged();
-    }
-
     @Override
     public void doCallback(CallbackResult<ImgurImage> result) {
         List<ImgurImage> imgurImages = result.getResult();
@@ -192,6 +169,7 @@ public class VozSmiliesActivity extends AppCompatActivity implements ActivityCal
             GlideApp.with(context)
                     .load(Uri.parse(emoticonList.get(position).url))
                     .placeholder(R.drawable.user_icon)
+                    .encodeQuality(50)
                     .into(pictureImage);
             convertView.setOnClickListener((v) -> {
                 context.onEmoticonClick(emoticonList.get(position).code);

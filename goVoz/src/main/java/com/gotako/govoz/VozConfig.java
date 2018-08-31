@@ -8,6 +8,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
 
+import com.google.gson.Gson;
+import com.gotako.govoz.data.EmoticonSetObject;
+import com.gotako.govoz.tasks.TaskHelper;
+import com.gotako.util.Utils;
+
+import java.util.List;
+
 /**
  * @author Nam
  */
@@ -61,6 +68,9 @@ public class VozConfig {
 
 
     private boolean usingDnsOverVpn;
+
+    private int activeEmoticonSet;
+    private List<EmoticonSetObject> emoticonSet;
     /**
      * Default constructor
      */
@@ -73,6 +83,10 @@ public class VozConfig {
             vozConfig = new VozConfig();
         }
         return vozConfig;
+    }
+
+    public static List<EmoticonSetObject> getEmoticonSet() {
+        return instance().emoticonSet;
     }
 
     public boolean isLoadImageByDemand() {
@@ -128,6 +142,10 @@ public class VozConfig {
         editor.putBoolean("useBackgroundService",useBackgroundService);
         editor.putBoolean("preloadForumsAndThreads", preloadForumsAndThreads);
         editor.putBoolean("usingDnsOverVpn", usingDnsOverVpn);
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(emoticonSet, emoticonSet.getClass());
+        editor.putString("emoticonSets", jsonString);
+        editor.putInt("activeEmoticonSet", activeEmoticonSet);
         editor.commit();
     }
 
@@ -144,6 +162,14 @@ public class VozConfig {
         useBackgroundService = prefs.getBoolean("useBackgroundService", false);
         preloadForumsAndThreads = prefs.getBoolean("preloadForumsAndThreads", true);
         usingDnsOverVpn = prefs.getBoolean("usingDnsOverVpn", true);
+        activeEmoticonSet = prefs.getInt("activeEmoticonSet", 0);
+        String jsonString = prefs.getString("emoticonSets", null);
+        Gson gson = new Gson();
+        if (Utils.isEmpty(jsonString)) {
+            emoticonSet = TaskHelper.createDefaultEmoticonSetList();
+        } else {
+            emoticonSet = gson.fromJson(jsonString, emoticonSet.getClass());
+        }
     }
 
     public int getLoadingDrawable() {
@@ -201,5 +227,15 @@ public class VozConfig {
     }
 
 
+    public int getActiveEmoticonSet() {
+        return activeEmoticonSet;
+    }
 
+    public void setActiveEmoticonSet(int activeEmoticonSet) {
+        this.activeEmoticonSet = activeEmoticonSet;
+    }
+
+    public void setEmoticonSet(List<EmoticonSetObject> emoticonSet) {
+        this.emoticonSet = emoticonSet;
+    }
 }

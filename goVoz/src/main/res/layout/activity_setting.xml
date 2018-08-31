@@ -61,6 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/linearLayout1"
         android:layout_marginTop="24dp"
+        android:visibility="gone"
         android:orientation="vertical">
         <TextView
             android:id="@+id/theme_description_label"
@@ -151,8 +152,8 @@
         android:id="@+id/autoReloadForum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/theme_linear_layout"
-        android:layout_below="@+id/theme_linear_layout"
+        android:layout_alignLeft="@+id/textView4"
+        android:layout_below="@+id/textView4"
         android:text="@string/autoReloadForum"
         android:textSize="14sp" />
 
@@ -346,5 +347,22 @@
         android:layout_below="@+id/preloadThings"
         android:text="@string/usingVpnChangeDNS"
         android:layout_alignLeft="@+id/confirmIgnore" />
+
+    <TextView
+        android:id="@+id/emoticonListText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/usingVpn"
+        android:layout_alignLeft="@+id/confirmIgnore"
+        android:layout_alignStart="@+id/confirmIgnore"
+        android:text="@string/defaultEmoticonSet" />
+
+    <Spinner
+        android:id="@+id/emoticonList"
+        android:layout_width="match_parent"
+        android:layout_alignLeft="@+id/confirmIgnore"
+        android:layout_alignStart="@+id/confirmIgnore"
+        android:layout_below="@+id/emoticonListText"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
