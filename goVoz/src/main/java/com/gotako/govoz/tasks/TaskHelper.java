@@ -169,26 +169,11 @@ public class TaskHelper {
 
     public static List<EmoticonSetObject> createDefaultEmoticonSetList() {
         List<EmoticonSetObject> emoticonSetList = new ArrayList<>();
-        emoticonSetList.add(new EmoticonSetObject() {{
-            name = "VozForums emoticons";
-            location = "assets";
-        }});
-        emoticonSetList.add(new EmoticonSetObject() {{
-            name = "Mèo mập";
-            location = "https://imgur.com/a/eRCCtp1";
-        }});
-        emoticonSetList.add(new EmoticonSetObject() {{
-            name = "Ếch xanh (Pepe)";
-            location = "https://imgur.com/a/PyAepyl";
-        }});
-        emoticonSetList.add(new EmoticonSetObject() {{
-            name = "Ếch lai ong Pebee = (Pepe + Quobee)";
-            location = "https://imgur.com/a/0LEvazq";
-        }});
-        emoticonSetList.add(new EmoticonSetObject() {{
-            name = "Voz Hồi giáo";
-            location = "https://imgur.com/a/y0xX2";
-        }});
+        emoticonSetList.add(new EmoticonSetObject("VozForums emoticons","assets"));
+        emoticonSetList.add(new EmoticonSetObject("Mèo mập","https://imgur.com/a/eRCCtp1"));
+        emoticonSetList.add(new EmoticonSetObject("Ếch xanh (Pepe)","https://imgur.com/a/PyAepyl"));
+        emoticonSetList.add(new EmoticonSetObject("Ếch lai ong Pebee = (Pepe + Quobee)","https://imgur.com/a/0LEvazq"));
+        emoticonSetList.add(new EmoticonSetObject("Voz Hồi giáo","https://imgur.com/a/y0xX2"));
         return emoticonSetList;
     }
 }

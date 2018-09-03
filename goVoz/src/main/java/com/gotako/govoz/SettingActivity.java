@@ -1,18 +1,38 @@
 package com.gotako.govoz;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
+import com.gotako.GlideApp;
+import com.gotako.govoz.data.Emoticon;
+import com.gotako.govoz.data.EmoticonSetObject;
+import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.util.Utils;
 
-public class SettingActivity extends Activity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SettingActivity extends FragmentActivity implements DialogInterface.OnDismissListener {
 
 	private CheckBox loadImageByDemand;
 	private CheckBox autoReloadForum;
@@ -25,6 +45,12 @@ public class SettingActivity extends Activity {
 	private CheckBox isPreloadForumsAndThreads;
 	private CheckBox useDnsOverVpn;
 	private SeekBar fontSize;
+	private Button addNewEmoSet;
+
+	Spinner emoticonList;
+	EmoticonSpinnerAdapter spinnerAdapter;
+	List<EmoticonSetObject> emoticonSetList;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		VozConfig.instance().load(this);
@@ -61,8 +87,6 @@ public class SettingActivity extends Activity {
             darkThemeRadio.setChecked(false);
             lightThemeRadio.setChecked(true);
         }
-		//currentCheckedRadio = getRadioForDrawable(config.getLoadingDrawable());
-		//currentCheckedRadio.setChecked(true);
 
 		hardwareAccelerated = (CheckBox)findViewById(R.id.hardwareAccelerated);
 		hardwareAccelerated.setChecked(config.isHardwareAccelerated());
@@ -71,6 +95,32 @@ public class SettingActivity extends Activity {
 		isPreloadForumsAndThreads = (CheckBox) findViewById(R.id.preloadThings);
 		isPreloadForumsAndThreads.setChecked(config.isPreloadForumsAndThreads());
 		useDnsOverVpn.setChecked(config.isUsingDnsOverVpn());
+
+
+		// emoticon list
+		emoticonList = findViewById(R.id.emoticonList);
+		emoticonSetList = VozConfig.getEmoticonSet();
+		if (emoticonSetList.isEmpty()) {
+			emoticonSetList = TaskHelper.createDefaultEmoticonSetList();
+			VozConfig.instance().setActiveEmoticonSet(0);
+			VozConfig.instance().setEmoticonSet(emoticonSetList);
+			VozConfig.instance().save(this);
+		}
+		spinnerAdapter = new EmoticonSpinnerAdapter(this, emoticonSetList);
+		emoticonList.setAdapter(spinnerAdapter);
+		spinnerAdapter.notifyDataSetChanged();
+		emoticonList.setSelection(0);
+
+		addNewEmoSet = findViewById(R.id.addNewEmoSetButton);
+		final SettingActivity activity = this;
+		addNewEmoSet.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				AddEmoticonSetDialog dialog = new AddEmoticonSetDialog(activity);
+				dialog.show();
+				dialog.setOnDismissListener(activity);
+			}
+		});
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
 	}
@@ -156,6 +206,7 @@ public class SettingActivity extends Activity {
 		config.setUseBackgroundService(useBackgroundService.isChecked());
 		config.setPreloadForumsAndThreads(isPreloadForumsAndThreads.isChecked());
 		config.setUsingDnsOverVpn(useDnsOverVpn.isChecked());
+		config.setActiveEmoticonSet(emoticonList.getSelectedItemPosition());
         if(darkThemeRadio.isChecked()) {
             config.setDarkTheme(true);
         } else {
@@ -180,4 +231,68 @@ public class SettingActivity extends Activity {
     public void onBackPressed() {
         saveConfig(null);
     }
+
+	@Override
+	public void onDismiss(DialogInterface dialogInterface) {
+		emoticonSetList.clear();
+		for(EmoticonSetObject emoticonSetObject : VozConfig.getEmoticonSet()) {
+			emoticonSetList.add(emoticonSetObject);
+		}
+		spinnerAdapter.notifyDataSetChanged();
+	}
+
+	class EmoticonSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
+		private List<EmoticonSetObject> setObjectList;
+		private SettingActivity context;
+
+		public EmoticonSpinnerAdapter(SettingActivity context, List<EmoticonSetObject> objectList) {
+			setObjectList = objectList;
+			this.context = context;
+		}
+		@Override
+		public int getCount() {
+			return setObjectList.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return setObjectList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				LayoutInflater mInflater = (LayoutInflater)
+						context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.emoticon_list_item, null);
+			}
+
+			TextView txtTitle = convertView.findViewById(R.id.title);
+			txtTitle.setText(setObjectList.get(position).name);
+			TextView txtLocation = convertView.findViewById(R.id.location);
+			txtLocation.setText(setObjectList.get(position).location);
+			return convertView;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				LayoutInflater mInflater = (LayoutInflater)
+						context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.drawer_list_item, null);
+			}
+			ImageView imgIcon = (ImageView) convertView.findViewById(R.id.icon);
+			imgIcon.setImageResource(R.drawable.ic_delete_white_18dp);
+
+			TextView txtTitle = convertView.findViewById(R.id.title);
+			txtTitle.setText(setObjectList.get(position).name);
+
+			return convertView;
+		}
+	}
 }

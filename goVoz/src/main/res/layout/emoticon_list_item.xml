@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/frame_border"
     >
     <TextView
         android:id="@+id/title"
@@ -14,7 +15,10 @@
         android:text="bookmarkSample"
         android:lines="1"
         android:maxLines="1" />
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@color/background_material_light_dark"
+        android:layout_height="1dp"></LinearLayout>
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"

@@ -9,10 +9,12 @@ import android.content.SharedPreferences;
 import android.support.v4.util.LruCache;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.gotako.govoz.data.EmoticonSetObject;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -143,7 +145,7 @@ public class VozConfig {
         editor.putBoolean("preloadForumsAndThreads", preloadForumsAndThreads);
         editor.putBoolean("usingDnsOverVpn", usingDnsOverVpn);
         Gson gson = new Gson();
-        String jsonString = gson.toJson(emoticonSet, emoticonSet.getClass());
+        String jsonString = gson.toJson(emoticonSet);
         editor.putString("emoticonSets", jsonString);
         editor.putInt("activeEmoticonSet", activeEmoticonSet);
         editor.commit();
@@ -167,8 +169,14 @@ public class VozConfig {
         Gson gson = new Gson();
         if (Utils.isEmpty(jsonString)) {
             emoticonSet = TaskHelper.createDefaultEmoticonSetList();
+            save(context);
         } else {
-            emoticonSet = gson.fromJson(jsonString, emoticonSet.getClass());
+            emoticonSet = new ArrayList<EmoticonSetObject>();
+            emoticonSet = gson.fromJson(jsonString, new TypeToken<List<EmoticonSetObject>>(){}.getType());
+            if (emoticonSet.size() > 0 && emoticonSet.get(0) == null) {
+                emoticonSet = TaskHelper.createDefaultEmoticonSetList();
+                save(context);
+            }
         }
     }
 

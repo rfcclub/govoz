@@ -155,4 +155,7 @@
     <string name="post_action_copy">Copy</string>
     <string name="choose_emoticons_set">Chọn bộ Emoticons</string>
     <string name="defaultEmoticonSet">Chọn emoticons theo ý thích:</string>
+    <string name="add_new_emoticons">Thêm emoticons mới</string>
+    <string name="emoticon_set_name">Tên bộ emoticons</string>
+    <string name="save_button">Lưu</string>
 </resources>
