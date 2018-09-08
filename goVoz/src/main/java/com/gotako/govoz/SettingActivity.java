@@ -2,8 +2,6 @@ package com.gotako.govoz;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -14,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -23,13 +19,10 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.gotako.GlideApp;
-import com.gotako.govoz.data.Emoticon;
 import com.gotako.govoz.data.EmoticonSetObject;
 import com.gotako.govoz.tasks.TaskHelper;
 import com.gotako.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SettingActivity extends FragmentActivity implements DialogInterface.OnDismissListener {
@@ -109,7 +102,7 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 		spinnerAdapter = new EmoticonSpinnerAdapter(this, emoticonSetList);
 		emoticonList.setAdapter(spinnerAdapter);
 		spinnerAdapter.notifyDataSetChanged();
-		emoticonList.setSelection(0);
+		emoticonList.setSelection(VozConfig.instance().getActiveEmoticonSet());
 
 		addNewEmoSet = findViewById(R.id.addNewEmoSetButton);
 		final SettingActivity activity = this;
@@ -194,8 +187,10 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	public void saveConfig(View view) {
+	public void saveConfigPressed(View view) {
+		saveConfig(this);
+	}
+	public void saveConfig(SettingActivity view) {
 		config.setLoadImageByDemand(loadImageByDemand.isChecked());
 		config.setFontSize(fontSize.getProgress());
 		config.setAutoReloadForum(autoReloadForum.isChecked());		
@@ -229,15 +224,11 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 
     @Override
     public void onBackPressed() {
-        saveConfig(null);
+        saveConfig(this);
     }
 
 	@Override
 	public void onDismiss(DialogInterface dialogInterface) {
-		emoticonSetList.clear();
-		for(EmoticonSetObject emoticonSetObject : VozConfig.getEmoticonSet()) {
-			emoticonSetList.add(emoticonSetObject);
-		}
 		spinnerAdapter.notifyDataSetChanged();
 	}
 

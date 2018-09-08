@@ -19,14 +19,15 @@
     <Spinner
         android:id="@+id/emoticonList"
         android:layout_width="match_parent"
-        android:layout_height="29dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp" />
+        android:layout_height="45dp"
+        android:background="@drawable/frame_border"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/white"
+        android:layout_height="1dp"
+        android:background="@color/background_material_light_dark"
         >
     </LinearLayout>
     <GridView

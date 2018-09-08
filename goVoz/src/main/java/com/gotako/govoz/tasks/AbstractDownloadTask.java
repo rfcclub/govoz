@@ -92,11 +92,11 @@ public abstract class AbstractDownloadTask<T> extends
                         .data("securitytoken", VozCache.instance().getSecurityToken())
                         .post();
             }
-            System.out.println("Page load in: " + (System.currentTimeMillis() - startMillis) / 1000);
+            Log.d("AbstractDownloadTask","Page load in: " + (System.currentTimeMillis() - startMillis) / 1000);
             startMillis = System.currentTimeMillis();
             checkError(document);
             result = processResult(document);
-            System.out.println("Processed in: " + (System.currentTimeMillis() - startMillis) / 1000);
+            Log.d("AbstractDownloadTask","Processed in: " + (System.currentTimeMillis() - startMillis) / 1000);
             completed = true;
             afterDownload(document, params);
         } catch (Exception e) {

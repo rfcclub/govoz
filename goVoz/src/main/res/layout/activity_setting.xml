@@ -369,6 +369,7 @@
                 android:layout_below="@id/emoticonListText"
                 android:layout_alignStart="@id/confirmIgnore"
                 android:layout_alignLeft="@id/confirmIgnore"
+                android:background="@drawable/frame_border"
                 android:layout_marginTop="5dp" />
             <Button
                 android:id="@+id/addNewEmoSetButton"
@@ -376,6 +377,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/emoticonList"
                 android:text="@string/add_new_emoticons"
+                />
+            <Button
+                android:id="@+id/editEmoSetButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/addNewEmoSetButton"
+                android:text="@string/edit_emoticons"
                 />
         </RelativeLayout>
     </ScrollView>
@@ -385,7 +393,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:onClick="saveConfig"
+        android:onClick="saveConfigPressed"
         android:text="@string/setting_save_config"
         android:textSize="16sp" />
 </LinearLayout>

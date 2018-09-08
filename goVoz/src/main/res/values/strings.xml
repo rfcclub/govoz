@@ -158,4 +158,5 @@
     <string name="add_new_emoticons">Thêm emoticons mới</string>
     <string name="emoticon_set_name">Tên bộ emoticons</string>
     <string name="save_button">Lưu</string>
+    <string name="edit_emoticons">Chỉnh sửa emoticons</string>
 </resources>

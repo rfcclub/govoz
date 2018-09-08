@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bugsense.trace.ExceptionCallback;
 import com.gotako.govoz.tasks.UserLoginTask;
+import com.gotako.govoz.tasks.VozMainForumDownloadTask;
 import com.gotako.util.Utils;
 
 import java.util.List;
@@ -204,6 +205,8 @@ public class LoginActivity extends Activity implements ActivityCallback<Boolean>
 			Intent data = new Intent();
 			data.putExtra("USERNAME", mUsername);
 			setResult(VozConstant.LOGIN_OK, data);
+			VozMainForumDownloadTask mainForumDownloadTask = new VozMainForumDownloadTask(null);
+			mainForumDownloadTask.execute(VozConstant.VOZ_LINK);
 			finish();
 		} else {
 			mPasswordView
