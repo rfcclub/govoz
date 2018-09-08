@@ -18,6 +18,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gotako.govoz.data.EmoticonSetObject;
 import com.gotako.govoz.tasks.TaskHelper;
@@ -39,6 +40,7 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 	private CheckBox useDnsOverVpn;
 	private SeekBar fontSize;
 	private Button addNewEmoSet;
+	private Button editEmoSet;
 
 	Spinner emoticonList;
 	EmoticonSpinnerAdapter spinnerAdapter;
@@ -113,6 +115,11 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 				dialog.show();
 				dialog.setOnDismissListener(activity);
 			}
+		});
+		editEmoSet = findViewById(R.id.editEmoSetButton);
+		editEmoSet.setOnClickListener(view -> {
+			Toast.makeText(activity, R.string.unimplemented_feature, Toast.LENGTH_SHORT)
+					.show();
 		});
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));

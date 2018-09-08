@@ -159,4 +159,5 @@
     <string name="emoticon_set_name">Tên bộ emoticons</string>
     <string name="save_button">Lưu</string>
     <string name="edit_emoticons">Chỉnh sửa emoticons</string>
+    <string name="unimplemented_feature">Tính năng này đang được implement  thím thông cảm chờ ít hôm.</string>
 </resources>
