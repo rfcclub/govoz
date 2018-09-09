@@ -152,7 +152,7 @@ public abstract class AbstractDownloadTask<T> extends
     }
 
     private boolean sessionExpired(Exception e) {
-        if (e.getMessage() != null && e.getMessage().startsWith(TOKEN_EXPIRED)) {
+        if (e.getMessage() != null && (e.getMessage().startsWith(TOKEN_EXPIRED))) {
             return true;
         } else {
             return false;

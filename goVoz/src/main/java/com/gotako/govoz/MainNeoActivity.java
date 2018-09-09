@@ -264,6 +264,8 @@ public class MainNeoActivity extends VozFragmentActivity
 
     @Override
     public void onSessionExpired() {
+        // reset cookies ..
+        VozCache.instance().setCookies(null);
         Intent intent = new Intent(getApplicationContext(), MainNeoActivity.class);
         startActivity(intent);
         finish();

@@ -118,8 +118,7 @@ public class SettingActivity extends FragmentActivity implements DialogInterface
 		});
 		editEmoSet = findViewById(R.id.editEmoSetButton);
 		editEmoSet.setOnClickListener(view -> {
-			Toast.makeText(activity, R.string.unimplemented_feature, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(activity, R.string.unimplemented_feature, Toast.LENGTH_SHORT).show();
 		});
         View rootView = findViewById(R.id.rootSettingLayout);
         rootView.setBackgroundColor(Utils.getColorByTheme(this, R.color.background_material_light_dark, R.color.voz_back_color));
