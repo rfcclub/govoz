@@ -427,10 +427,4 @@ public class MainNeoActivity extends VozFragmentActivity
         pageSelectDialog.setTitle("Go to page:");
         pageSelectDialog.show(getSupportFragmentManager(), "selectPage");
     }
-
-    @Override
-    public void lastBreath(Exception ex) {
-        super.lastBreath(ex);
-        VozCache.instance().clearCache();
-    }
 }

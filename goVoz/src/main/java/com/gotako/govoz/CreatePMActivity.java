@@ -2,25 +2,17 @@ package com.gotako.govoz;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.bugsense.trace.ExceptionCallback;
 import com.gotako.gofast.GoFastEngine;
 import com.gotako.gofast.annotation.BindingField;
 import com.gotako.govoz.tasks.CreatePMTask;
-import com.gotako.govoz.tasks.PostReplyTask;
 import com.gotako.util.Utils;
 
-import java.util.List;
-
-public class CreatePMActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
+public class CreatePMActivity extends VozFragmentActivity implements ActivityCallback<Boolean> {
 
     @BindingField(id = R.id.toAddress, twoWay = true)
     String toAddress = "";

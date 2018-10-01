@@ -18,7 +18,7 @@ import com.gotako.util.Utils;
 
 import java.util.List;
 
-public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean>, ExceptionCallback {
+public class PostActivity extends VozFragmentActivity implements ActivityCallback<Boolean> {
 
 	private static final int SMILEY_REQUEST = 1;
 	@BindingField(id = R.id.titleText, twoWay = true)

@@ -19,7 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bugsense.trace.ExceptionCallback;
 import com.google.gson.Gson;
 import com.gotako.gofast.listener.BindingActionListener;
 import com.gotako.govoz.data.NavDrawerItem;
@@ -31,10 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author lnguyen66
+ * @author Nam
  */
 public class VozFragmentActivity extends BaseFragmentActivity implements
-        OnMenuItemClickListener, BindingActionListener, ExceptionCallback, LogoutCallback {
+        OnMenuItemClickListener, BindingActionListener, LogoutCallback {
     public static final int LOGIN_ACTION = 1;
     protected boolean threadIsClosed;
 
@@ -216,6 +215,10 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
         // do nothing
     }
 
+    protected void doRep() {
+
+    }
+
     private void doLoginWithPreset() {
         SharedPreferences prefs = this.getSharedPreferences("VOZINFO", Context.MODE_PRIVATE);
         boolean autoLogin = false;
@@ -257,16 +260,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     public void refresh() {
         // do nothing. This method will be overriden by subclasses
-    }
-
-    public void doRep() {
-        // do nothing. This method will be overriden by subclasses
-    }
-
-    @Override
-    public void lastBreath(Exception ex) {
-        ex.printStackTrace(); // in case you want to see the stacktrace in your log cat output
-        // BugSenseHandler.sendException(ex);
     }
 
     @Override

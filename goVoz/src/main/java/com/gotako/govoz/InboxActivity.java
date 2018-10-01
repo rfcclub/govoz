@@ -28,7 +28,7 @@ import java.util.List;
 import static com.gotako.govoz.VozConstant.VOZ_LINK;
 
 public class InboxActivity extends VozFragmentActivity implements
-        ActivityCallback<PrivateMessage>, AdapterView.OnItemClickListener, ExceptionCallback {
+        ActivityCallback<PrivateMessage>, AdapterView.OnItemClickListener {
 
     @BindingCollection(id = R.id.pmList, layout = R.layout.pm_item, twoWay = true)
     private List<PrivateMessage> pmList = new ArrayList<PrivateMessage>();
