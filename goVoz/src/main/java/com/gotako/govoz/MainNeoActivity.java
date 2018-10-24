@@ -36,9 +36,14 @@ public class MainNeoActivity extends VozFragmentActivity
 
     protected VozFragment mFragment;
     private static final int VPN_REQUEST_CODE = 0x0F;
+    private boolean hasVpnPermission = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeVoz(savedInstanceState);
+    }
+
+    private void initializeVoz(Bundle savedInstanceState) {
         GetSmiliesTask smiliesTask = new GetSmiliesTask(this, null);
         smiliesTask.execute("https://forums.voz.vn/misc.php?do=getsmilies&editorid=vB_Editor_001");
         if (VozConfig.instance().isUsingDnsOverVpn()) {
@@ -61,9 +66,36 @@ public class MainNeoActivity extends VozFragmentActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (hasVpnPermission) {
+            startService(new Intent(this, VozVpnService.class).setAction(VozVpnService.ACTION_DISCONNECT));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (hasVpnPermission) {
+            startService(new Intent(this, VozVpnService.class).setAction(VozVpnService.ACTION_CONNECT));
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        initializeVoz(savedInstanceState);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopService(new Intent(this, VozVpnService.class).setAction(VozVpnService.ACTION_DISCONNECT));
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == VPN_REQUEST_CODE) {
+            hasVpnPermission = true;
             startService(new Intent(this, VozVpnService.class).setAction(VozVpnService.ACTION_CONNECT));
         }
     }
@@ -295,10 +327,7 @@ public class MainNeoActivity extends VozFragmentActivity
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+
 
     /*
      * This method has error, need review

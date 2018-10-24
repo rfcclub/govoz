@@ -112,9 +112,11 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
             if (VozCache.instance().mNeoNavigationList.size() > 0) {
                 onBackPressed();
             } else {
-                boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
-                if (!drawerOpen) {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
+                if (!(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)) {
+                    boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
+                    if (!drawerOpen) {
+                        mDrawerLayout.openDrawer(GravityCompat.START);
+                    }
                 }
             }
         });
@@ -175,7 +177,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 //        menu.findItem(R.id.action_refresh).setIcon(R.drawable.reload);
 //        menu.findItem(R.id.action_rmenu).setIcon(R.drawable.rmenu);
         // if nav drawer is opened, hide the action items
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
+        // boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLayoutSlidePanel);
         return super.onPrepareOptionsMenu(menu);
     }
  

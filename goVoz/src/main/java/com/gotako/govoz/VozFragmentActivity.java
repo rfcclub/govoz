@@ -39,8 +39,6 @@ public class VozFragmentActivity extends BaseFragmentActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        BugSenseHandler.initAndStartSession(this, "2330a14e");
-//        BugSenseHandler.setLogging(1000, "*:W");
         VozConfig.instance().load(this);
 //        if (VozConfig.instance().isDarkTheme()) {
             setTheme(R.style.AppTheme);
