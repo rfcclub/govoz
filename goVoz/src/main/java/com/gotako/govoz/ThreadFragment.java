@@ -179,7 +179,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_layout, container, false);
+        return createViewWithSwipeToRefresh(inflater, R.layout.fragment_layout, container, savedInstanceState);
     }
 
     @Override
@@ -251,7 +251,7 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
             ((TextView) postLayout.findViewById(R.id.threadTitle)).setText(mThreadName);
             layout.addView(postLayout);
             LinearLayout postsPlaceHolder = (LinearLayout) postLayout.findViewById(R.id.linearPosts);
-            layout.invalidate();
+            layout.requestLayout();
             for (int i = 0; i < mPosts.size(); i++) {
                 View view = viewInflater.inflate(R.layout.neo_post_item, null);
                 Post post = mPosts.get(i);
@@ -265,15 +265,19 @@ public class ThreadFragment extends VozFragment implements ActivityCallback<Post
                 ImageButton collapseButton = view.findViewById(R.id.post_collapse_button);
                 if (post.isComplexStructure()) {
                     webView.getSettings().setJavaScriptEnabled(true);
-                    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+                    webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
                     webView.getSettings().setPluginState(WebSettings.PluginState.ON);
                     if (webView.isHardwareAccelerated() && VozConfig.instance().isHardwareAccelerated()) {
                         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
                     } else {
                         webView.setLayerType(View.LAYER_TYPE_NONE, null);
                     }
-
-                    webView.setDrawingCacheEnabled(false);
+                    webView.getSettings().setAppCacheMaxSize( 8 * 1024 * 1024 ); // 8MB
+                    webView.getSettings().setAppCachePath( getActivity().getApplicationContext().getCacheDir().getAbsolutePath() );
+                    webView.getSettings().setAllowFileAccess( true );
+                    webView.getSettings().setAppCacheEnabled( true );
+                    webView.getSettings().setCacheMode( WebSettings.LOAD_DEFAULT );
+                    webView.setDrawingCacheEnabled(true);
                     // disable all click listener in webview
                     webView.setClickable(false);
                     webView.setLongClickable(true);

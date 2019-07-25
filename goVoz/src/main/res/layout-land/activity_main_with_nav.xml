@@ -56,14 +56,14 @@
                 <LinearLayout
                     android:id="@+id/yourFavorite"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
                     android:background="@color/liver">
                     <TextView
                         android:id="@+id/loginLink"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="36dp"
                         android:layout_weight="50"
                         android:layout_marginTop="1dp"
                         android:background="@drawable/left_menu_selector"
@@ -74,7 +74,7 @@
                     <TextView
                         android:id="@+id/preLoginLink"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="36dp"
                         android:layout_weight="50"
                         android:layout_marginTop="1dp"
                         android:layout_marginLeft="1dp"
@@ -86,7 +86,7 @@
                     <TextView
                         android:id="@+id/yourPosts"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="36dp"
                         android:layout_weight="0.5"
                         android:layout_marginTop="1dp"
                         android:background="@drawable/left_menu_selector"
@@ -98,7 +98,7 @@
                     <TextView
                         android:id="@+id/yourThreads"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="36dp"
                         android:layout_weight="0.5"
                         android:layout_marginTop="1dp"
                         android:layout_marginLeft="1dp"
@@ -194,7 +194,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="60"
+                android:layout_weight="70"
                 android:scrollbars="vertical"
                 android:orientation="vertical">
                 <TextView
@@ -217,7 +217,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="40"
+                android:layout_weight="30"
                 android:scrollbars="vertical"
                 android:orientation="vertical" >
                 <TextView

@@ -209,12 +209,7 @@ public class GifImageView extends ImageView implements Runnable {
   public void draw(Canvas canvas) {
     // Save the canvas to a layer for off-screen composition.
     // If not, the transparency is not preserved, resulting in black areas.
-    int count = canvas.saveLayer(0, 0, getWidth(), getHeight(), null,
-            Canvas.MATRIX_SAVE_FLAG |
-                    Canvas.CLIP_SAVE_FLAG |
-                    Canvas.HAS_ALPHA_LAYER_SAVE_FLAG |
-                    Canvas.FULL_COLOR_LAYER_SAVE_FLAG |
-                    Canvas.CLIP_TO_LAYER_SAVE_FLAG);
+    int count = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
     super.draw(canvas);
 
     // draw a picture with PorterDuffXfermode(Mode.DST_IN)

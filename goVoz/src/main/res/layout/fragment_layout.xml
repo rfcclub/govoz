@@ -13,21 +13,26 @@
             android:layout_gravity="top"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <ScrollView
-            android:id="@+id/scrollviewMain"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="true"
-            android:fillViewport="true"
-            android:scrollbarStyle="insideOverlay"
-            tools:scrollbarSize="20dp">
-
-            <LinearLayout
-                android:id="@+id/linearMain"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
-        </ScrollView>
+                android:layout_height="match_parent">
+                <ScrollView
+                    android:id="@+id/scrollviewMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="true"
+                    android:fillViewport="true"
+                    android:scrollbarStyle="insideOverlay"
+                    tools:scrollbarSize="20dp">
+
+                    <LinearLayout
+                        android:id="@+id/linearMain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"></LinearLayout>
+                </ScrollView>
+            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
         <include
             layout="@layout/navigation_panel"

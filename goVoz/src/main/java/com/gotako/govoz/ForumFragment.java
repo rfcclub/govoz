@@ -157,8 +157,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_layout, container, false);
+        return createViewWithSwipeToRefresh(inflater, R.layout.fragment_layout, container, savedInstanceState);
     }
 
     @Override
@@ -213,6 +212,7 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             parent.removeAllViews();
             updateThread(parent, layoutInflater);
             parent.invalidate();
+            parent.requestLayout();
             updateStatus();
             ScrollView scrollView = getView().findViewById(R.id.scrollviewMain);
             if (scrollView != null) {
@@ -290,12 +290,13 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
         }
         title.setText(Html.fromHtml(titleText));
         String subTitle = thread.getSubTitle();
+        TextView subTitleView = (TextView) threadLayout.findViewById(R.id.textSubtile);
         if (!Utils.isNullOrEmpty(subTitle)) {
-            TextView subTitleView = (TextView) threadLayout.findViewById(R.id.textSubtile);
             subTitleView.setVisibility(View.VISIBLE);
             subTitleView.setText(subTitle);
-            if(titleText.length() >= 30) subTitleView.setMaxLines(1);
+            if(titleText.length() <= 30) subTitleView.setMaxLines(1);
         }
+
         if (!Utils.isNullOrEmpty(thread.prefix)) {
             String prefix = "<b><font color=\"" + thread.prefixColor + "\">" + thread.prefix + "</font></b></a> - ";
             int i1 = prefix.indexOf("[");
@@ -303,7 +304,6 @@ public class ForumFragment extends VozFragment implements ActivityCallback<Threa
             title.setText(Html.fromHtml(prefix + titleText));
         }
         if (thread.getRating() > 0) {
-
             ImageView threadRating = (ImageView) threadLayout.findViewById(R.id.threadRating);
             threadRating.setVisibility(View.VISIBLE);
             switch (thread.getRating()) {

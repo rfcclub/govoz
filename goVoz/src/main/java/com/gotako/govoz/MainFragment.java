@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +41,6 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     // private Map<Integer, Forum> mForumGroups;
     private List<Forum> mForumGroups;
     private Map<Integer, List<Forum>> mForums;
-
     public MainFragment() {
         // Required empty public constructor
     }
@@ -101,8 +102,7 @@ public class MainFragment extends VozFragment implements ActivityCallback<Forum>
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_layout, container, false);
+        return createViewWithSwipeToRefresh(inflater, R.layout.fragment_layout, container, savedInstanceState);
     }
 
     @Override
