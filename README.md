@@ -1,5 +1,5 @@
 # govoz
-This is reference repository for GoVoz application, which is written in Java in my free time. I will rewrite it using Flutter with better code structure and UI/UX.
+This is official repository for GoVoz application, which is written in Java in my free time. I will rewrite it using Flutter with better code structure and UI/UX. This repository will be upgraded to Kotlin fully.
 
 The code started from old homemade binding library, GoFast - which is written by me also. Initially, all screens were written in Activity with one forum level is one Activity.
 
